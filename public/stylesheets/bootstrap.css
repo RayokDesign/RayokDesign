@@ -121,3 +121,6 @@ th {
 .fs-6 {
     font-size: 1rem !important;
 }
+.d-none {
+    display: none !important;
+}
