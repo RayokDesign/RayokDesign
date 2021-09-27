@@ -136,5 +136,5 @@ th {
   padding-left: var(--bs-gutter-x, 0.75rem);
   margin-right: auto;
   margin-left: auto;
-  position:absolute;
+  position:relative;
 }
