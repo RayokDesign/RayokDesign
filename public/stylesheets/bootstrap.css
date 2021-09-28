@@ -188,3 +188,8 @@ th {
     flex: 0 0 auto;
     width: 100%;
   }
+
+  .text-primary {
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-primary-rgb), var(--bs-text-opacity)) !important;
+  }
