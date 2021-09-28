@@ -1,3 +1,7 @@
+:root {
+  --bs-primary-rgb: 13, 110, 253;
+}
+
 table {
     caption-side: bottom;
     border-collapse: collapse;
