@@ -5,7 +5,6 @@ function playBtn(ev){
     if(btn.classList.contains('active')){
         btn.classList.remove('bi-play-fill');
         btn.classList.add('bi-pause-fill');
-        console.log(audioActive);
         if(audioActive){
             audioActive.pause();
             audioActive.currentTime = 0;
