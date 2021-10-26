@@ -18,6 +18,7 @@ function endedPlay(ev){
     btn.classList.add('bi-play-fill');
     btn.classList.remove('active');
     btn.blur();
+    btn.touchend();
 }
 function switchWord(ev){
     const th=ev;
