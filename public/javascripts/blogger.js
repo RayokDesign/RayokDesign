@@ -1,24 +1,34 @@
+var audioActive = null;
 function playBtn(ev){
     const btn=ev;
     const audio=ev.previousElementSibling;
-        btn.classList.toggle('active');
     if(btn.classList.contains('active')){
-    btn.classList.remove('bi-play-fill');
-    btn.classList.add('bi-pause-fill');
-    audio.play();
+        btn.classList.remove('bi-play-fill');
+        btn.classList.add('bi-pause-fill');
+        console.log(audioActive);
+        if(audioActive){
+            audioActive.pause();
+            audioActive.currentTime = 0;
+            endedPlay(audioActive);
+        }
+        audioActive = audio;
+        audio.play();
     }else{
-    btn.classList.add('bi-play-fill');
-    btn.classList.remove('bi-pause-fill');
-    audio.pause();
+        btn.classList.add('bi-play-fill');
+        btn.classList.remove('bi-pause-fill');
+        audio.pause();
+        audioActive = null;
     }
 }
+
 function endedPlay(ev){
     const btn=ev.nextElementSibling;
     btn.classList.remove('bi-pause-fill');
     btn.classList.add('bi-play-fill');
     btn.classList.remove('active');
-    btn.blur();
+    audioActive = null;
 }
+
 function switchWord(ev){
     const th=ev;
     const tw=th.nextElementSibling;
@@ -32,6 +42,7 @@ function switchWord(ev){
     audio1.classList.toggle('d-none');
     audio2.classList.toggle('d-none');
 }
+
 function switchWord2(ev){
     const tw=ev;
     const th=tw.previousElementSibling;
