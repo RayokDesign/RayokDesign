@@ -1,5 +1,17 @@
-var audioActive = null;
-function playBtn(ev){
+let audioActive = null;
+let timerAutoPlay = null;
+let audioList = document.getElementsByTagName('audio');
+let autoNum = 0;
+let autoPlayStatus = false;
+
+function playBtn(ev,auto){
+    if(auto){
+        autoPlayStatus = auto;
+    }else{
+        clearTimeout(timerAutoPlay);
+        autoPlayStatus = false;
+        autoNum = 0;
+    }
     const btn=ev;
     const audio=ev.previousElementSibling;
     if(btn.classList.contains('active')){
@@ -8,7 +20,7 @@ function playBtn(ev){
         if(audioActive){
             audioActive.pause();
             audioActive.currentTime = 0;
-            endedPlay(audioActive);
+            endedPlay(audioActive,true);
         }
         audioActive = audio;
         audio.play();
@@ -19,13 +31,35 @@ function playBtn(ev){
         audioActive = null;
     }
 }
+function autoPlay(){
+    if(audioActive){
+        audioActive.pause();
+        audioActive.currentTime = 0;
+        endedPlay(audioActive,true);
+    }
+    timerAutoPlay = setTimeout(function(){
+        if (autoNum<audioList.length){
+            audioList[autoNum].nextElementSibling.classList.add('active');
+            playBtn(audioList[autoNum].nextElementSibling,true);
+        }else{
+            autoNum=0;
+            autoPlayStatus = false;
+        }
+    },200);
+}
 
-function endedPlay(ev){
+function endedPlay(ev,stop){
     const btn=ev.nextElementSibling;
     btn.classList.remove('bi-pause-fill');
     btn.classList.add('bi-play-fill');
     btn.classList.remove('active');
     audioActive = null;
+    if (autoPlayStatus && !stop){
+        autoNum++;
+        autoPlay();
+    }else{
+        autoNum=0;
+    }
 }
 
 function switchWord(ev){
