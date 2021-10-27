@@ -25,6 +25,7 @@ function startPlay(ev,autoSwitch){
         audio.play();
     }
 }
+
 function endPlay(ev,stop){
     const btn=ev.nextElementSibling;
     btn.classList.remove('bi-stop-fill');
@@ -45,36 +46,21 @@ function endPlay(ev,stop){
 
 function autoPlay(){
     if(audioPlaying){
-        audioPlaying.pause();
-        audioPlaying.currentTime = 0;
-        endPlay(audioPlaying,true);
+        if(audioPlaying == audioList[0]){
+            audioPlaying = null;
+        }else{
+            audioPlaying.pause();
+            audioPlaying.currentTime = 0;
+            endPlay(audioPlaying,true);
+        }
     }
     autoPlayStatus=autoPlayStatus?false:true;
-    if(audioPlaying == audioList[0]){
-        audioPlaying = null;
-    }
     if(autoPlayStatus){
         audioList[0].nextElementSibling.classList.add('active');
         startPlay(audioList[0].nextElementSibling,autoPlayStatus);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//old funtion
 function playBtn(ev){
     if(audioPlaying){
         audioPlaying.pause();
@@ -98,6 +84,7 @@ function endedPlay(ev){
     btn.classList.remove('active');
     audioPlaying = null;
 }
+//old funtion
 
 function switchWord(ev){
     const th=ev;
