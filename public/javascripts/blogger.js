@@ -1,65 +1,101 @@
+let audioPlaying = null;
 let audioActive = null;
-let timerAutoPlay = null;
-let audioList = document.getElementsByTagName('audio');
-let autoNum = 0;
 let autoPlayStatus = false;
+let autoPlayCount = 0;
+let autoPlayTimer = null;
+const audioList = document.getElementsByTagName('audio');
 
-function playBtn(ev,auto){
-    if(auto){
-        autoPlayStatus = auto;
-    }else{
-        clearTimeout(timerAutoPlay);
+
+function startPlay(ev,autoSwitch){
+    if(!autoSwitch){
+        clearTimeout(autoPlayTimer);
+        autoPlayCount = 0;
         autoPlayStatus = false;
-        autoNum = 0;
+    }
+    if(audioPlaying){
+        audioPlaying.pause();
+        audioPlaying.currentTime = 0;
+        endPlay(audioPlaying);
     }
     const btn=ev;
     const audio=ev.previousElementSibling;
     if(btn.classList.contains('active')){
         btn.classList.remove('bi-play-fill');
-        btn.classList.add('bi-pause-fill');
-        if(audioActive){
-            audioActive.pause();
-            audioActive.currentTime = 0;
-            endedPlay(audioActive,true);
-        }
-        audioActive = audio;
+        btn.classList.add('bi-stop-fill');
+        audioPlaying = audio;
         audio.play();
-    }else{
-        btn.classList.add('bi-play-fill');
-        btn.classList.remove('bi-pause-fill');
-        audio.pause();
-        audioActive = null;
     }
 }
-function autoPlay(){
-    if(audioActive){
-        audioActive.pause();
-        audioActive.currentTime = 0;
-        endedPlay(audioActive,true);
+function endPlay(ev,stop){
+    const btn=ev.nextElementSibling;
+    btn.classList.remove('bi-stop-fill');
+    btn.classList.add('bi-play-fill');
+    btn.classList.remove('active');
+    audioPlaying = null;
+    if(autoPlayCount < audioList.length-1 && autoPlayStatus == true && !stop){
+        autoPlayCount++;
+        autoPlayTimer = setTimeout(function(){
+            audioList[autoPlayCount].nextElementSibling.classList.add('active');
+            startPlay(audioList[autoPlayCount].nextElementSibling,autoPlayStatus);
+        },200);
+    }else{
+        autoPlayCount = 0;
+        clearTimeout(autoPlayTimer);
     }
-    timerAutoPlay = setTimeout(function(){
-        if (autoNum<audioList.length){
-            audioList[autoNum].nextElementSibling.classList.add('active');
-            playBtn(audioList[autoNum].nextElementSibling,true);
-        }else{
-            autoNum=0;
-            autoPlayStatus = false;
-        }
-    },200);
 }
 
-function endedPlay(ev,stop){
+function autoPlay(){
+    if(audioPlaying){
+        audioPlaying.pause();
+        audioPlaying.currentTime = 0;
+        endPlay(audioPlaying,true);
+    }
+    autoPlayStatus=autoPlayStatus?false:true;
+    if(audioPlaying == audioList[0]){
+        audioPlaying = null;
+    }
+    if(autoPlayStatus){
+        audioList[0].nextElementSibling.classList.add('active');
+        startPlay(audioList[0].nextElementSibling,autoPlayStatus);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function playBtn(ev){
+    if(audioActive){
+        endedPlay(audioActive);
+    }
+    const btn=ev;
+    const audio=ev.previousElementSibling;
+    if(btn.classList.contains('active')){
+        btn.classList.remove('bi-play-fill');
+        btn.classList.add('bi-stop-fill');
+        audioActive = audio;
+        audio.play();
+    }
+}
+
+function endedPlay(ev){
     const btn=ev.nextElementSibling;
-    btn.classList.remove('bi-pause-fill');
+    btn.classList.remove('bi-stop-fill');
     btn.classList.add('bi-play-fill');
     btn.classList.remove('active');
     audioActive = null;
-    if (autoPlayStatus && !stop){
-        autoNum++;
-        autoPlay();
-    }else{
-        autoNum=0;
-    }
 }
 
 function switchWord(ev){
