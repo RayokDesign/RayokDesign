@@ -7,9 +7,9 @@ const audioList = document.getElementsByTagName('audio');
 
 function startPlay(ev,autoSwitch){
     if(!autoSwitch){
-        clearTimeout(autoPlayTimer);
         autoPlayCount = 0;
         autoPlayStatus = false;
+        clearTimeout(autoPlayTimer);
     }
     if(audioPlaying){
         audioPlaying.pause();
@@ -39,8 +39,10 @@ function endPlay(ev,stop){
             startPlay(audioList[autoPlayCount].nextElementSibling,autoPlayStatus);
         },200);
     }else{
+        if(autoPlayCount == audioList.length-1){
+            autoPlayStatus = false;
+        }
         autoPlayCount = 0;
-        autoPlayStatus = false;
         clearTimeout(autoPlayTimer);
     }
 }
