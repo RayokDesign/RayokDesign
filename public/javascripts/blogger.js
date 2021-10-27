@@ -1,5 +1,4 @@
 let audioPlaying = null;
-let audioActive = null;
 let autoPlayStatus = false;
 let autoPlayCount = 0;
 let autoPlayTimer = null;
@@ -77,15 +76,17 @@ function autoPlay(){
 
 
 function playBtn(ev){
-    if(audioActive){
-        endedPlay(audioActive);
+    if(audioPlaying){
+        audioPlaying.pause();
+        audioPlaying.currentTime = 0;
+        endPlay(audioPlaying);
     }
     const btn=ev;
     const audio=ev.previousElementSibling;
     if(btn.classList.contains('active')){
         btn.classList.remove('bi-play-fill');
         btn.classList.add('bi-stop-fill');
-        audioActive = audio;
+        audioPlaying = audio;
         audio.play();
     }
 }
@@ -95,7 +96,7 @@ function endedPlay(ev){
     btn.classList.remove('bi-stop-fill');
     btn.classList.add('bi-play-fill');
     btn.classList.remove('active');
-    audioActive = null;
+    audioPlaying = null;
 }
 
 function switchWord(ev){
