@@ -40,6 +40,7 @@ function endPlay(ev,stop){
         },200);
     }else{
         autoPlayCount = 0;
+        autoPlayStatus = false;
         clearTimeout(autoPlayTimer);
     }
 }
