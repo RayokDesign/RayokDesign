@@ -12,8 +12,10 @@ function startPlay(ev,autoSwitch){
         clearTimeout(autoPlayTimer);
     }
     if(audioPlaying){
-        audioPlaying.pause();
-        audioPlaying.currentTime = 0;
+        if(audioPlaying.currentTime != 0){
+            audioPlaying.pause();
+            audioPlaying.currentTime = 0;
+        }
         endPlay(audioPlaying);
     }
     const btn=ev;
