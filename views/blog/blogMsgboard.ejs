@@ -1,0 +1,39 @@
+<% include ./template/blogHeader %>
+		<div class='container'>
+		<% if(auth){%>
+		<form action="/blog/msgboard/add" method="post" class="row g-2">
+			<div class="col-auto">
+				<input name="content" type="text" class="form-control" placeholder="請輸入內容">
+			</div>
+			<div class="col-auto">
+				<button type="submit" class="btn btn-primary mb-3">送出</button>
+			</div>
+		</form>
+		<%}%>
+		<table class="table caption-top table-light table-striped table-hover">
+			<% if(!auth){%><caption>尚未登入，僅供瀏覽。</caption><%}%>
+			<thead>
+			  <tr>
+				<th scope="col-4">Name</th>
+				<th scope="col-5">Content</th>
+				<th scope="col-3">Date</th>
+			  </tr>
+			</thead>
+			<tbody>
+				<% for(item in list){ %>
+					<tr>
+						<td>
+							<%= list[item].name %>
+						</td>
+						<td>
+							<%=list[item].content %>
+						</td>
+						<td>
+							<%- moment(list[item].timestamp).fromNow() %>
+						</td>
+					</tr>
+				<% } %>
+			</tbody>
+		  </table>
+		</div>
+<% include ./template/blogFooter %>
