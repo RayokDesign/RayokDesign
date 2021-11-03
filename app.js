@@ -10,7 +10,7 @@ var usersRouter = require('./routes/users');
 /* Rayok */
 var loginRouter = require('./routes/login');
 var signupRouter = require('./routes/signup');
-var memberRouter = require('./routes/user');
+var memberRouter = require('./routes/member');
 var msgboxRouter = require('./routes/msgbox')
 /* Rayok */
 
