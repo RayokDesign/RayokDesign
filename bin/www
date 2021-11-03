@@ -3,19 +3,23 @@
 /**
  * Module dependencies.
  */
-var fs = require('fs');
 var app = require('../app');
 var debug = require('debug')('rayoktailand:server');
 var http = require('http');
-var https = require('https');
+/* Rayok */
+var fs = require('fs');
+var https = require('https'); //https
+/* Rayok */
 
 /**
  * Get port from environment and store in Express.
  */
 
+/* Rayok */
 var privateKey = fs.readFileSync(__dirname + '/../ssl/private.key');
 var certificate = fs.readFileSync(__dirname + '/../ssl/certificate.crt');
 var credentials = { key: privateKey, cert: certificate };
+/* Rayok */
 var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
 

@@ -1,5 +1,4 @@
 ssl
+bin
 node_modules
 connections
-package.json
-package-lock.json
