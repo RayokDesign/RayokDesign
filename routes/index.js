@@ -6,7 +6,7 @@ const docRef = firebaseDb.collection('users').doc('alovelace');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  await docRef.set({
+  docRef.set({
     first: 'Ada',
     last: 'Lovelace',
     born: 1815
