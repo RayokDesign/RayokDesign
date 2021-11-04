@@ -7,8 +7,11 @@ var app = require('../app');
 var debug = require('debug')('rayoktailand:server');
 var http = require('http');
 /* Rayok */
+//https
+/*
 var fs = require('fs');
-var https = require('https'); //https
+var https = require('https'); 
+*/
 /* Rayok */
 
 /**
@@ -16,18 +19,26 @@ var https = require('https'); //https
  */
 
 /* Rayok */
+//https
+/*
 var privateKey = fs.readFileSync(__dirname + '/../ssl/private.key');
 var certificate = fs.readFileSync(__dirname + '/../ssl/certificate.crt');
 var credentials = { key: privateKey, cert: certificate };
+*/
 /* Rayok */
-var port = normalizePort(process.env.PORT || '443');
+var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
+/* Rayok */
+//https
+//var server = https.createServer(credentials, app);
+/* Rayok */
 
-var server = https.createServer(credentials, app);
+//http
+var server = http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
