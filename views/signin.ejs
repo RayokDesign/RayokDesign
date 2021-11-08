@@ -1,0 +1,38 @@
+<%- include('header') %>
+<nav class="navbar navbar-light pt-3 mb-4">
+    <div class="container">
+        <h1><a href="/" class="navbar-brand">RayokTailand</a></h1>
+    </div>
+</nav>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <h2 class="mb-3 fs-4 fw-bold text-center">登入</h2>
+            <% if (error){ %>
+                <div class="alert alert-danger" role="alert"><%= error %></div>
+            <% } %>
+            <form action="/signin" method="post">
+                <div class="mb-3 fw-bold">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="請輸入信箱" autofocus required />
+                </div>
+                <div class="mb-3 fw-bold">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" placeholder="請輸入密碼" required />
+                </div>
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">
+                        保持登入
+                    </label>
+                </div>
+                <div class="mb-3 mx-auto d-grid">
+                    <input type="submit" class="btn btn-primary"value="登入" />
+                </div>
+                <p class="text-end fs-6">還沒有帳號嗎? <a href="/signup">註冊</a></p>
+            </form>
+        </div>
+
+    </div>
+</div>
+<%- include('footer') %>
