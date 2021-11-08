@@ -30,9 +30,9 @@
                 </div>
                 <div class="mb-3 mx-auto d-grid">
                     <% if (uid && emailVerified){ %>
-                        <input type="submit" class="btn btn-primary" value="送出"/>
+                        <input type="submit" class="btn btn-primary" value="留言"/>
                     <% }else{ %>
-                        <input type="submit" class="btn btn-primary" value="送出" disabled/>
+                        <input type="submit" class="btn btn-primary" value="留言" disabled/>
                     <% } %>
                 </div>
             </form>
@@ -44,10 +44,15 @@
                                 </svg></span><span style="font-size:0.6rem"><%= moment(msgboxesInfo[msgboxInfo].timestamp).fromNow() %></span>
                             </h6>
                         <p class="card-text"><%= msgboxesInfo[msgboxInfo].message %></p>
-                        <p class="card-text"><a><i class="bi bi-hand-thumbs-up"></i></a><a><i class="bi bi-hand-thumbs-down"></i></a></p>
-                    </div>
-                    <div class="card-footer">
-
+                        <p class="card-text">
+                            <% if (msgboxesInfo[msgboxInfo].like.indexOf(uid) != -1){ %> 
+                                <a href="/like/<%= msgboxesInfo[msgboxInfo].id %>"><i class="bi-hand-thumbs-up-fill" style="color:black;"></i></a>
+                            <% } else { %>
+                                <a href="/like/<%= msgboxesInfo[msgboxInfo].id %>"><i class="bi-hand-thumbs-up" style="color:black;"></i></a>
+                            <% } %>
+                            <span><%= msgboxesInfo[msgboxInfo].like.length %></span>
+                            <a href="#" class="text-decoration-none ms-3" style="color:black;">回覆</a>
+                        </p>
                     </div>
                 </div>
             <% } %>

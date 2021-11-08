@@ -10,7 +10,8 @@ router.post('/', function (req, res) {
         var msgboxInfo = {
             username: username,
             message: req.body.message,
-            timestamp: new Date().getTime()
+            timestamp: new Date().getTime(),
+            like: []
         }
         msgboxRef.add(msgboxInfo)
         .then(function(){
