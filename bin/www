@@ -26,7 +26,7 @@ var certificate = fs.readFileSync(__dirname + '/../ssl/certificate.crt');
 var credentials = { key: privateKey, cert: certificate };
 
 /* Rayok */
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '443');
 app.set('port', port);
 
 /**
