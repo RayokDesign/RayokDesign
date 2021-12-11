@@ -2,7 +2,6 @@
 <% var amount = [], memoDate = null, memo = null, count = 0, i = 0; %>
 <% var items = { 
     '01':'รายรับข้าวมันไก่',
-    '02':'บาท',
     '03':'คนละครึ่ง',
     '04':'รวมพร้อมเพย์',
     '05':'รวม',
@@ -33,11 +32,10 @@
             <input class="form-control mb-3" type="month" name="YearMonth" value="<%= yearmonth %>">
         </form>
         <hr>
-        <form action="/restaurant" method="post">
+        <form action="/restaurant" method="post" class="pt-3">
             <select class="form-select mb-3" aria-label="Default select example" name="item" required>
                 <option selected value="">Open this select menu</option>
                 <option value="01">รายรับข้าวมันไก่</option>
-                <option value="02">บาท</option>
                 <option value="03">คนละครึ่ง</option>
                 <option value="04">รวมพร้อมเพย์</option>
                 <option value="05">รวม</option>
@@ -83,9 +81,10 @@
                             <%= items[bbb] %>
                     </h5>
                     <% if (data[arrDay[i]][bbb]['amount'] < 0) { %>
-                        <span class="text-danger"><%= data[arrDay[i]][bbb]['amount'] %></span>
+                        <span class="text-danger"><%= new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(Math.abs(data[arrDay[i]][bbb]['amount']))
+                             %></span>
                     <% }else if (data[arrDay[i]][bbb]['amount'] > 0) { %>
-                        <span class="text-primary"><%= data[arrDay[i]][bbb]['amount'] %></span>
+                        <span class="text-primary"><%= new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(data[arrDay[i]][bbb]['amount']) %></span>
                     <% }else{ %>
                         <span><%= data[arrDay[i]][bbb]['amount'] %></span>
                     <% } %>
@@ -117,10 +116,11 @@
 
     let amounts = document.getElementsByClassName('amount');
     for (var i=0; i<amount.length; i++){
-        amounts[i].innerHTML = amount[i];
         if (amount[i]<0){
+            amounts[i].innerHTML = new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(amount[i]);
             amounts[i].classList.add("text-danger");
         }else if (amount[i]>0){
+            amounts[i].innerHTML = '+' + new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(amount[i]);
             amounts[i].classList.add("text-primary");
         }
     }
