@@ -43,7 +43,7 @@ app.use(function(req,res,next){
   if(req.session.uid == process.env.ALLOW_UID){
     next();
   }else{
-    req.session.error = '您的帳號無訪問權限，請聯絡管理員';
+    req.session.error = 'คุณไม่ได้รับอนุญาตให้เข้าถึงเนื้อหา โปรดติดต่อผู้ดูแลระบบ';
     res.redirect('/member/signin');
   }
 })

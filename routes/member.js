@@ -14,7 +14,7 @@ router.get('/signin', function (req, res) {
     }
     res.render('member', {
         page: 'signin',
-        title: '登入',
+        title: 'Signin',
         error: error
     });
 })
@@ -63,7 +63,7 @@ router.get('/signup', function (req, res) {
     }
     res.render('member', {
         page: 'signup',
-        title: '註冊',
+        title: 'Signup',
         error: error
     });
 })
@@ -82,10 +82,7 @@ router.post('/signup', function (req, res) {
             email: email,
             password: password
         });
-        sendEmailVerification(user)
-        .then(() => {
-            console.log('驗證信已傳送至您的信箱');
-        })
+        
         res.redirect('/member/success');
     })
     .catch(function(error){

@@ -8,7 +8,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-10">
-            <h2 class="mb-3 fs-4 fw-bold text-center">登入</h2>
+            <h2 class="mb-3 fs-4 fw-bold text-center">Signin</h2>
             <% if (error){ %>
                 <div class="alert alert-danger" role="alert"><%= error %></div>
             <% } %>
@@ -24,13 +24,13 @@
                 <div class="mb-3 form-check">
                     <input type="checkbox" class="form-check-input" id="remember" name="remember">
                     <label class="form-check-label" for="remember">
-                        保持登入
+                        remember me
                     </label>
                 </div>
                 <div class="mb-3 mx-auto d-grid">
                     <input type="submit" class="btn btn-primary"value="登入" />
                 </div>
-                <p class="text-end fs-6">還沒有帳號嗎? <a href="/member/signup">註冊</a></p>
+                <p class="text-end fs-6">還沒有帳號嗎? <a href="/member/signup">Signup</a></p>
             </form>
         </div>
     </div>
@@ -72,10 +72,10 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-10">
-                <h2 class="mb-3 fs-4 fw-bold text-center">註冊成功！驗證信已傳送至您的信箱，驗證後即可使用網站功能。</h2>
+                <h2 class="mb-3 fs-4 fw-bold text-center">สมัครสมาชิกสำเร็จ</h2>
                 <h3><%= email %></h3>
                 <p class="text-center">
-                    <a href="/" class="btn btn-primary">回首頁</a>
+                    <a href="/restaurant" class="btn btn-primary">Back to home</a>
                 </p>
             </div>
         </div>
