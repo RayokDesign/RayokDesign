@@ -39,6 +39,7 @@ app.use('/', indexRouter);
 /* Rayok----- */
 app.use('/member', memberRouter);
 app.use('/comment', commentRouter);
+
 app.use(function(req,res,next){
   if(req.session.uid == process.env.ALLOW_UID){
     next();
