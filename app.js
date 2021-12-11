@@ -8,13 +8,11 @@ const logger = require('morgan');
 const session = require('express-session');
 /* ----- Rayok */
 
-var indexRouter = require('./routes/index');
-
 /* Rayok ----- */
-var signinRouter = require('./routes/signin');
-var signupRouter = require('./routes/signup');
-var userRouter = require('./routes/user');
-var msgboxRouter = require('./routes/msgbox')
+var indexRouter = require('./routes/index');
+var memberRouter = require('./routes/member');
+var commentRouter = require('./routes/comment');
+var restaurantRouter = require('./routes/restaurant');
 /* ----- Rayok */
 
 var app = express();
@@ -26,6 +24,7 @@ app.use(session({
   cookie: { secure: false }
 }))
 /* ----- Rayok */
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -38,20 +37,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 
 /* Rayok----- */
-app.use('/signin', signinRouter);
-app.use('/signup', signupRouter);
-app.use('/msgbox', msgboxRouter);
-
-//如果未登入，不允許訪問以下路由
-app.use(function (req, res, next){
-  if (req.session.uid){
-    return next();
-  } else {
-    res.redirect('/');
+app.use('/member', memberRouter);
+app.use('/comment', commentRouter);
+app.use(function(req,res,next){
+  if(req.session.uid == process.env.ALLOW_UID){
+    next();
+  }else{
+    req.session.error = '您的帳號無訪問權限，請聯絡管理員';
+    res.redirect('/member/signin');
   }
-});
-app.use('/user', userRouter);
-/* -----Rayok */
+})
+app.use('/restaurant', restaurantRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -59,7 +55,7 @@ app.use(function(req, res, next) {
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function(err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

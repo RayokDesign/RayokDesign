@@ -2,21 +2,21 @@
 <nav class="navbar navbar-light pt-3 mb-4">
     <div class="container">
         <h1><a href="/" class="navbar-brand">RayokTailand</a></h1>
-        <form class="d-flex">
+        <div class="d-flex">
             <% if (uid){ %>
-                <a href="/user" class="btn btn-primary me-2">管理</a>
-                <a href="/signout" class="btn btn-secondary">登出</a>
+                <a href="/member/user" class="btn btn-primary me-2">管理</a>
+                <a href="/member/signout" class="btn btn-secondary">登出</a>
             <% } else { %>
-                <a href="/signin" class="btn btn-primary me-2">登入</a>
-                <a href="/signup" class="btn btn-secondary">註冊</a>
+                <a href="/member/signin" class="btn btn-primary me-2">登入</a>
+                <a href="/member/signup" class="btn btn-secondary">註冊</a>
             <% } %>
-        </form>
+        </div>
     </div>
 </nav>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-10">
-            <form action="/msgbox" method="post">
+            <form action="/comment" method="post">
                 <div class="mb-3 fw-bold">
                     <label for="message" class="form-label">留言板</label>
                     <% if (uid && emailVerified){ %>
@@ -36,21 +36,21 @@
                     <% } %>
                 </div>
             </form>
-            <% for (msgboxInfo in msgboxesInfo){ %>
+            <% for (commentInfo in commentsInfo){ %>
                 <div class="card border-0 rounded-0 border-bottom">
                     <div class="card-body">
-                        <h6 class="card-subtitle text-muted"><span style="font-size:0.8rem"><%= msgboxesInfo[msgboxInfo].username %><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
+                        <h6 class="card-subtitle text-muted"><span style="font-size:0.8rem"><%= commentsInfo[commentInfo].username %><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dot" viewBox="0 0 16 16">
                                     <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
-                                </svg></span><span style="font-size:0.6rem"><%= moment(msgboxesInfo[msgboxInfo].timestamp).fromNow() %></span>
+                                </svg></span><span style="font-size:0.6rem"><%= moment(commentsInfo[commentInfo].timestamp).fromNow() %></span>
                             </h6>
-                        <p class="card-text"><%= msgboxesInfo[msgboxInfo].message %></p>
+                        <p class="card-text"><%= commentsInfo[commentInfo].message %></p>
                         <p class="card-text">
-                            <% if (msgboxesInfo[msgboxInfo].like.indexOf(uid) != -1){ %> 
-                                <a href="/like/<%= msgboxesInfo[msgboxInfo].id %>"><i class="bi-hand-thumbs-up-fill" style="color:black;"></i></a>
+                            <% if (commentsInfo[commentInfo].like.indexOf(uid) != -1){ %> 
+                                <a href="/comment/like/<%= commentsInfo[commentInfo].id %>"><i class="bi-hand-thumbs-up-fill" style="color:black;"></i></a>
                             <% } else { %>
-                                <a href="/like/<%= msgboxesInfo[msgboxInfo].id %>"><i class="bi-hand-thumbs-up" style="color:black;"></i></a>
+                                <a href="/comment/like/<%= commentsInfo[commentInfo].id %>"><i class="bi-hand-thumbs-up" style="color:black;"></i></a>
                             <% } %>
-                            <span><%= msgboxesInfo[msgboxInfo].like.length %></span>
+                            <span><%= commentsInfo[commentInfo].like.length %></span>
                             <a href="#" class="text-decoration-none ms-3" style="color:black;">回覆</a>
                         </p>
                     </div>
@@ -59,4 +59,40 @@
         </div>
     </div>
 </div>
+<script>
+    async function fetchData(url, sign){
+        let form = document.getElementById("signinForm");
+        let email = null;
+        let password = null;
+
+        if (sign == 'signin'){
+            email = form.children[0].children[1].value;
+            password = form.children[1].children[1].value;
+        }
+        return fetch(url, {
+            body: JSON.stringify({
+                email: email,
+                password: password
+            }),
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'POST',
+            mode: 'cors',
+            redirect: 'follow',
+            referrer: 'no-referrer',
+        })
+        .then(function(response) {
+            return response.text();
+        })
+        .then(function(myJson) {
+            console.log(myJson);
+        })
+        .catch(function(err){
+            console.log('錯誤:', err);
+        });
+    }
+</script>
 <%- include('footer') %>

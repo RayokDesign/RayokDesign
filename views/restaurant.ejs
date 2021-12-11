@@ -1,0 +1,132 @@
+<%- include('header') %>
+<% var amount = [], memoDate = null, memo = null, count = 0, i = 0; %>
+<% var items = { 
+    '01':'รายรับข้าวมันไก่',
+    '02':'บาท',
+    '03':'คนละครึ่ง',
+    '04':'รวมพร้อมเพย์',
+    '05':'รวม',
+    '06':'รายจ่ายทั้งหมดที่ใช้เงินรายรับออก',
+    '07':'บาท รวมรายรับทั้งหมด',
+    '08':'รายรับน้ำส้ม แม่ปอ',
+    '09':'น้ำหวานขายแล้ ว',
+    '10':'ไก่เหลือ ประมาน'
+} %>
+
+<nav class="navbar navbar-light pt-3 mb-4">
+    <div class="container">
+        <h1><a href="/" class="navbar-brand">RayokTailand</a></h1>
+        <div class="d-flex">
+            <% if (uid){ %>
+                <a href="/member/user" class="btn btn-primary me-2">管理</a>
+                <a href="/member/signout" class="btn btn-secondary">登出</a>
+            <% } else { %>
+                <a href="/member/signin" class="btn btn-primary me-2">登入</a>
+                <a href="/member/signup" class="btn btn-secondary">註冊</a>
+            <% } %>
+        </div>
+    </div>
+</nav>
+<div class="container pt-3">
+    <header class="mb-3">
+        <form action="/restaurant" method="get" id="YearMonth">
+            <input class="form-control mb-3" type="month" name="YearMonth" value="<%= yearmonth %>">
+        </form>
+        <hr>
+        <form action="/restaurant" method="post">
+            <select class="form-select mb-3" aria-label="Default select example" name="item" required>
+                <option selected value="">Open this select menu</option>
+                <option value="01">รายรับข้าวมันไก่</option>
+                <option value="02">บาท</option>
+                <option value="03">คนละครึ่ง</option>
+                <option value="04">รวมพร้อมเพย์</option>
+                <option value="05">รวม</option>
+                <option value="06">รายจ่ายทั้งหมดที่ใช้เงินรายรับออก</option>
+                <option value="07">บาท รวมรายรับทั้งหมด</option>
+                <option value="08">รายรับน้ำส้ม แม่ปอ</option>
+                <option value="09">น้ำหวานขายแล้ ว</option>
+                <option value="10">ไก่เหลือ ประมาน</option>
+            </select>
+            <div class="input-group mb-3">
+                <span class="input-group-text">฿</span>
+                <input class="form-control" name="amount" type="number" required="required">
+                <span class="input-group-text">
+                    <input class="form-check-input mt-0 me-2" name="expin" type="radio" value="0" checked>
+                    <span>Expense</span>
+                </span>
+                <span class="input-group-text">
+                    <input class="form-check-input mt-0 me-2" name="expin" type="radio" value="1">
+                    <span>Income</span>
+                </span>
+            </div>
+            <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
+            
+            <div class="d-grid">
+                <button class="btn btn-primary">Submit</button>
+            </div>
+        </form>
+    </header>
+    <section>
+        <% for (aaa in data) { %>
+            <% memo = data[arrDay[i]].memo %>
+            <% delete data[arrDay[i]].memo %>
+        <div class="card mb-3" >
+            <div class="card-header d-flex justify-content-between">
+                <span><%= moment(yearmonth+'-'+arrDay[i]).format('DD dddd YYYY MMMM') %></span>
+                <% memoDate = yearmonth + '-' + arrDay[i] %>
+                <span class="amount"></span>
+            </div>
+            <div class="card-body">
+                <% for (bbb in data[arrDay[i]]) { %>
+                <div class="item d-flex justify-content-between">
+                    <h5 class="card-title">
+                            <%= items[bbb] %>
+                    </h5>
+                    <% if (data[arrDay[i]][bbb]['amount'] < 0) { %>
+                        <span class="text-danger"><%= data[arrDay[i]][bbb]['amount'] %></span>
+                    <% }else if (data[arrDay[i]][bbb]['amount'] > 0) { %>
+                        <span class="text-primary"><%= data[arrDay[i]][bbb]['amount'] %></span>
+                    <% }else{ %>
+                        <span><%= data[arrDay[i]][bbb]['amount'] %></span>
+                    <% } %>
+                </div>
+                <% count = parseInt(count) + parseInt(data[arrDay[i]][bbb]['amount']) %>
+                <% } %>
+                
+                <form action="/restaurant" method="post">
+                    <div class="input-group">
+                        <textarea class="form-control" aria-label="With textarea" name="memo"><%= memo %></textarea>
+                        <button class="btn btn-primary" type="button" onclick="pressUpdate(this)">update</button>
+                    </div>
+                    <input class="d-none" type="date" value="<%= memoDate %>" name="memoDate">
+                </form>
+            </div>
+            <% amount.push(count); %>
+            <% count = 0; %>
+            <% i++ %>
+        </div>
+        <% } %>
+    </section>
+</div>
+<script>
+    let amount = [<%- amount %>];
+    let formDate = document.getElementById('YearMonth');
+    formDate.children[0].addEventListener("change", function(){
+        formDate.submit();
+    })
+
+    let amounts = document.getElementsByClassName('amount');
+    for (var i=0; i<amount.length; i++){
+        amounts[i].innerHTML = amount[i];
+        if (amount[i]<0){
+            amounts[i].classList.add("text-danger");
+        }else if (amount[i]>0){
+            amounts[i].classList.add("text-primary");
+        }
+    }
+
+    function pressUpdate (btn){
+        btn.parentNode.parentNode.submit();
+    }
+</script>
+<%- include('footer') %>
