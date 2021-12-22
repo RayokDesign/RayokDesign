@@ -1,0 +1,44 @@
+<%- include('header') %>
+<div class="container">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (category in data){ %>
+            <tr>
+                <td><%= data[category].name %></td>
+                <td>
+                    <div class="d-grid gap-2 d-flex justify-content-end">
+                        <a id="edit" href="javascript:;" data-bs-toggle="button" autocomplete="off" class="btn btn-primary">Edit</a>
+                        <a href="categories/delete/<%= category %>" class="btn btn-danger">Delete</a>
+                    </div>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+    <form action="/restaurant/categories" method="post">
+        <div class="row g-3">
+            <div class="col">
+              <input name="name" type="text" class="form-control" placeholder="Category name" aria-label="Category name">
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Add</button>
+              </div>
+          </div>
+    </form>
+</div>
+<script>
+    let edit = document.getElementById('edit');
+    edit.addEventListener('click', function(){
+        if(0){
+            alert('hello');
+        }
+        // (edit.className).indexOf("active");
+    })
+</script>
+<%- include('footer') %>

@@ -1,17 +1,5 @@
 <%- include('header') %>
-<% var amount = [], memoDate = null, memo = null, count = 0, i = 0; %>
-<% var items = { 
-    '01':'รายรับข้าวมันไก่',
-    '03':'คนละครึ่ง',
-    '04':'รวมพร้อมเพย์',
-    '05':'รวม',
-    '06':'รายจ่ายทั้งหมดที่ใช้เงินรายรับออก',
-    '07':'บาท รวมรายรับทั้งหมด',
-    '08':'รายรับน้ำส้ม แม่ปอ',
-    '09':'น้ำหวานขายแล้ ว',
-    '10':'ไก่เหลือ ประมาน'
-} %>
-
+<% let amount = 0, recordsIndex = [], totalAmount = {}, inflow = 0, outflow = 0 %>
 <nav class="navbar navbar-light pt-3">
     <div class="container">
         <h1><a href="/restaurant" class="navbar-brand">RayokTailand</a></h1>
@@ -28,34 +16,76 @@
 </nav>
 <div class="container pt-3">
     <header class="mb-3">
-        <form action="/restaurant" method="get" id="YearMonth">
-            <input class="form-control mb-3" type="month" name="YearMonth" value="<%= yearmonth %>">
+        <form action="/restaurant" method="get" id="date">
+            <input class="form-control mb-3" type="month" name="date" onchange="document.getElementById('date').submit()" value="<%= date[0]+'-'+date[1] %>">
         </form>
+        <% for (day in daysIndex) {
+            for(record in days[daysIndex[day]].records) {
+                if (!totalAmount[days[daysIndex[day]].records[record].category]) {
+                    if (days[daysIndex[day]].records[record].expin == 'expense') {
+                        totalAmount[days[daysIndex[day]].records[record].category] = -days[daysIndex[day]].records[record].amount
+                        outflow += days[daysIndex[day]].records[record].amount;
+                    } else {
+                        totalAmount[days[daysIndex[day]].records[record].category] = days[daysIndex[day]].records[record].amount
+                        inflow += days[daysIndex[day]].records[record].amount;
+                    }
+                } else {
+                    if (days[daysIndex[day]].records[record].expin == 'income') {
+                        totalAmount[days[daysIndex[day]].records[record].category] += days[daysIndex[day]].records[record].amount
+                        inflow += days[daysIndex[day]].records[record].amount;
+                    } else {
+                        totalAmount[days[daysIndex[day]].records[record].category] -= days[daysIndex[day]].records[record].amount
+                        outflow += days[daysIndex[day]].records[record].amount
+                    }
+                }
+            }
+        } %>
+        <div class="card">
+            <div class="card-header">
+              Details
+            </div>
+            <ul class="list-group list-group-flush">
+                <% for (monthRecord in totalAmount) { %>
+                <li class="list-group-item d-flex justify-content-between"><span><%= categories[monthRecord].name %></span><span><%= new Intl.NumberFormat().format(totalAmount[monthRecord]) %> ฿</span></li>
+                <% } %>
+            </ul>
+        </div>
+        
+        <hr>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between"><span>Inflow</span><span>+ <%= new Intl.NumberFormat().format(inflow) %> ฿</span></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Outflow</span><span>- <%= new Intl.NumberFormat().format(outflow) %> ฿</span></li>
+            <% if (outflow > inflow) { %>
+                <li class="list-group-item d-flex justify-content-between"><span></span><span>- <%= new Intl.NumberFormat().format(outflow+inflow) %> ฿</span></li>
+            <% } else { %>
+                <li class="list-group-item d-flex justify-content-between"><span class="fw-bold">Total</span><span class="fw-bold">+ <%= new Intl.NumberFormat().format(inflow-outflow) %> ฿</span></li>
+            <% } %>
+        </ul>
         <hr>
         <form action="/restaurant" method="post" class="pt-3">
-            <select class="form-select mb-3" aria-label="Default select example" name="item" required>
+            <div class="d-flex expinRadio">
+                <div class="form-check me-3 mb-1">
+                    <input class="form-check-input" type="radio" name="expin" id="expense" value="expense" checked>
+                    <label class="form-check-label" for="expense">
+                        Expense
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="expin" id="income" value="income">
+                    <label class="form-check-label" for="income">
+                        Income
+                    </label>
+                </div>
+            </div>
+            <select class="form-select mb-3" name="category" required>
                 <option selected value="">Open this select menu</option>
-                <option value="01">รายรับข้าวมันไก่</option>
-                <option value="03">คนละครึ่ง</option>
-                <option value="04">รวมพร้อมเพย์</option>
-                <option value="05">รวม</option>
-                <option value="06">รายจ่ายทั้งหมดที่ใช้เงินรายรับออก</option>
-                <option value="07">บาท รวมรายรับทั้งหมด</option>
-                <option value="08">รายรับน้ำส้ม แม่ปอ</option>
-                <option value="09">น้ำหวานขายแล้ ว</option>
-                <option value="10">ไก่เหลือ ประมาน</option>
+                <% for (let category in categories) { %>
+                    <option value="<%= category %>"><%= categories[category].name %></option>
+                <% } %>
             </select>
             <div class="input-group mb-3">
-                <span class="input-group-text">฿</span>
                 <input class="form-control" name="amount" type="number" required="required">
-                <span class="input-group-text">
-                    <input class="form-check-input mt-0 me-2" name="expin" type="radio" value="0" checked>
-                    <span>Expense</span>
-                </span>
-                <span class="input-group-text">
-                    <input class="form-check-input mt-0 me-2" name="expin" type="radio" value="1">
-                    <span>Income</span>
-                </span>
+                <span class="input-group-text">฿</span>
             </div>
             <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
             
@@ -65,68 +95,53 @@
         </form>
     </header>
     <section>
-        <% for (aaa in data) { %>
-            <% memo = data[arrDay[i]].memo %>
-            <% delete data[arrDay[i]].memo %>
+        <% for (let day in daysIndex) { %>
         <div class="card mb-3" >
             <div class="card-header d-flex justify-content-between">
-                <span><%= moment(yearmonth+'-'+arrDay[i]).format('DD dddd YYYY MMMM') %></span>
-                <% memoDate = yearmonth + '-' + arrDay[i] %>
-                <span class="amount"></span>
+                <span><%= moment(days[daysIndex[day]].time).format('DD dddd YYYY MMMM') %></span>
+                <span class="amount">
+                    <% for (let record in days[daysIndex[day]].records) {
+                      if (days[daysIndex[day]].records[record].expin == 'expense'){
+                        amount -= days[daysIndex[day]].records[record].amount;
+                      } else {
+                        amount += days[daysIndex[day]].records[record].amount;
+                      }
+                    } %>
+                    <%= amount>0?'+'+new Intl.NumberFormat().format(amount):new Intl.NumberFormat().format(amount) %> ฿
+                    <% amount = 0 %>
+                </span>
             </div>
             <div class="card-body">
-                <% for (bbb in data[arrDay[i]]) { %>
-                <div class="item d-flex justify-content-between">
+                <% for (let record in days[daysIndex[day]].records) {
+                    recordsIndex.push(record);
+                } %>
+                <% recordsIndex.sort().reverse() %>
+
+                <% for (let record in recordsIndex) { %>
+                <div class="item d-flex justify-content-between pt-2 pb-2">
                     <h5 class="card-title">
-                            <%= items[bbb] %>
+                        <a href="restaurant/delete/<%= moment(days[daysIndex[day]].time).format('YYYY-MM-DD') + '-' + recordsIndex[record] %>">
+                            <%= categories[days[daysIndex[day]].records[recordsIndex[record]].category].name %>
+                        </a>
                     </h5>
-                    <% if (data[arrDay[i]][bbb]['amount'] < 0) { %>
-                        <span class="text-danger"><%= new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(Math.abs(data[arrDay[i]][bbb]['amount']))
-                             %></span>
-                    <% }else if (data[arrDay[i]][bbb]['amount'] > 0) { %>
-                        <span class="text-primary"><%= new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(data[arrDay[i]][bbb]['amount']) %></span>
-                    <% }else{ %>
-                        <span><%= data[arrDay[i]][bbb]['amount'] %></span>
+                    <% if (days[daysIndex[day]].records[recordsIndex[record]].expin == 'expense') { %> 
+                        <span class="text-danger"><%= new Intl.NumberFormat().format(days[daysIndex[day]].records[recordsIndex[record]].amount) %> ฿</span>
+                    <% } else { %>
+                        <span class="text-primary"><%= new Intl.NumberFormat().format(days[daysIndex[day]].records[recordsIndex[record]].amount) %> ฿</span>
                     <% } %>
                 </div>
-                <% count = parseInt(count) + parseInt(data[arrDay[i]][bbb]['amount']) %>
                 <% } %>
-                
-                <form action="/restaurant" method="post">
+                <% recordsIndex = [] %>
+                <!-- <form action="/restaurant" method="post">
                     <div class="input-group">
-                        <textarea class="form-control" aria-label="With textarea" name="memo"><%= memo %></textarea>
+                        <textarea class="form-control" aria-label="With textarea" name="memo">1234</textarea>
                         <button class="btn btn-primary" type="button" onclick="pressUpdate(this)">update</button>
                     </div>
-                    <input class="d-none" type="date" value="<%= memoDate %>" name="memoDate">
-                </form>
+                    <input class="d-none" type="date" value="12345" name="memoDate">
+                </form> -->
             </div>
-            <% amount.push(count); %>
-            <% count = 0; %>
-            <% i++ %>
         </div>
         <% } %>
     </section>
 </div>
-<script>
-    let amount = [<%- amount %>];
-    let formDate = document.getElementById('YearMonth');
-    formDate.children[0].addEventListener("change", function(){
-        formDate.submit();
-    })
-
-    let amounts = document.getElementsByClassName('amount');
-    for (var i=0; i<amount.length; i++){
-        if (amount[i]<0){
-            amounts[i].innerHTML = new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(amount[i]);
-            amounts[i].classList.add("text-danger");
-        }else if (amount[i]>0){
-            amounts[i].innerHTML = '+' + new Intl.NumberFormat('th-TH', { style: 'currency', currency: 'THB', minimumFractionDigits: 0}).format(amount[i]);
-            amounts[i].classList.add("text-primary");
-        }
-    }
-
-    function pressUpdate (btn){
-        btn.parentNode.parentNode.submit();
-    }
-</script>
 <%- include('footer') %>
