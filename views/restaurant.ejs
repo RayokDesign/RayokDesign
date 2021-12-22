@@ -3,6 +3,56 @@
 <nav class="navbar navbar-light pt-3">
     <div class="container">
         <h1><a href="/restaurant" class="navbar-brand">RayokTailand</a></h1>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <i class="bi bi-plus-circle"></i>
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="/restaurant" method="post" class="pt-3">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Record</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <div class="d-flex expinRadio">
+                            <div class="form-check me-3 mb-3">
+                                <input class="form-check-input" type="radio" name="expin" id="expense" value="expense" checked>
+                                <label class="form-check-label" for="expense">
+                                    Expense
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="expin" id="income" value="income">
+                                <label class="form-check-label" for="income">
+                                    Income
+                                </label>
+                            </div>
+                        </div>
+                        <select class="form-select mb-3" name="category" required>
+                            <option selected value="">Open this select menu</option>
+                            <% for (let category in categories) { %>
+                                <option value="<%= category %>"><%= categories[category].name %></option>
+                            <% } %>
+                        </select>
+                        <div class="input-group mb-3">
+                            <input class="form-control" name="amount" type="number" required="required">
+                            <span class="input-group-text">฿</span>
+                        </div>
+                        <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+                
+            </form>
+            </div>
+            </div>
+        </div>
         <div class="d-flex">
             <% if (uid){ %>
                 <a href="/member/user" class="btn btn-primary me-2">จัดการ</a>
@@ -40,18 +90,6 @@
                 }
             }
         } %>
-        <div class="card">
-            <div class="card-header">
-              Details
-            </div>
-            <ul class="list-group list-group-flush">
-                <% for (monthRecord in totalAmount) { %>
-                <li class="list-group-item d-flex justify-content-between"><span><%= categories[monthRecord].name %></span><span><%= new Intl.NumberFormat().format(totalAmount[monthRecord]) %> ฿</span></li>
-                <% } %>
-            </ul>
-        </div>
-        
-        <hr>
         <ul class="list-group list-group-flush">
             <li class="list-group-item d-flex justify-content-between"><span>Inflow</span><span>+ <%= new Intl.NumberFormat().format(inflow) %> ฿</span></li>
             <li class="list-group-item d-flex justify-content-between"><span>Outflow</span><span>- <%= new Intl.NumberFormat().format(outflow) %> ฿</span></li>
@@ -62,37 +100,29 @@
             <% } %>
         </ul>
         <hr>
-        <form action="/restaurant" method="post" class="pt-3">
-            <div class="d-flex expinRadio">
-                <div class="form-check me-3 mb-1">
-                    <input class="form-check-input" type="radio" name="expin" id="expense" value="expense" checked>
-                    <label class="form-check-label" for="expense">
-                        Expense
-                    </label>
+        <div class="accordion" id="details">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    Total cost of each item
+                </button>
+              </h2>
+              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <ul class="list-group list-group-flush">
+                        <% for (monthRecord in totalAmount) { %>
+                            <% if (totalAmount[monthRecord]>0) { %>
+                            <li class="list-group-item d-flex justify-content-between"><span><%= categories[monthRecord].name %></span><span>+ <%= new Intl.NumberFormat().format(totalAmount[monthRecord]) %> ฿</span></li>
+                            <% } else { %>
+                            <li class="list-group-item d-flex justify-content-between"><span><%= categories[monthRecord].name %></span><span>- <%= new Intl.NumberFormat().format(Math.abs(totalAmount[monthRecord])) %> ฿</span></li>
+                            <% } %>
+                        <% } %>
+                    </ul>
                 </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="expin" id="income" value="income">
-                    <label class="form-check-label" for="income">
-                        Income
-                    </label>
-                </div>
+              </div>
             </div>
-            <select class="form-select mb-3" name="category" required>
-                <option selected value="">Open this select menu</option>
-                <% for (let category in categories) { %>
-                    <option value="<%= category %>"><%= categories[category].name %></option>
-                <% } %>
-            </select>
-            <div class="input-group mb-3">
-                <input class="form-control" name="amount" type="number" required="required">
-                <span class="input-group-text">฿</span>
-            </div>
-            <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
-            
-            <div class="d-grid">
-                <button class="btn btn-primary">Submit</button>
-            </div>
-        </form>
+          </div>
+        <hr>
     </header>
     <section>
         <% for (let day in daysIndex) { %>
