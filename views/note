@@ -1,33 +1,3 @@
-<%- include('header') %>
-<% let categoryStatistics = {}, dayStatistics = {}, monthStatistics = {}, inflow = 0, outflow = 0 %>
-
-<% for (day in data) {
-    for (record in data[day].records) {
-        if (!dayStatistics[day]) {dayStatistics[day] = 0};
-        if (!categoryStatistics[record+day]) {categoryStatistics[record+day] = 0};
-        if (!monthStatistics[record]) {monthStatistics[record] = 0};
-        for (item in data[day].records[record]) {
-            if (data[day].records[record][item].expin == "expense") {
-                categoryStatistics[record+day] += -data[day].records[record][item].amount;
-                monthStatistics[record] += -data[day].records[record][item].amount;
-            } else {
-                categoryStatistics[record+day] += data[day].records[record][item].amount;
-                monthStatistics[record] += data[day].records[record][item].amount;
-            }
-        }
-        dayStatistics[day] += categoryStatistics[record+day];
-    }
-    if (dayStatistics[day] > 0){
-        inflow += dayStatistics[day];
-    } else {
-        outflow += dayStatistics[day];
-    }
-}%>
-
-<% function amountFormat(amount) {
-    return `${new Intl.NumberFormat().format(amount)} ฿`;
-} %>
-
 <nav class="navbar navbar-light pt-3">
     <div class="container">
         <h1><a href="/restaurant" class="navbar-brand">RayokTailand</a></h1>
@@ -80,17 +50,17 @@
                         <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
                 </div>
+                
             </form>
             </div>
             </div>
         </div>
-        <!-- /Modal -->
         <div class="d-flex">
             <% if (uid){ %>
-                <a href="/member/user" class="btn btn-primary me-2">User</a>
+                <a href="/member/user" class="btn btn-primary me-2">จัดการ</a>
                 <a href="/member/signout" class="btn btn-secondary">Signout</a>
             <% } else { %>
                 <a href="/member/signin" class="btn btn-primary me-2">Signin</a>
@@ -108,44 +78,24 @@
         <!-- /CHOOSE MONTH -->
         
         <!-- MONTH RECORD -->
-        <ul class="list-group list-group-flush mb-3">
-            <li class="list-group-item d-flex justify-content-between"><span>Inflow</span><span><%= amountFormat(inflow) %></span></li>
-            <li class="list-group-item d-flex justify-content-between"><span>Outflow</span><span><%= amountFormat(outflow) %></span></li>
-            <li class="list-group-item d-flex justify-content-between mt-1"><span class="fw-bold"></span>
-                <% if (inflow+outflow > 0) { %>
-                    <span class="fw-bold text-primary"><%= amountFormat(inflow + outflow) %></span>
-                <% } else if (inflow+outflow < 0) { %>
-                    <span class="fw-bold text-danger"><%= amountFormat(inflow + outflow) %></span>
-                <% } else { %>
-                    <span class="fw-bold"><%= amountFormat(inflow + outflow) %></span>
-                <% } %>
-            </li>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item d-flex justify-content-between"><span>Inflow</span><span id="inflow">1234</span></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Outflow</span><span id="outflow">1234</span></li>
+            <li class="list-group-item d-flex justify-content-between"><span class="fw-bold">Total</span><span id="total" class="fw-bold">1234</span></li>
         </ul>
         <!-- /MONTH RECORD -->
+        <hr>
         <!-- TOTAL COST -->
         <div class="accordion" id="details">
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingThree">
                 <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Total cost of categories
+                    Total cost of this month
                 </button>
               </h2>
               <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                 <div class="accordion-body p-0">
-                    <ul id="monthStatistics" class="list-group list-group-flush">
-                        <% for (totalcost in monthStatistics) { %>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="text-capitalize"><%= categories[totalcost].name %></span>
-                            <% if (monthStatistics[totalcost] > 0) { %>
-                                <span class="text-primary">+<%= amountFormat(monthStatistics[totalcost]) %></span>
-                            <% } else if (monthStatistics[totalcost] < 0) { %>
-                                <span class="text-danger"><%= amountFormat(monthStatistics[totalcost]) %></span>
-                            <% } else { %>
-                                <span><%= amountFormat(monthStatistics[totalcost]) %></span>
-                            <% } %>
-                        </li>
-                        <% } %>
-                    </ul>
+                    <ul id="monthAmount" class="list-group list-group-flush"></ul>
                 </div>
               </div>
             </div>
@@ -160,13 +110,9 @@
             <!-- RECORD'S DATE -->
             <div class="card-header d-flex justify-content-between">
                 <span><%= moment(data[day].time).format('DD dddd YYYY MMMM') %></span>
-                <% if (dayStatistics[day] > 0) { %>
-                    <span class="fw-bold text-primary"><%= amountFormat(dayStatistics[day]) %></span>
-                <% } else if (dayStatistics[day] < 0) { %>
-                    <span class="fw-bold text-danger"><%= amountFormat(dayStatistics[day]) %></span>
-                <% } else { %>
-                    <span class="fw-bold"><%= amountFormat(dayStatistics[day]) %></span>
-                <% } %>
+                <span id="date<%= day %>">
+                    1234
+                </span>
             </div>
             <!-- /RECORD'S DATE -->
 
@@ -180,8 +126,7 @@
                             <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= day+record %>" aria-expanded="true" aria-controls="<%= record %>">
                                 <%= categories[record].name %>
                             </button>
-                            <span class="fs-6 p-3 text-nowrap">
-                                <%= amountFormat(categoryStatistics[record+day]) %>
+                            <span class="fs-6 p-3 text-nowrap" id="category<%= day+record %>">
                             </span>
                         </h2>
                         <!-- /CATEGORY HEAD -->
@@ -192,13 +137,35 @@
                                     <% for (item in data[day].records[record]) { %>
                                     <li class="list-group-item d-flex justify-content-between">
                                         <span class="text-capitalize"><%= item %></span>
-                                        <% if (data[day].records[record][item].expin == "income") { %>
-                                        <span class="text-primary">+<%= amountFormat(data[day].records[record][item].amount) %></span>
+                                        <% if (data[day].records[record][item].expin == 'income') { %>
+                                            <% if (monthAmount[record]) {
+                                                monthAmount[record] += data[day].records[record][item].amount
+                                            } else {
+                                                monthAmount[record] = data[day].records[record][item].amount
+                                            } %>
+                                            <% if (categoryAmount[`category${day}${record}`]) {
+                                                categoryAmount[`category${day}${record}`] += data[day].records[record][item].amount
+                                            } else {
+                                                categoryAmount[`category${day}${record}`] = data[day].records[record][item].amount
+                                            } %>
+                                        <span class="text-primary">+<%= new Intl.NumberFormat().format(data[day].records[record][item].amount) %> ฿</span>
                                         <% } else { %>
-                                        <span class="text-danger">-<%= amountFormat(data[day].records[record][item].amount) %></span>
+                                            <% if (monthAmount[record]) {
+                                                monthAmount[record] -= data[day].records[record][item].amount
+                                            } else {
+                                                monthAmount[record] = data[day].records[record][item].amount
+                                            } %>
+                                            <% if (categoryAmount[`category${day}${record}`]) {
+                                                categoryAmount[`category${day}${record}`] -= data[day].records[record][item].amount
+                                            } else {
+                                                categoryAmount[`category${day}${record}`] =-data[day].records[record][item].amount
+                                            } %>
+                                        <span class="text-danger">-<%= new Intl.NumberFormat().format(data[day].records[record][item].amount) %> ฿</span>
                                         <% } %>
                                     </li>
                                     <% } %>
+                                    <% if (!dateAmount[`date${day}`]) dateAmount[`date${day}`] = 0 %>
+                                    <% dateAmount[`date${day}`] += categoryAmount[`category${day}${record}`] %>
                                 </ul>
                             </div>
                         </div>
@@ -209,8 +176,14 @@
             </div>
             <!-- RECORD'S DETAIL -->
         </div>
+        <% if (dateAmount[`date${day}`] > 0) {
+            inflow += dateAmount[`date${day}`]
+        } else {
+            outflow += dateAmount[`date${day}`]
+        }%>
         <% } %>
     </section>
     <!-- /SHOW RECORDS -->
 </div>
+<%= JSON.stringify(monthAmount) %>
 <%- include('footer') %>

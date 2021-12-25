@@ -14,72 +14,54 @@ router.get('/', async function(req, res) {
     } else {
         date = [date.getFullYear(), date.getMonth()+1];
     }
-    const records = await getRecords(db, date[0], date[1]);
+    const data = await getRecords(db, date[0], date[1]);
     const uid = req.session.uid;
     const categories = await getCategories(db);
     
-    console.log(records[0]);
-    console.log(records[1]);
-
     res.render('restaurant', {
         title:'restaurant',
         moment: moment,
         uid: uid,
-        days: records[0],
-        daysIndex: records[1],
         categories: categories,
-        date: date
+        date: date,
+        data: data
     });
 });
 
 async function getRecords(db, year, month) {
     const daysRef = db.collection(`restaurant/${year}/months/${month}/days`);
     const snapshot = await daysRef.orderBy("time", "desc").get();
-    let days = {};
-    let daysIndex = [];
-    snapshot.forEach(record => {
-        if (Object.keys(record.data().records).length != 0){
-            days[record.id] = record.data();
-            daysIndex.push(record.id);
-        }
-    });
-    return [days,daysIndex];
-}
-async function getCategories(db) {
-    const categoriesRef = db.collection('categories');
-    const snapshot = await categoriesRef.orderBy('time').get();
-    let categories = {}
+
+    let data = {};
     snapshot.forEach(doc => {
-      categories[doc.id] = doc.data();
+        // if (Object.keys(doc.data().records).length != 0){
+        //     data[record.id] = data.data();
+        // }
+        data[doc.id] = doc.data();
     });
-    return categories;
-  }
+    console.log(data);
+    return data;
+}
 
 router.post('/', async function(req, res) {
-    if (req.body.memo){
-        await updateDocument(db, req.body);
-        res.redirect('/restaurant');
-    }else{
-        await setDocument(db, req.body);
-        res.redirect('/restaurant');
-    }
+    await setDocument(db, req.body);
+    res.redirect('/restaurant');
 });
 
-async function setDocument(db, record) {
-    const date = record.date.split('-');
+async function setDocument(db, data) {
+    const date = data.date.split('-');
     const dayRef = db.doc(`restaurant/${date[0]}/months/${date[1]}/days/${date[2]}`);
     const time = new Date().getTime();
+
+    let record = `{
+        "records.${data.category}.${data.item}.amount": ${data.amount},
+        "records.${data.category}.${data.item}.expin": "${data.expin}"
+    }`;
+    console.log(record);
     await dayRef.set({
         time: new Date(date[0], date[1]-1, date[2]).getTime()
     }, { merge: true });
-    
-    let data = `{
-        "records.${time}.amount": ${record.amount},
-        "records.${time}.expin": "${record.expin}",
-        "records.${time}.category": "${record.category}"
-    }`;
-
-    await dayRef.update(eval('('+data+')'));
+    await dayRef.update(eval('('+record+')'));
 }
 
 async function updateDocument(db, req) {
@@ -116,6 +98,15 @@ router.get('/categories', async function(req, res) {
         data: data,
     })
 });
+async function getCategories(db) {
+    const categoriesRef = db.collection('categories');
+    const snapshot = await categoriesRef.orderBy('time').get();
+    let categories = {}
+    snapshot.forEach(doc => {
+      categories[doc.id] = doc.data();
+    });
+    return categories;
+}
 
 router.post('/categories', async function(req, res) {
     const categoriesRef = db.collection('categories');
