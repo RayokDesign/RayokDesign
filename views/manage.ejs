@@ -100,7 +100,7 @@
     }
 
     function editOption(obj, col, doc){
-        let url = `http://127.0.0.1:3000/restaurant/editoption?name=${obj.parentNode.previousElementSibling.children[0].value}&col=${col}&doc=${doc}`;
+        let url = `/restaurant/editoption?name=${obj.parentNode.previousElementSibling.children[0].value}&col=${col}&doc=${doc}`;
 
         fetch(url);
         let editOptionToast = document.getElementById('editOptionToast');
@@ -109,7 +109,7 @@
     }
 
     function addOption(obj, col, doc){
-        let url = `http://127.0.0.1:3000/restaurant/addoption?name=${obj.parentNode.previousElementSibling.children[0].value}&col=${col}`;
+        let url = `/restaurant/addoption?name=${obj.parentNode.previousElementSibling.children[0].value}&col=${col}`;
 
         fetch(url).then(response => window.location.reload());
     }
