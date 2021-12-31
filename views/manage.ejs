@@ -1,0 +1,117 @@
+<%- include('header') %>
+<nav class="navbar navbar-light pt-3">
+    <div class="container">
+        <h1><a href="/restaurant" class="navbar-brand">YRCOM</a></h1>
+    </div>
+</nav>
+<div class="container">
+    <div class="d-flex mt-3 mb-3">
+        <input class="form-check-input me-2" type="radio" name="optionRadio" id="categories" onchange="radioChecked(this)" checked>
+        <label class="form-check-label me-3" for="categories">
+            Categories
+        </label>
+        <input class="form-check-input me-2" type="radio" name="optionRadio" id="items" onchange="radioChecked(this)">
+        <label class="form-check-label" for="items">
+            Items
+        </label>
+    </div>
+    <table class="table" id="categoriesTable">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Categories</th>
+                <th scope="col">Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (category in categories){ %>
+            <tr>
+                <td class="align-middle"><%= categories[category].index %></td>
+                <td class="align-middle"><input type="text" value="<%= categories[category].name %>"></td>
+                <td>
+                    <button data-bs-toggle="button" autocomplete="off" class="btn btn-primary" onclick="editOption(this, 'categories', '<%= category %>')">Edit</button>
+                </td>
+            </tr>
+            <% } %>
+            <tr class="table-info">
+                <td class="align-middle">n</td>
+                <td class="align-middle"><input type="text" value=""></td>
+                <td>
+                    <button data-bs-toggle="button" autocomplete="off" class="btn btn-primary" onclick="addOption(this, 'categories')">Add</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table d-none" id="itemsTable">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Items</th>
+                <th scope="col">Method</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for (item in items){ %>
+            <tr>
+                <td class="align-middle"><%= items[item].index %></td>
+                <td class="align-middle"><input type="text" value="<%= items[item].name %>"></td>
+                <td>
+                    <button data-bs-toggle="button" autocomplete="off" class="btn btn-primary" onclick="editOption(this, 'items', '<%= item %>')">Edit</button>
+                </td>
+            </tr>
+            <% } %>
+            <tr class="table-info">
+                <td class="align-middle">n</td>
+                <td class="align-middle"><input type="text" value=""></td>
+                <td>
+                    <button data-bs-toggle="button" autocomplete="off" class="btn btn-primary" onclick="addOption(this, 'items')">Add</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- Toast List -->
+<div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 11">
+    <div id="editOptionToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Notice</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-primary">
+            Success!
+        </div>
+    </div>
+</div>
+<!-- /Toast List -->
+<script>
+    let categoriesTable = document.getElementById('categoriesTable');
+    let itemsTable = document.getElementById('itemsTable');
+
+    function radioChecked(obj){
+        console.log(obj.id);
+        if (obj.id == "items"){
+            itemsTable.classList.toggle('d-none');
+            categoriesTable.classList.toggle('d-none');
+        } else {
+            itemsTable.classList.toggle('d-none');
+            categoriesTable.classList.toggle('d-none');
+        }
+    }
+
+    function editOption(obj, col, doc){
+        let url = `http://127.0.0.1:3000/restaurant/editoption?name=${obj.parentNode.previousElementSibling.children[0].value}&col=${col}&doc=${doc}`;
+
+        fetch(url);
+        let editOptionToast = document.getElementById('editOptionToast');
+        let toast = new bootstrap.Toast(editOptionToast);
+        toast.show();
+    }
+
+    function addOption(obj, col, doc){
+        let url = `http://127.0.0.1:3000/restaurant/addoption?name=${obj.parentNode.previousElementSibling.children[0].value}&col=${col}`;
+
+        fetch(url).then(response => window.location.reload());
+    }
+</script>
+<%- include('footer') %>

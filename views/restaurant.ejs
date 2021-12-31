@@ -2,95 +2,50 @@
 <% let categoryStatistics = {}, dayStatistics = {}, monthStatistics = {}, inflow = 0, outflow = 0 %>
 
 <% for (day in data) {
-    for (record in data[day].records) {
-        if (!dayStatistics[day]) {dayStatistics[day] = 0};
-        if (!categoryStatistics[record+day]) {categoryStatistics[record+day] = 0};
-        if (!monthStatistics[record]) {monthStatistics[record] = 0};
-        for (item in data[day].records[record]) {
-            if (data[day].records[record][item].expin == "expense") {
-                categoryStatistics[record+day] += -data[day].records[record][item].amount;
-                monthStatistics[record] += -data[day].records[record][item].amount;
-            } else {
-                categoryStatistics[record+day] += data[day].records[record][item].amount;
-                monthStatistics[record] += data[day].records[record][item].amount;
+    if (Object.keys(data[day].records).length !=0) {
+
+        for (record in data[day].records) {
+            if (!dayStatistics[day]) {dayStatistics[day] = 0};
+            if (!categoryStatistics[data[day].records[record].category+day]) {categoryStatistics[data[day].records[record].category+day] = 0};
+            if (!monthStatistics[data[day].records[record].category]) {monthStatistics[data[day].records[record].category] = 0};
+            for (item in data[day].records[record].items) {
+                if (data[day].records[record].items[item].expin == "expense") {
+                    categoryStatistics[data[day].records[record].category+day] += -data[day].records[record].items[item].amount;
+                    monthStatistics[data[day].records[record].category] += -data[day].records[record].items[item].amount;
+                } else {
+                    categoryStatistics[data[day].records[record].category+day] += data[day].records[record].items[item].amount;
+                    monthStatistics[data[day].records[record].category] += data[day].records[record].items[item].amount;
+                }
             }
+            dayStatistics[day] += categoryStatistics[data[day].records[record].category+day];
         }
-        dayStatistics[day] += categoryStatistics[record+day];
-    }
-    if (dayStatistics[day] > 0){
-        inflow += dayStatistics[day];
-    } else {
-        outflow += dayStatistics[day];
+        if (dayStatistics[day] > 0){
+            inflow += dayStatistics[day];
+        } else {
+            outflow += dayStatistics[day];
+        }
     }
 }%>
 
 <% function amountFormat(amount) {
-    return `${new Intl.NumberFormat().format(amount)} ฿`;
+    if (isNaN(amount)){
+        return '0 ฿'
+    } else {
+        return `${new Intl.NumberFormat().format(amount)} ฿`;
+    }
 } %>
 
 <nav class="navbar navbar-light pt-3">
     <div class="container">
-        <h1><a href="/restaurant" class="navbar-brand">RayokTailand</a></h1>
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <h1><a href="/restaurant" class="navbar-brand">YRCOM</a></h1>
+        <!-- Button trigger Add Record Modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addRecordModal">
             <i class="bi bi-plus-circle"></i>
         </button>
-
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                <form action="/restaurant" method="post" class="pt-3">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Record</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                        <div class="d-flex expinRadio">
-                            <div class="form-check me-3 mb-3">
-                                <input class="form-check-input" type="radio" name="expin" id="expense" value="expense" checked>
-                                <label class="form-check-label" for="expense">
-                                    Expense
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="expin" id="income" value="income">
-                                <label class="form-check-label" for="income">
-                                    Income
-                                </label>
-                            </div>
-                        </div>
-                        <!-- ITEMS -->
-                        <select class="form-select mb-3" name="item" required>
-                            <option selected value="">Select a item</option>
-                            <option value="pork">Pork</option>
-                            <option value="chicken">Chicken</option>
-                        </select>
-                        <!-- CATEGORIES -->
-                        <select class="form-select mb-3" name="category" required>
-                            <option selected value="">Select a category</option>
-                            <% for (let category in categories) { %>
-                                <option value="<%= category %>"><%= categories[category].name %></option>
-                            <% } %>
-                        </select>
-                        <div class="input-group mb-3">
-                            <input class="form-control" name="amount" type="number" required="required" placeholder="0">
-                            <span class="input-group-text">฿</span>
-                        </div>
-                        <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-            </div>
-            </div>
-        </div>
-        <!-- /Modal -->
+        <!-- /Button trigger Add Record Modal -->
         <div class="d-flex">
             <% if (uid){ %>
-                <a href="/member/user" class="btn btn-primary me-2">User</a>
+                <a href="/restaurant/manage" class="btn btn-primary me-2">Menage</a>
                 <a href="/member/signout" class="btn btn-secondary">Signout</a>
             <% } else { %>
                 <a href="/member/signin" class="btn btn-primary me-2">Signin</a>
@@ -159,7 +114,7 @@
         <div class="card mb-3" >
             <!-- RECORD'S DATE -->
             <div class="card-header d-flex justify-content-between">
-                <span><%= moment(data[day].time).format('DD dddd YYYY MMMM') %></span>
+                <span><%= moment(data[day].date._seconds*1000).format('DD dddd YYYY MMMM') %></span>
                 <% if (dayStatistics[day] > 0) { %>
                     <span class="fw-bold text-primary"><%= amountFormat(dayStatistics[day]) %></span>
                 <% } else if (dayStatistics[day] < 0) { %>
@@ -178,10 +133,10 @@
                         <!-- CATEGORY HEAD -->
                         <h2 class="accordion-header d-flex">
                             <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= day+record %>" aria-expanded="true" aria-controls="<%= record %>">
-                                <%= categories[record].name %>
+                                <%= categories[data[day].records[record].category].name %>
                             </button>
-                            <span class="fs-6 p-3 text-nowrap">
-                                <%= amountFormat(categoryStatistics[record+day]) %>
+                            <span class="fs-6 p-3 text-nowrap w-25 text-end">
+                                <%= amountFormat(categoryStatistics[data[day].records[record].category+day]) %>
                             </span>
                         </h2>
                         <!-- /CATEGORY HEAD -->
@@ -189,13 +144,15 @@
                         <div id="collapse<%= day+record %>" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
                             <div class="accordion-body p-0">
                                 <ul class="list-group list-group-flush">
-                                    <% for (item in data[day].records[record]) { %>
+                                    <% for (item in data[day].records[record].items) { %>
                                     <li class="list-group-item d-flex justify-content-between">
-                                        <span class="text-capitalize"><%= item %></span>
-                                        <% if (data[day].records[record][item].expin == "income") { %>
-                                        <span class="text-primary">+<%= amountFormat(data[day].records[record][item].amount) %></span>
+                                        <span class="text-capitalize">
+                                            <a href="javascript:;" class="me-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal" data-bs-deleteHref=<%= `/restaurant/deleteitem?deleteitem=${date[0]}-${date[1]}-${day}-${record}-${item}` %>><i class="bi bi-x-circle"></i></a>
+                                            <%= items[data[day].records[record].items[item].item].name %></span>    
+                                        <% if (data[day].records[record].items[item].expin == "income") { %>
+                                        <span class="text-primary">+<%= amountFormat(data[day].records[record].items[item].amount) %></span>
                                         <% } else { %>
-                                        <span class="text-danger">-<%= amountFormat(data[day].records[record][item].amount) %></span>
+                                        <span class="text-danger">-<%= amountFormat(data[day].records[record].items[item].amount) %></span>
                                         <% } %>
                                     </li>
                                     <% } %>
@@ -206,6 +163,10 @@
                     </div>
                 </div>
                 <% } %>
+                <div class="form-floating">
+                    <textarea class="form-control border-top-2 border-start-0 border-end-0 border-bottom-0 ps-3 pe-3" placeholder="Write some memo" id="floatingMemArea" oninput= "updateMemo(this, '<%= data[day].date._seconds %>')"><%= data[day].memo %></textarea>
+                    <label class="ps-3 pe-3 border-0" for="floatingMemoArea">Memo</label>
+                </div>
             </div>
             <!-- RECORD'S DETAIL -->
         </div>
@@ -213,4 +174,116 @@
     </section>
     <!-- /SHOW RECORDS -->
 </div>
+<!-- Modal List -->
+<!-- Add Record Modal -->
+<div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <form action="/restaurant?date=<%= date[0]+'-'+date[1] %>" method="post" class="pt-3">
+        <div class="modal-header">
+        <h5 class="modal-title" id="addRecordModalLabel">Add Record</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+                <div class="d-flex expinRadio">
+                    <div class="form-check me-3 mb-3">
+                        <input class="form-check-input" type="radio" name="expin" id="expense" value="expense" checked>
+                        <label class="form-check-label" for="expense">
+                            Expense
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="expin" id="income" value="income">
+                        <label class="form-check-label" for="income">
+                            Income
+                        </label>
+                    </div>
+                </div>
+                <!-- ITEMS -->
+                <select class="form-select mb-3" name="item" required>
+                    <option selected value="">Select a item</option>
+                    <% for (item in items) { %>
+                        <option value="<%= item %>"><%= items[item].name %></option>
+                    <% } %>
+                </select>
+                <!-- CATEGORIES -->
+                <select class="form-select mb-3" name="category" required>
+                    <option selected value="">Select a category</option>
+                    <% for (category in categories) { %>
+                        <option value="<%= category %>"><%= categories[category].name %></option>
+                    <% } %>
+                </select>
+                <div class="input-group mb-3">
+                    <input class="form-control" name="amount" type="number" required="required" placeholder="0">
+                    <span class="input-group-text">฿</span>
+                </div>
+                <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>
+<!-- /Add Record Modal -->
+<!-- Delete Item Modal -->
+<div class="modal fade" id="deleteItemModal" tabindex="-1" aria-labelledby="deleteItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="deleteItemModalLabel">Warning</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Delete this item?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="" type="button" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /Delete Item Modal -->
+<!-- /Modal List -->
+<!-- Toast List -->
+<div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 11">
+    <div id="updateMemoToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="me-auto">Notice</strong>
+            <small>Just now</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body text-primary">
+            Memo updated!
+        </div>
+    </div>
+</div>
+<!-- /Toast List -->
+<script>
+    // Delete Item Modal JS
+    var deleteItemModal = document.getElementById('deleteItemModal')
+    deleteItemModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget
+        var recipient = button.getAttribute('data-bs-deleteHref')
+        var modalDeleteButton = deleteItemModal.querySelector('.modal-footer a')
+
+        modalDeleteButton.href = recipient;
+    })
+    // --Delete Item Modal JS
+
+    var timer = null;
+    function updateMemo(obj, timestamp){
+        let url = `http://127.0.0.1:3000/restaurant/updateMemo?memo=${obj.value}&timestamp=${timestamp}`;
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            fetch(url);
+            let updateMemoToast = document.getElementById('updateMemoToast');
+            let toast = new bootstrap.Toast(updateMemoToast);
+            toast.show();
+        },1000);
+    }
+</script>
 <%- include('footer') %>
