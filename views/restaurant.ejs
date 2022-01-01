@@ -3,7 +3,6 @@
 
 <% for (day in data) {
     if (Object.keys(data[day].records).length !=0) {
-
         for (record in data[day].records) {
             if (!dayStatistics[day]) {dayStatistics[day] = 0};
             if (!categoryStatistics[data[day].records[record].category+day]) {categoryStatistics[data[day].records[record].category+day] = 0};

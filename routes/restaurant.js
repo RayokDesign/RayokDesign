@@ -12,7 +12,7 @@ router.get('/', async function(req, res) {
     if (req.query.date){
         date = (req.query.date).split('-');
     } else {
-        date = [date.getFullYear(), date.getMonth()+1];
+        date = (moment(date).format('YYYY-MM')).split('-');
     }
     const data = await getRecords(db, date[0], date[1]);
     const uid = req.session.uid;

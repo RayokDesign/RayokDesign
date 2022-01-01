@@ -48,6 +48,7 @@ app.use(function(req,res,next){
     res.redirect('/member/signin');
   }
 })
+
 app.use('/restaurant', restaurantRouter);
 
 // catch 404 and forward to error handler
