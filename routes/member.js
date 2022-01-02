@@ -24,6 +24,7 @@ router.post('/signin', function (req, res) {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         // Signed in
+        const user = userCredential.user;
         req.session.uid = user.uid;
         if (req.body.remember == 'on'){
             req.session.cookie.maxAge = 7*24*3600*1000;
