@@ -28,6 +28,8 @@ router.get('/', async function(req, res) {
         date: date,
         data: data
     });
+    
+    req.session.submit = true;
 });
 router.get('/deleteitem', async function(req, res){
     let deleteData= req.query.deleteitem.split('-');
@@ -45,82 +47,90 @@ router.get('/deleteitem', async function(req, res){
     if (itemsEmptyCheck.length == 0){
         await dayRef.update(eval('('+deleteCategoryJson+')'));
     }
-    // 當沒有任何紀錄時，刪除當天。
-    // data = await dayRef.get();
-    // let recordsEmptyCheck = Object.keys(data.data().records);
-    // if (recordsEmptyCheck.length == 0){
-    //     await dayRef.delete();
-    // }
+
     res.redirect(`/restaurant?date=${deleteData[0]}-${deleteData[1]}`);
 })
 async function getRecords(db, year, month) {
+    //檢查本月是否有資料
+    const firstDayRef = db.doc(`restaurant/${year}/months/${month}/days/01`);
+    const firstDayDoc = await firstDayRef.get();
+    
+    if (!firstDayDoc.exists){
+        const daysInMonth = getDaysInMonth(year,month);
+        const batch = db.batch();
+
+        for (let day=1; day<=daysInMonth; day++){
+            if(day<10){day=`0${day}`}
+            batch.set(db.doc(`restaurant/${year}/months/${month}/days/${day}`), {
+                records: {},
+                memo: '',
+                categoryIndex: 0,
+                itemIndex: 0,
+                timestamp: Timestamp.fromDate(new Date(`${year}-${month}-${day}`))
+            })
+        }
+        await batch.commit();
+        // for (let day=1; day<=daysInMonth; day++){
+        //     if(day<10){day=`0${day}`}
+        //     await db.doc(`restaurant/${year}/months/${month}/days/${day}`).set({
+        //         records: {},
+        //         memo: '',
+        //         categoryIndex: 0,
+        //         itemIndex: 0,
+        //         timestamp: Timestamp.fromDate(new Date(`${year}-${month}-${day}`))
+        //     })
+        // }
+    }
+    //無資料則新增當月天數的資料夾
+
     const daysRef = db.collection(`restaurant/${year}/months/${month}/days`);
-    const snapshot = await daysRef.get();
+    const snapshot = await daysRef.orderBy('timestamp').get();
 
     let data = {};
     snapshot.forEach(doc => {
-        data[doc.id] = doc.data();
+        data[parseInt(doc.id)] = doc.data();
     });
     return data;
 }
 
 router.post('/', async function(req, res) {
     await setDocument(db, req.body);
-    res.redirect(`/restaurant?date=${req.query.date}`);
+    await res.redirect(`/restaurant?date=${req.query.date}`)
 });
 
 async function setDocument(db, data) {
     const date = data.date.split('-');
-    const dayRef = db.doc(`restaurant/${date[0]}/months/${date[1]}/days/${date[2]}`);
-    const doc = await dayRef.get();
-    if (!doc.exists) {
-        let record = `{
-            "records": {
-                "0": {
-                    "category": "${data.category}",
-                    "items": {
-                        "0": {
-                            "item": "${data.item}",
-                            "amount": ${data.amount},
-                            "expin": "${data.expin}"
-                        }
-                    }
-                }
-            },
-            "categoryIndex": 0,
-            "itemIndex": 0,
-            "date": Timestamp.fromDate(new Date(data.date)),
-        }`;
-        await dayRef.set(eval('('+record+')'), {merge: true});
-    } else {
-        let docData = doc.data();
-        let haveCategory = false;
-        let categoryIndex = null;
 
-        for (index in docData.records){
-            if (docData.records[index].category == data.category){
-                haveCategory = true;
-                categoryIndex = index;
-            }
+    //新增資料到資料夾
+
+    let dayRef = db.doc(`restaurant/${date[0]}/months/${date[1]}/days/${date[2]}`);
+    let dayDoc = await dayRef.get();
+    let docData = dayDoc.data();
+    let haveCategory = false;
+    let categoryIndex = null;
+
+    for (index in docData.records){
+        if (docData.records[index].category == data.category){
+            haveCategory = true;
+            categoryIndex = index;
         }
-        if (haveCategory != true){
-            docData.categoryIndex += 1;
-            categoryIndex = docData.categoryIndex;
-        }
-        docData.itemIndex += 1;
-        let record = `{
-            "records.${categoryIndex}.category": "${data.category}",
-            "records.${categoryIndex}.items.${docData.itemIndex}": {
-                "item": "${data.item}",
-                "amount": ${data.amount},
-                "expin": "${data.expin}"
-            },
-            "categoryIndex": ${docData.categoryIndex},
-            "itemIndex": ${docData.itemIndex}
-        }`;
-        await dayRef.update(eval('('+record+')'));
     }
-
+    if (haveCategory != true){
+        docData.categoryIndex += 1;
+        categoryIndex = docData.categoryIndex;
+    }
+    docData.itemIndex += 1;
+    let record = `{
+        "records.${categoryIndex}.category": "${data.category}",
+        "records.${categoryIndex}.items.${docData.itemIndex}": {
+            "item": "${data.item}",
+            "amount": ${data.amount},
+            "expin": "${data.expin}"
+        },
+        "categoryIndex": ${docData.categoryIndex},
+        "itemIndex": ${docData.itemIndex}
+    }`;
+    await dayRef.update(eval('('+record+')'));
 }
 
 router.get('/delete/:id', async function(req, res) {
@@ -181,7 +191,6 @@ router.get('/addoption', async function(req, res) {
     await indexRef.update({
         counter: FieldValue.increment(1)
     })
-    console.log(index.data());
     let dataRef = db.collection(`${req.query.col}`);
     let addData = `{
         index: ${index.data().counter},
@@ -209,5 +218,10 @@ router.get('/updatememo', async function(req, res) {
     })
     res.end();
 })
+
+function getDaysInMonth (year, month){
+    return new Date(year, month, 0).getDate();
+}
+
 
 module.exports = router;
