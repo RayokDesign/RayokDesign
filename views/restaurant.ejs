@@ -1,5 +1,5 @@
 <%- include('header') %>
-<% let categoryStatistics = {}, dayStatistics = {}, monthStatistics = {}, inflow = 0, outflow = 0 %>
+<% let itemStatistics = {}, dayStatistics = {}, categoryStatistics = {}, monthStatistics = {}, inflow = 0, outflow = 0 %>
 
 <% for (day in data) {
     if (Object.keys(data[day].records).length !=0) {
@@ -7,11 +7,15 @@
             if (!dayStatistics[day]) {dayStatistics[day] = 0};
             if (!categoryStatistics[data[day].records[record].category+day]) {categoryStatistics[data[day].records[record].category+day] = 0};
             if (!monthStatistics[data[day].records[record].category]) {monthStatistics[data[day].records[record].category] = 0};
+            
             for (item in data[day].records[record].items) {
+                if (!itemStatistics[data[day].records[record].items[item].item]) {itemStatistics[data[day].records[record].items[item].item] = 0};
                 if (data[day].records[record].items[item].expin == "expense") {
+                    itemStatistics[data[day].records[record].items[item].item] +=  -data[day].records[record].items[item].amount;
                     categoryStatistics[data[day].records[record].category+day] += -data[day].records[record].items[item].amount;
                     monthStatistics[data[day].records[record].category] += -data[day].records[record].items[item].amount;
                 } else {
+                    itemStatistics[data[day].records[record].items[item].item] +=  data[day].records[record].items[item].amount;
                     categoryStatistics[data[day].records[record].category+day] += data[day].records[record].items[item].amount;
                     monthStatistics[data[day].records[record].category] += data[day].records[record].items[item].amount;
                 }
@@ -33,7 +37,7 @@
         return `${new Intl.NumberFormat().format(amount)} ฿`;
     }
 } %>
-
+<%= JSON.stringify(itemStatistics) %>
 <nav class="navbar navbar-light pt-3">
     <div class="container">
         <a class="navbar-brand" href="/restaurant">
@@ -74,18 +78,47 @@
             </li>
         </ul>
         <!-- /MONTH RECORD -->
-        <!-- TOTAL COST -->
+        <!-- Items Statistics -->
+        <div class="accordion mb-3" id="details">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingThree">
+                <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItemStatistics" aria-expanded="false" aria-controls="collapseThree">
+                    Items Statistics
+                </button>
+                </h2>
+                <div id="collapseItemStatistics" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                <div class="accordion-body p-0">
+                    <ul id="monthStatistics" class="list-group list-group-flush">
+                        <% for (let totalcost in itemStatistics) { %>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-capitalize"><%= items[totalcost].name %></span>
+                            <% if (itemStatistics[totalcost] > 0) { %>
+                                <span class="text-primary">+<%= amountFormat(itemStatistics[totalcost]) %></span>
+                            <% } else if (itemStatistics[totalcost] < 0) { %>
+                                <span class="text-danger"><%= amountFormat(itemStatistics[totalcost]) %></span>
+                            <% } else { %>
+                                <span><%= amountFormat(itemStatistics[totalcost]) %></span>
+                            <% } %>
+                        </li>
+                        <% } %>
+                    </ul>
+                </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Items Statistics -->
+        <!-- Categories Statistics -->
         <div class="accordion" id="details">
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingThree">
                 <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Total cost of categories
+                    Categories Statistics
                 </button>
               </h2>
               <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                 <div class="accordion-body p-0">
                     <ul id="monthStatistics" class="list-group list-group-flush">
-                        <% for (totalcost in monthStatistics) { %>
+                        <% for (let totalcost in monthStatistics) { %>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-capitalize"><%= categories[totalcost].name %></span>
                             <% if (monthStatistics[totalcost] > 0) { %>
@@ -103,7 +136,7 @@
             </div>
           </div>
         <hr>
-        <!-- /TOTAL COST -->
+        <!-- /Categories Statistics -->
     </header>
     <!-- SHOW RECORDS -->
     <section>
