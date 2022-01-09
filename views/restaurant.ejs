@@ -37,7 +37,7 @@
 <nav class="navbar navbar-light pt-3">
     <div class="container">
         <a class="navbar-brand" href="/restaurant">
-            <img src="/images/icons/icon48.png" alt="icon">
+            <img src="/images/icons/YRCOM.ico" alt="icon">
             YRCOM
         </a>
         <div class="d-flex">
@@ -112,7 +112,7 @@
             <!-- RECORD'S DATE -->
             <div class="card-header d-flex justify-content-between">
                 <span>
-                    <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#addRecordModal" data-bs-addRecord="<%= moment(date[0]+'-'+date[1]+'-'+day).format("YYYY-MM-DD") %>">
+                    <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#addRecordModal" data-bs-addRecord="<%= moment(data[day].timestamp._seconds*1000).format("YYYY-MM-DD") %>">
                         <i class="bi bi-plus-circle"></i>
                     </button>
                     <%= moment(data[day].timestamp._seconds*1000).format('DD dddd YYYY MMMM') %></span>
@@ -218,7 +218,7 @@
                     <input class="form-control" name="amount" type="number" required="required" placeholder="0">
                     <span class="input-group-text">฿</span>
                 </div>
-                <input class="form-control mb-3" name="date" type="date" value="<%- moment(new Date()).format('YYYY-MM-DD') %>" required="required">
+                <input class="form-control mb-3" name="date" type="date" value="" required="required">
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -242,7 +242,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <a href="" type="button" class="btn btn-danger">Delete</a>
+                <a id="deleteItemBtn" href="" type="button" class="btn btn-danger">Delete</a>
             </div>
         </div>
     </div>
@@ -303,9 +303,12 @@
     //Ignore double submit
     var addRecordForm = document.getElementById("addRecordForm");
     var addRecordBtn = document.getElementById("addRecordBtn");
+    var deleteItemBtn = document.getElementById("deleteItemBtn");
     addRecordForm.addEventListener('submit', function (){
         addRecordBtn.disabled = true;
-        console.log('aa');
+    })
+    deleteItemBtn.addEventListener('click', function (){
+        deleteItemBtn.classList.add('disabled');
     })
     // -- Ignore double submit
 </script>

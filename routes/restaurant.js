@@ -28,28 +28,8 @@ router.get('/', async function(req, res) {
         date: date,
         data: data
     });
-    
-    req.session.submit = true;
 });
-router.get('/deleteitem', async function(req, res){
-    let deleteData= req.query.deleteitem.split('-');
-    let dayRef = db.doc(`restaurant/${deleteData[0]}/months/${deleteData[1]}/days/${deleteData[2]}`);
-    let deleteItemJson = `{
-        "records.${deleteData[3]}.items.${deleteData[4]}": FieldValue.delete() 
-    }`
-    await dayRef.update(eval('('+deleteItemJson+')'));
-    
-    let data = await dayRef.get();
-    let itemsEmptyCheck = Object.keys(data.data().records[deleteData[3]].items);
-    let deleteCategoryJson = `{
-        "records.${deleteData[3]}": FieldValue.delete() 
-    }`
-    if (itemsEmptyCheck.length == 0){
-        await dayRef.update(eval('('+deleteCategoryJson+')'));
-    }
 
-    res.redirect(`/restaurant?date=${deleteData[0]}-${deleteData[1]}`);
-})
 async function getRecords(db, year, month) {
     //檢查本月是否有資料
     const firstDayRef = db.doc(`restaurant/${year}/months/${month}/days/01`);
@@ -70,16 +50,6 @@ async function getRecords(db, year, month) {
             })
         }
         await batch.commit();
-        // for (let day=1; day<=daysInMonth; day++){
-        //     if(day<10){day=`0${day}`}
-        //     await db.doc(`restaurant/${year}/months/${month}/days/${day}`).set({
-        //         records: {},
-        //         memo: '',
-        //         categoryIndex: 0,
-        //         itemIndex: 0,
-        //         timestamp: Timestamp.fromDate(new Date(`${year}-${month}-${day}`))
-        //     })
-        // }
     }
     //無資料則新增當月天數的資料夾
 
@@ -132,7 +102,25 @@ async function setDocument(db, data) {
     }`;
     await dayRef.update(eval('('+record+')'));
 }
+router.get('/deleteitem', async function(req, res){
+    let deleteData= req.query.deleteitem.split('-');
+    let dayRef = db.doc(`restaurant/${deleteData[0]}/months/${deleteData[1]}/days/${deleteData[2]}`);
+    let deleteItemJson = `{
+        "records.${deleteData[3]}.items.${deleteData[4]}": FieldValue.delete() 
+    }`
+    await dayRef.update(eval('('+deleteItemJson+')'));
+    
+    let data = await dayRef.get();
+    let itemsEmptyCheck = Object.keys(data.data().records[deleteData[3]].items);
+    let deleteCategoryJson = `{
+        "records.${deleteData[3]}": FieldValue.delete() 
+    }`
+    if (itemsEmptyCheck.length == 0){
+        await dayRef.update(eval('('+deleteCategoryJson+')'));
+    }
 
+    res.redirect(`/restaurant?date=${deleteData[0]}-${deleteData[1]}`);
+})
 router.get('/delete/:id', async function(req, res) {
     const id = (req.params.id).split('-');
     await deleteRecord(db, id);
