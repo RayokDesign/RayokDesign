@@ -1,12 +1,15 @@
 const express = require('express');
 const router = express.Router();
 /* Rayok ----- */
+const { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } = require('firebase/auth');
 const app = require('../connections/firebase_connect');
-const { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword, deleteUser, signOut } = require('firebase/auth');
-const auth = getAuth(app);
 const db = require('../connections/firebase_admin_connect');
+const auth = getAuth(app);
 /* ----- Rayok */
 
+router.get('/members', function (req,res){
+    
+})
 router.get('/signin', function (req, res) {
     if (req.session.error){
         var error = req.session.error;
@@ -82,7 +85,7 @@ router.post('/signup', function (req, res) {
             password: password
         });
         
-        res.redirect('/member/success');
+        res.redirect('/restaurant');
     })
     .catch(function(error){
         const errorCode = error.code;
@@ -110,31 +113,6 @@ router.post('/signup', function (req, res) {
 router.get('/signout', function(req, res) {
   req.session.cookie.maxAge = 0;
   res.redirect('/member/signin');
-})
-
-router.get('/user', function(req, res) {
-    if (req.session.uid){
-        const userRef = db.collection('users').doc(req.session.uid);
-        userRef.get().then((user) => {
-            res.render('member',{
-                page: 'user',
-                title: '會員專區',
-                username: user.data().username
-            });
-        }).catch((error) => {
-          console.log("Error getting document:", error);
-        })
-    } else {
-        res.redirect('/member/signin');
-    }
-});
-
-router.get('/success',function(req,res){
-  res.render('member',{
-      email: auth.currentUser.email,
-      page: 'success',
-      title: '註冊成功'
-  });
 })
 
 

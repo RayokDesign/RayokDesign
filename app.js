@@ -39,16 +39,6 @@ app.use('/', indexRouter);
 /* Rayok----- */
 app.use('/member', memberRouter);
 app.use('/comment', commentRouter);
-
-app.use(function(req,res,next){
-  if(req.session.uid == process.env.ALLOW_UID){
-    next();
-  }else{
-    req.session.error = 'คุณไม่ได้รับอนุญาตให้เข้าถึงเนื้อหา โปรดติดต่อผู้ดูแลระบบ';
-    res.redirect('/member/signin');
-  }
-})
-
 app.use('/restaurant', restaurantRouter);
 
 // catch 404 and forward to error handler

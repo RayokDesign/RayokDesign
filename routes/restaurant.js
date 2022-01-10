@@ -3,31 +3,45 @@ const router = express.Router();
 /* Rayok ----- */
 const db = require('../connections/firebase_admin_connect');
 const moment = require('moment');
-const { getFirestore, Timestamp, FieldValue, FieldPath } = require('firebase-admin/firestore');
+const {  Timestamp, FieldValue } = require('firebase-admin/firestore');
 /* ----- Rayok */
 
-
 router.get('/', async function(req, res) {
-    let date = new Date();
-    if (req.query.date){
-        date = (req.query.date).split('-');
+    if (req.session.uid){
+        const userRef = db.collection('users').doc(req.session.uid);
+        const user = await userRef.get();
+        if (user.exists) {
+            if (user.data().restaurant == true){
+                let date = new Date();
+                if (req.query.date){
+                    date = (req.query.date).split('-');
+                } else {
+                    date = (moment(date).format('YYYY-MM')).split('-');
+                }
+                const data = await getRecords(db, date[0], date[1]);
+                const categories = await getCategories(db);
+                const items = await getItems(db);
+    
+                res.render('restaurant', {
+                    title:'restaurant',
+                    moment: moment,
+                    user: true,
+                    categories: categories,
+                    items: items,
+                    date: date,
+                    data: data
+                });
+            } else {
+                res.render('restaurant', {
+                    title:'restaurant',
+                    user: false
+                });
+            }
+        }
     } else {
-        date = (moment(date).format('YYYY-MM')).split('-');
+        req.session.error = 'Please Log In';
+        res.redirect('/member/signin');
     }
-    const data = await getRecords(db, date[0], date[1]);
-    const uid = req.session.uid;
-    const categories = await getCategories(db);
-    const items = await getItems(db);
-
-    res.render('restaurant', {
-        title:'restaurant',
-        moment: moment,
-        uid: uid,
-        categories: categories,
-        items: items,
-        date: date,
-        data: data
-    });
 });
 
 async function getRecords(db, year, month) {

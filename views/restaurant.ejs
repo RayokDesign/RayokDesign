@@ -1,4 +1,5 @@
 <%- include('header') %>
+<% if (user) { %>
 <% let itemStatistics = {}, dayStatistics = {}, categoryStatistics = {}, monthStatistics = {}, inflow = 0, outflow = 0 %>
 
 <% for (day in data) {
@@ -39,19 +40,10 @@
 } %>
 <nav class="navbar navbar-light pt-3">
     <div class="container">
-        <a class="navbar-brand" href="/restaurant">
-            <img src="/images/icons/favicon.ico" alt="icon">
+        <a class="navbar-brand mx-auto" href="/restaurant">
+            <img class="me-2" src="/images/icons/favicon-32x32.png" alt="" width="32" height="32" class="d-inline-block align-text-top">
             YRCOM
         </a>
-        <div class="d-flex">
-            <% if (uid){ %>
-                <a href="/restaurant/manage" class="btn btn-primary me-2">Menage</a>
-                <a href="/member/signout" class="btn btn-secondary">Signout</a>
-            <% } else { %>
-                <a href="/member/signin" class="btn btn-primary me-2">Signin</a>
-                <a href="/member/signup" class="btn btn-secondary">Signup</a>
-            <% } %>
-        </div>
     </div>
 </nav>
 <div class="container pt-3">
@@ -344,4 +336,7 @@
     })
     // -- Ignore double submit
 </script>
+<% } else { %>
+aaaa
+<% } %>
 <%- include('footer') %>
