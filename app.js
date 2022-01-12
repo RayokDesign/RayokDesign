@@ -9,9 +9,8 @@ const session = require('express-session');
 /* ----- Rayok */
 
 /* Rayok ----- */
-var indexRouter = require('./routes/index');
 var memberRouter = require('./routes/member');
-var commentRouter = require('./routes/comment');
+var membersRouter = require('./routes/members');
 var restaurantRouter = require('./routes/restaurant');
 /* ----- Rayok */
 
@@ -34,11 +33,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-
 /* Rayok----- */
 app.use('/member', memberRouter);
-app.use('/comment', commentRouter);
+app.use('/members', membersRouter);
 app.use('/restaurant', restaurantRouter);
 
 // catch 404 and forward to error handler

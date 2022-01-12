@@ -29,12 +29,16 @@ router.get('/', async function(req, res) {
                     categories: categories,
                     items: items,
                     date: date,
-                    data: data
+                    data: data,
+                    admin: req.session.admin,
+                    uid: req.session.uid
                 });
             } else {
                 res.render('restaurant', {
                     title:'restaurant',
-                    user: false
+                    moment: moment,
+                    user: false,
+                    uid: req.session.uid
                 });
             }
         }

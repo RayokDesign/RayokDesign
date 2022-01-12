@@ -38,14 +38,7 @@
         return `${new Intl.NumberFormat().format(amount)} ฿`;
     }
 } %>
-<nav class="navbar navbar-light pt-3">
-    <div class="container">
-        <a class="navbar-brand mx-auto" href="/restaurant">
-            <img class="me-2" src="/images/icons/favicon-32x32.png" alt="" width="32" height="32" class="d-inline-block align-text-top">
-            YRCOM
-        </a>
-    </div>
-</nav>
+
 <div class="container pt-3">
     <header class="mb-3">
         <!-- CHOOSE MONTH -->
@@ -53,148 +46,166 @@
             <input class="form-control mb-3" type="month" name="date" onchange="document.getElementById('date').submit()" value="<%= date[0]+'-'+date[1] %>">
         </form>
         <!-- /CHOOSE MONTH -->
-        
-        <!-- MONTH RECORD -->
-        <ul class="list-group list-group-flush mb-3">
-            <li class="list-group-item d-flex justify-content-between"><span>Inflow</span><span><%= amountFormat(inflow) %></span></li>
-            <li class="list-group-item d-flex justify-content-between"><span>Outflow</span><span><%= amountFormat(outflow) %></span></li>
-            <li class="list-group-item d-flex justify-content-between mt-1"><span class="fw-bold"></span>
-                <% if (inflow+outflow > 0) { %>
-                    <span class="fw-bold text-primary"><%= amountFormat(inflow + outflow) %></span>
-                <% } else if (inflow+outflow < 0) { %>
-                    <span class="fw-bold text-danger"><%= amountFormat(inflow + outflow) %></span>
-                <% } else { %>
-                    <span class="fw-bold"><%= amountFormat(inflow + outflow) %></span>
-                <% } %>
+        <!-- StatisticsTabls -->
+        <ul class="nav nav-tabs" id="statisticsTabs">
+            <li class="nav-item">
+                <a class="nav-link active" href="javascript:;" onclick="switchTabs(this, 0)">Month</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:;" onclick="switchTabs(this, 1)" data-bs-toggle="collapse" data-bs-target="#collapseItemStatistics">Items</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="javascript:;" onclick="switchTabs(this, 2)">Categories</a>
             </li>
         </ul>
+        <!-- /StatisticsTabls -->
+        <!-- MONTH RECORD -->
+        <table class="table table-hover statistics">
+            <tbody>
+                <tr>
+                    <th class="ps-3">Inflow</th>
+                    <td class="text-end pe-3"><%= amountFormat(inflow) %></td>
+                </tr>
+                <tr>
+                    <th class="ps-3">Outflow</th>
+                    <td class="text-end pe-3"><%= amountFormat(outflow) %></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th class="ps-3">Net Profit</th>
+                    <td class="text-end pe-3">                
+                        <% if (inflow+outflow > 0) { %>
+                            <span class="fw-bold text-primary"><%= amountFormat(inflow + outflow) %></span>
+                        <% } else if (inflow+outflow < 0) { %>
+                            <span class="fw-bold text-danger"><%= amountFormat(inflow + outflow) %></span>
+                        <% } else { %>
+                            <span class="fw-bold"><%= amountFormat(inflow + outflow) %></span>
+                        <% } %>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
         <!-- /MONTH RECORD -->
         <!-- Items Statistics -->
-        <div class="accordion mb-3" id="details">
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItemStatistics" aria-expanded="false" aria-controls="collapseThree">
-                    Items Statistics
-                </button>
-                </h2>
-                <div id="collapseItemStatistics" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body p-0">
-                    <ul id="monthStatistics" class="list-group list-group-flush">
-                        <% for (let totalcost in itemStatistics) { %>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="text-capitalize"><%= items[totalcost].name %></span>
-                            <% if (itemStatistics[totalcost] > 0) { %>
-                                <span class="text-primary">+<%= amountFormat(itemStatistics[totalcost]) %></span>
-                            <% } else if (itemStatistics[totalcost] < 0) { %>
-                                <span class="text-danger"><%= amountFormat(itemStatistics[totalcost]) %></span>
-                            <% } else { %>
-                                <span><%= amountFormat(itemStatistics[totalcost]) %></span>
-                            <% } %>
-                        </li>
+        <table class="table statistics d-none">
+            <tbody>
+                <% for (let totalcost in itemStatistics) { %>
+                <tr>
+                    <th class="ps-3"><%= items[totalcost].name %></th>
+                    <td class="text-end pe-3">
+                        <% if (itemStatistics[totalcost] > 0) { %>
+                            <span class="text-primary">+<%= amountFormat(itemStatistics[totalcost]) %></span>
+                        <% } else if (itemStatistics[totalcost] < 0) { %>
+                            <span class="text-danger"><%= amountFormat(itemStatistics[totalcost]) %></span>
+                        <% } else { %>
+                            <span><%= amountFormat(itemStatistics[totalcost]) %></span>
                         <% } %>
-                    </ul>
-                </div>
-                </div>
-            </div>
-        </div>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
         <!-- /Items Statistics -->
         <!-- Categories Statistics -->
-        <div class="accordion" id="details">
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingThree">
-                <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                    Categories Statistics
-                </button>
-              </h2>
-              <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                <div class="accordion-body p-0">
-                    <ul id="monthStatistics" class="list-group list-group-flush">
-                        <% for (let totalcost in monthStatistics) { %>
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span class="text-capitalize"><%= categories[totalcost].name %></span>
-                            <% if (monthStatistics[totalcost] > 0) { %>
-                                <span class="text-primary">+<%= amountFormat(monthStatistics[totalcost]) %></span>
-                            <% } else if (monthStatistics[totalcost] < 0) { %>
-                                <span class="text-danger"><%= amountFormat(monthStatistics[totalcost]) %></span>
-                            <% } else { %>
-                                <span><%= amountFormat(monthStatistics[totalcost]) %></span>
-                            <% } %>
-                        </li>
+        <table class="table statistics d-none">
+            <tbody>
+                <% for (let totalcost in monthStatistics) { %>
+                <tr>
+                    <th class="ps-3"><%= categories[totalcost].name %></th>
+                    <td class="text-end pe-3">
+                        <% if (monthStatistics[totalcost] > 0) { %>
+                            <span class="text-primary">+<%= amountFormat(monthStatistics[totalcost]) %></span>
+                        <% } else if (monthStatistics[totalcost] < 0) { %>
+                            <span class="text-danger"><%= amountFormat(monthStatistics[totalcost]) %></span>
+                        <% } else { %>
+                            <span><%= amountFormat(monthStatistics[totalcost]) %></span>
                         <% } %>
-                    </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        <hr>
+                    </td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
         <!-- /Categories Statistics -->
     </header>
     <!-- SHOW RECORDS -->
     <section>
         <% for (day in data) { %>
-        <div class="card mb-3" >
-            <!-- RECORD'S DATE -->
-            <div class="card-header d-flex justify-content-between">
-                <span>
-                    <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#addRecordModal" data-bs-addRecord="<%= moment(data[day].timestamp._seconds*1000).format("YYYY-MM-DD") %>">
-                        <i class="bi bi-plus-circle"></i>
-                    </button>
-                    <%= moment(data[day].timestamp._seconds*1000).format('DD dddd YYYY MMMM') %></span>
-                    <% if (dayStatistics[day] > 0) { %>
-                    <span class="fw-bold text-primary"><%= amountFormat(dayStatistics[day]) %></span>
-                <% } else if (dayStatistics[day] < 0) { %>
-                    <span class="fw-bold text-danger"><%= amountFormat(dayStatistics[day]) %></span>
-                <% } else { %>
-                    <span class="fw-bold"><%= amountFormat(dayStatistics[day]) %></span>
-                <% } %>
-            </div>
-            <!-- /RECORD'S DATE -->
-
-            <!-- RECORD'S DETAIL -->
-            <div class="card-body p-0">
+        <table class="table table-borderless">
+            <thead class="table-primary">
+                <!-- RECORD'S DATE -->
+                <tr>
+                    <th class="ps-3">
+                        <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#addRecordModal" data-bs-addRecord="<%= moment(data[day].timestamp._seconds*1000).format("YYYY-MM-DD") %>">
+                            <i class="bi bi-plus-circle"></i>
+                        </button>
+                        <%= moment(data[day].timestamp._seconds*1000).format('DD dddd YYYY MMMM') %>
+                    </th>
+                    <th class="text-end pe-3 align-middle">
+                        <% if (dayStatistics[day] > 0) { %>
+                            <span class="fw-bold text-primary"><%= amountFormat(dayStatistics[day]) %></span>
+                        <% } else if (dayStatistics[day] < 0) { %>
+                            <span class="fw-bold text-danger"><%= amountFormat(dayStatistics[day]) %></span>
+                        <% } else { %>
+                            <span class="fw-bold"><%= amountFormat(dayStatistics[day]) %></span>
+                        <% } %>
+                    </th>
+                </tr>
+                <!-- /RECORD'S DATE -->
+            </thead>
+            <tbody>
                 <% for (record in data[day].records) { %>
-                <div class="accordion accordion-flush" id="accordionCategory">
-                    <div class="accordion-item">
-                        <!-- CATEGORY HEAD -->
-                        <h2 class="accordion-header d-flex">
-                            <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= day+record %>" aria-expanded="true" aria-controls="<%= record %>">
-                                <%= categories[data[day].records[record].category].name %>
-                            </button>
-                            <span class="fs-6 p-3 text-nowrap w-25 text-end">
+                    <tr>
+                        <td class="px-1">
+                            <div class="accordion accordion-flush">
+                                <div class="accordion-item">
+                                    <!-- CATEGORY HEAD -->
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed ps-3 py-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= day+record %>">
+                                            <%= categories[data[day].records[record].category].name %>
+                                        </button>
+                                    </h2>
+                                    <!-- /CATEGORY HEAD -->
+                                    <!-- ITEM HEAD -->
+                                    <div id="collapse<%= day+record %>" class="accordion-collapse collapse">
+                                        <div class="accordion-body p-0">
+                                            <ul class="list-group list-group-flush">
+                                                <% for (item in data[day].records[record].items) { %>
+                                                <li class="list-group-item d-flex justify-content-between p-3 fs-6">
+                                                    <span class="text-capitalize">
+                                                        <a href="javascript:;" class="me-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal" data-bs-deleteHref=<%= `/restaurant/deleteitem?deleteitem=${date[0]}-${date[1]}-0${day}-${record}-${item}` %>><i class="bi bi-x-circle"></i></a>
+                                                        <%= items[data[day].records[record].items[item].item].name %>
+                                                    </span>    
+                                                    <% if (data[day].records[record].items[item].expin == "income") { %>
+                                                    <span class="text-primary">+<%= amountFormat(data[day].records[record].items[item].amount) %></span>
+                                                    <% } else { %>
+                                                    <span class="text-danger">-<%= amountFormat(data[day].records[record].items[item].amount) %></span>
+                                                    <% } %>
+                                                </li>
+                                                <% } %>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- /ITEM HEAD -->
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-end pe-3 align-middle py-0">
+                            <span class="fs-6 w-25 text-end">
                                 <%= amountFormat(categoryStatistics[data[day].records[record].category+day]) %>
                             </span>
-                        </h2>
-                        <!-- /CATEGORY HEAD -->
-                        <!-- ITEM HEAD -->
-                        <div id="collapse<%= day+record %>" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
-                            <div class="accordion-body p-0">
-                                <ul class="list-group list-group-flush">
-                                    <% for (item in data[day].records[record].items) { %>
-                                    <li class="list-group-item d-flex justify-content-between">
-                                        <span class="text-capitalize">
-                                            <a href="javascript:;" class="me-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal" data-bs-deleteHref=<%= `/restaurant/deleteitem?deleteitem=${date[0]}-${date[1]}-0${day}-${record}-${item}` %>><i class="bi bi-x-circle"></i></a>
-                                            <%= items[data[day].records[record].items[item].item].name %></span>    
-                                        <% if (data[day].records[record].items[item].expin == "income") { %>
-                                        <span class="text-primary">+<%= amountFormat(data[day].records[record].items[item].amount) %></span>
-                                        <% } else { %>
-                                        <span class="text-danger">-<%= amountFormat(data[day].records[record].items[item].amount) %></span>
-                                        <% } %>
-                                    </li>
-                                    <% } %>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- /ITEM HEAD -->
-                    </div>
-                </div>
+                        </td>
+                    </tr>
                 <% } %>
-                <div class="form-floating">
-                    <textarea class="form-control border-top-2 border-start-0 border-end-0 border-bottom-0 ps-3 pe-3" placeholder="Write some memo" id="floatingMemArea" oninput= "updateMemo(this, '<%= data[day].timestamp._seconds %>')"><%= data[day].memo %></textarea>
-                    <label class="ps-3 pe-3 border-0" for="floatingMemoArea">Memo</label>
-                </div>
-            </div>
-            <!-- RECORD'S DETAIL -->
-        </div>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        <textarea rows="2" class="form-control ps-2" placeholder="Write something here" oninput= "updateMemo(this, '<%= data[day].timestamp._seconds %>')"><%= data[day].memo %></textarea>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
         <% } %>
     </section>
     <!-- /SHOW RECORDS -->
@@ -313,7 +324,7 @@
     //Update Memo
     var timer = null;
     function updateMemo(obj, timestamp){
-        let url = `http://127.0.0.1:3000/restaurant/updateMemo?memo=${obj.value}&timestamp=${timestamp}`;
+        let url = `/restaurant/updateMemo?memo=${obj.value}&timestamp=${timestamp}`;
         clearTimeout(timer);
         timer = setTimeout(function(){
             fetch(url);
@@ -335,8 +346,86 @@
         deleteItemBtn.classList.add('disabled');
     })
     // -- Ignore double submit
+
+    //Switch Tabs
+    var statisticsTabs = document.getElementById("statisticsTabs").getElementsByTagName("a");
+    var statistics = document.getElementsByClassName('statistics');
+    function switchTabs(obj, index){
+        for (let i = 0; i<statisticsTabs.length; i++){
+            statisticsTabs[i].classList.remove('active');
+            statistics[i].classList.add('d-none');
+        }
+        obj.classList.add('active');
+        statistics[index].classList.remove('d-none');
+    }
+    
+    // -- Switch Tabs
 </script>
 <% } else { %>
-aaaa
+    <div class="container">
+        <header class="mb-3">
+            <!-- CHOOSE MONTH -->
+            <form action="/restaurant" method="get" id="date">
+                <input class="form-control mb-3" type="month" name="date" value="<%= moment(new Date).format('YYYY-MM') %>" disabled>
+            </form>
+            <!-- /CHOOSE MONTH -->
+            
+            <!-- MONTH RECORD -->
+            <ul class="list-group list-group-flush mb-3">
+                <li class="list-group-item d-flex justify-content-between"><span>Inflow</span><span>0</span></li>
+                <li class="list-group-item d-flex justify-content-between"><span>Outflow</span><span>0</span></li>
+                <li class="list-group-item d-flex justify-content-between mt-1"><span class="fw-bold"></span>
+                    <span class="fw-bold">0</span>
+                </li>
+            </ul>
+            <!-- /MONTH RECORD -->
+            <!-- Items Statistics -->
+            <div class="accordion mb-3" id="details">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItemStatistics" aria-expanded="false" aria-controls="collapseThree">
+                        Items Statistics
+                    </button>
+                    </h2>
+                    <div id="collapseItemStatistics" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body p-0">
+                        <ul id="monthStatistics" class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-capitalize">Item</span>
+                                    <span>0</span>
+                            </li>
+                        </ul>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /Items Statistics -->
+            <!-- Categories Statistics -->
+            <div class="accordion" id="details">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Categories Statistics
+                    </button>
+                  </h2>
+                  <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                    <div class="accordion-body p-0">
+                        <ul id="monthStatistics" class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-capitalize">Category</span>
+                                <span>0</span>
+                            </li>
+                        </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <hr>
+            <!-- /Categories Statistics -->
+        </header>
+        <section>
+            <h3>You can not see this function of page, please contact admin.</h1>
+        </section>  
+    </div>
 <% } %>
 <%- include('footer') %>

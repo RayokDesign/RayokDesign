@@ -7,9 +7,6 @@ const db = require('../connections/firebase_admin_connect');
 const auth = getAuth(app);
 /* ----- Rayok */
 
-router.get('/members', function (req,res){
-    
-})
 router.get('/signin', function (req, res) {
     if (req.session.error){
         var error = req.session.error;
@@ -18,17 +15,22 @@ router.get('/signin', function (req, res) {
     res.render('member', {
         page: 'signin',
         title: 'Signin',
-        error: error
+        error: error,
     });
 })
 router.post('/signin', function (req, res) {
     const email = req.body.email;
     const password = req.body.password;
     signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+    .then(async (userCredential) => {
         // Signed in
         const user = userCredential.user;
         req.session.uid = user.uid;
+        const adminRef = db.doc(`users/${user.uid}`);
+        const admin = await adminRef.get();
+        if (admin.data().admin){
+            req.session.admin = admin.data().admin;
+        }
         if (req.body.remember == 'on'){
             req.session.cookie.maxAge = 7*24*3600*1000;
         }
