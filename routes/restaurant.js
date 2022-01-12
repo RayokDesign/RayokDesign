@@ -86,8 +86,29 @@ router.post('/', async function(req, res) {
     await res.redirect(`/restaurant?date=${req.query.date}`)
 });
 
-async function setDocument(db, data) {
+async function setDocument(db, data) {    
     const date = data.date.split('-');
+    //檢查本月是否有資料
+    const firstDayRef = db.doc(`restaurant/${date[0]}/months/${date[1]}/days/01`);
+    const firstDayDoc = await firstDayRef.get();
+    
+    if (!firstDayDoc.exists){
+        const daysInMonth = getDaysInMonth(date[0], date[1]);
+        const batch = db.batch();
+
+        for (let day=1; day<=daysInMonth; day++){
+            if(day<10){day=`0${day}`}
+            batch.set(db.doc(`restaurant/${date[0]}/months/${date[1]}/days/${day}`), {
+                records: {},
+                memo: '',
+                categoryIndex: 0,
+                itemIndex: 0,
+                timestamp: Timestamp.fromDate(new Date(`${date[0]}-${date[1]}-${day}`))
+            })
+        }
+        await batch.commit();
+    }
+    //無資料則新增當月天數的資料夾
 
     //新增資料到資料夾
 
