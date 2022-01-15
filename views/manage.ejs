@@ -1,9 +1,4 @@
 <%- include('header') %>
-<nav class="navbar navbar-light pt-3">
-    <div class="container">
-        <h1><a href="/restaurant" class="navbar-brand">YRCOM</a></h1>
-    </div>
-</nav>
 <div class="container">
     <div class="d-flex mt-3 mb-3">
         <input class="form-check-input me-2" type="radio" name="optionRadio" id="categories" onchange="radioChecked(this)" checked>
@@ -47,6 +42,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Items</th>
+                <th scope="col">Expin</th>
                 <th scope="col">Method</th>
             </tr>
         </thead>
@@ -55,6 +51,7 @@
             <tr>
                 <td class="align-middle"><%= items[item].index %></td>
                 <td class="align-middle"><input type="text" value="<%= items[item].name %>"></td>
+                <td class="align-middle"><input type="text" value="<%= items[item].expin %>" disabled></td>
                 <td>
                     <button data-bs-toggle="button" autocomplete="off" class="btn btn-primary" onclick="editOption(this, 'items', '<%= item %>')">Edit</button>
                 </td>
@@ -62,9 +59,15 @@
             <% } %>
             <tr class="table-info">
                 <td class="align-middle">n</td>
-                <td class="align-middle"><input type="text" value=""></td>
+                <td class="align-middle"><input type="text" value="" required></td>
+                <td class="align-middle">
+                    <select name="expinSel" id="expinSel">
+                        <option value="expense">expense</option>
+                        <option value="income">income</option>
+                    </select>
+                </td>
                 <td>
-                    <button data-bs-toggle="button" autocomplete="off" class="btn btn-primary" onclick="addOption(this, 'items')">Add</button>
+                    <button data-bs-toggle="button" autocomplete="off" class="btn btn-primary" onclick="addOption(this, 'items', 'expin')">Add</button>
                 </td>
             </tr>
         </tbody>
@@ -108,9 +111,15 @@
         toast.show();
     }
 
-    function addOption(obj, col, doc){
-        let url = `/restaurant/addoption?name=${obj.parentNode.previousElementSibling.children[0].value}&col=${col}`;
-
+    function addOption(obj, col, expin){
+        let url = '';
+        if (expin){
+            let expinSel = document.getElementById('expinSel');
+            url = `/restaurant/addoption?name=${obj.parentNode.previousElementSibling.previousElementSibling.children[0].value}&expin=${expinSel.value}&col=${col}`;
+        } else{
+            url = `/restaurant/addoption?name=${obj.parentNode.previousElementSibling.previousElementSibling.children[0].value}&col=${col}`;
+        }
+        
         fetch(url).then(response => window.location.reload());
     }
 </script>

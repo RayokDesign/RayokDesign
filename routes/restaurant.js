@@ -221,6 +221,7 @@ router.get('/addoption', async function(req, res) {
     let dataRef = db.collection(`${req.query.col}`);
     let addData = `{
         index: ${index.data().counter},
+        expin: "${req.query.expin}" || undefined,
         name: "${req.query.name}"
     }`
     await dataRef.add(eval('('+addData+')'));

@@ -27,7 +27,7 @@ router.get('/', async function(req,res){
                 snapshot.forEach(user => {
                     data[user.id] = user.data();
                 })
-                res.render('members', {
+                res.render('admin', {
                     title: "Manager",
                     data: data,
                 });

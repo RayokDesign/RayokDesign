@@ -223,23 +223,37 @@
         <div class="modal-body">
                 <div class="d-flex expinRadio">
                     <div class="form-check me-3 mb-3">
-                        <input class="form-check-input" type="radio" name="expin" id="expense" value="expense" checked>
+                        <input class="form-check-input" type="radio" name="expin" value="expense" onclick="switchExpin(this, 0)" checked>
                         <label class="form-check-label" for="expense">
                             Expense
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="expin" id="income" value="income">
+                        <input class="form-check-input" type="radio" name="expin" value="income" onclick="switchExpin(this, 1)">
                         <label class="form-check-label" for="income">
                             Income
                         </label>
                     </div>
                 </div>
                 <!-- ITEMS -->
-                <select class="form-select mb-3" name="item" required>
-                    <option selected value="">Select a item</option>
+                <select class="form-select mb-3 items" name="item" required>
+                    <option selected value="">Select an item</option>
                     <% for (item in items) { %>
-                        <option value="<%= item %>"><%= items[item].name %></option>
+                        <% if (items[item].expin == 'expense'){ %>
+                        <option value="<%= item %>">
+                            <%= items[item].name %>
+                        </option>
+                        <% } %>
+                    <% } %>
+                </select>
+                <select class="form-select mb-3 items d-none" name="item" required>
+                    <option selected value="">Select an item</option>
+                    <% for (item in items) { %>
+                        <% if (items[item].expin == 'income'){ %>
+                        <option value="<%= item %>">
+                                <%= items[item].name %>
+                        </option>
+                        <% } %>
                     <% } %>
                 </select>
                 <!-- CATEGORIES -->
@@ -258,6 +272,73 @@
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button id="addRecordBtn" type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+    </div>
+    </div>
+</div>
+<!-- /Add Record Modal -->
+<!-- Modify Record Modal -->
+<div class="modal fade" id="addRecordModal" tabindex="-1" aria-labelledby="addRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <form id="addRecordForm" action="/restaurant?date=<%= date[0]+'-'+date[1] %>" method="post" class="pt-3">
+        <div class="modal-header">
+        <h5 class="modal-title" id="addRecordModalLabel">Add Record</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+                <div class="d-flex expinRadio">
+                    <div class="form-check me-3 mb-3">
+                        <input class="form-check-input" type="radio" name="expin" value="expense" onclick="switchExpin(this, 0)" checked>
+                        <label class="form-check-label" for="expense">
+                            Expense
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="expin" value="income" onclick="switchExpin(this, 1)">
+                        <label class="form-check-label" for="income">
+                            Income
+                        </label>
+                    </div>
+                </div>
+                <!-- ITEMS -->
+                <select class="form-select mb-3 items" name="item" required>
+                    <option selected value="">Select an item</option>
+                    <% for (item in items) { %>
+                        <% if (items[item].expin == 'expense'){ %>
+                        <option value="<%= item %>">
+                            <%= items[item].name %>
+                        </option>
+                        <% } %>
+                    <% } %>
+                </select>
+                <select class="form-select mb-3 items d-none" name="item" required>
+                    <option selected value="">Select an item</option>
+                    <% for (item in items) { %>
+                        <% if (items[item].expin == 'income'){ %>
+                        <option value="<%= item %>">
+                                <%= items[item].name %>
+                        </option>
+                        <% } %>
+                    <% } %>
+                </select>
+                <!-- CATEGORIES -->
+                <select class="form-select mb-3" name="category" required>
+                    <option selected value="">Select a category</option>
+                    <% for (category in categories) { %>
+                        <option value="<%= category %>"><%= categories[category].name %></option>
+                    <% } %>
+                </select>
+                <div class="input-group mb-3">
+                    <input class="form-control" name="amount" type="number" required="required" placeholder="0">
+                    <span class="input-group-text">฿</span>
+                </div>
+                <input class="form-control mb-3" name="date" type="date" value="" required="required">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="addRecordBtn" type="submit" class="btn btn-primary">Update</button>
         </div>
     </form>
     </div>
@@ -307,7 +388,16 @@
         var addRecordModalDate = addRecordModal.querySelector('[type=date]')
         addRecordModalDate.value = recipient;
     })
-    // --Add Item Modal JS
+    // --Add Item Modal JS    
+    // Modify Item Modal JS
+    var addRecordModal = document.getElementById('addRecordModal')
+    addRecordModal.addEventListener('show.bs.modal', function (event) {
+        var button = event.relatedTarget;
+        var recipient = button.getAttribute('data-bs-addRecord')
+        var addRecordModalDate = addRecordModal.querySelector('[type=date]')
+        addRecordModalDate.value = recipient;
+    })
+    // --Modify Item Modal JS
     // Delete Item Modal JS
     var deleteItemModal = document.getElementById('deleteItemModal')
     deleteItemModal.addEventListener('show.bs.modal', function (event) {
@@ -360,6 +450,15 @@
     }
     
     // -- Switch Tabs
+    // Switch Expin
+    var radioExpin = document.getElementsByClassName('items');
+    function switchExpin(obj, index){
+        for (let i = 0; i<radioExpin.length; i++){
+            radioExpin[i].classList.add('d-none');
+        }
+        radioExpin[index].classList.remove('d-none');
+    }
+    // --Switch Expin
 </script>
 <% } else { %>
     <div class="container">
