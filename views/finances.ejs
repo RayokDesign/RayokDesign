@@ -29,9 +29,7 @@
             </nav>
         </header>
         <!-- SHOW RECORDS -->
-        <section id="records" class="mb-3">
-            
-        </section>
+        <section id="records"></section>
     <!-- /SHOW RECORDS -->
     </div>
     <div class="plug-in">
@@ -44,62 +42,81 @@
         </div>
         <!-- /toast -->
     </div>
-    <div class="fixed-bottom mb-2">
-        <form id="record-form" action="#" class="container">
-            <div class="row mb-2 justify-content-center">
-                <div class="col-10">
-                    <div class="input-group">
-                        <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
-                        <span class="input-group-text">฿</span>
-                    </div>
-                </div>
+    <div class="fixed-bottom mb-2 container">
+        <div class="row mb-2">
+            <div class="col text-center">
+                <button id="add-record-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-record-modal">
+                    +
+                </button>
             </div>
-            <div class="row mb-2 justify-content-center">
-                <div class="col-5">
-                    <div class="form-check">
-                        <input id="expense-radio" class="form-check-input" type="radio" name="expin" value="expense" checked>
-                        <label class="form-check-label" for="expense">
-                            Expense
-                        </label>
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="form-check">
-                        <input id="income-radio" class="form-check-input" type="radio" name="expin" value="income">
-                        <label class="form-check-label" for="income">
-                            Income
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-2 justify-content-center">
-                <div class="col-5">
-                    <select id="category-select" class="form-select col-5" name="category" required>
-                        <option selected value="">Select a category</option>
-                    </select>
-                </div>
-                <div class="col-5">
-                    <select id="item-select" class="form-select col-5" name="item" required>
-                        <option selected value="">Select an item</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row mb-2 justify-content-center">
-                <div class="col-10">
-                    <input id="date-selector" type="date" class="form-control">
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-10 text-end">
-                    <button id="submit" type="submit" class="btn btn-primary">
-                        Add
-                    </button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
-    
-    <script src="dist/finances_bundle.js"></script>
+    <!-- MODAL -->
+    <div class="modal fade" id="add-record-modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+                <form id="record-form" action="#" class="">
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-10">
+                            <div class="input-group">
+                                <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
+                                <span class="input-group-text">฿</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-5">
+                            <div class="form-check">
+                                <input id="expense-radio" class="form-check-input" type="radio" name="expin" value="expense" checked>
+                                <label class="form-check-label" for="expense">
+                                    Expense
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="form-check">
+                                <input id="income-radio" class="form-check-input" type="radio" name="expin" value="income">
+                                <label class="form-check-label" for="income">
+                                    Income
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-5">
+                            <select id="category-select" class="form-select col-5" name="category" required>
+                                <option selected value="">Select a category</option>
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <select id="item-select" class="form-select col-5" name="item" required>
+                                <option selected value="">Select an item</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-10">
+                            <input id="date-selector" type="date" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-10 text-end">
+                            <div class="modal-footer">
+                                <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id="submit-button" type="submit" class="btn btn-primary">Add</button>
+                                <button id="delete-button" class="btn btn-danger">Delete</button>
+                                <button id="modify-button" class="btn btn-primary">Modify</button>
+                              </div>
+                            
+                        </div>
+                    </div>
+                </form>
+            </div>
+          </div>
+        </div>
+    </div>
     <script src="https://rayok.tw/javascripts/bootstrap.min.js"></script>
+    <script src="dist/finances_bundle.js"></script>
 </body>
 </html>

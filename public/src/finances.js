@@ -47,21 +47,6 @@ function signOutUser() {
   signOut(getAuth());
 }
 
-// Saves a new message on the Cloud Firestore.
-async function saveMessage(messageText) {
-  // TODO 7: Push a new message to Cloud Firestore.
-  try {
-    await addDoc(collection(getFirestore(), 'messages'), {
-      name: getUserName(),
-      text: messageText,
-      timestamp: serverTimestamp()
-    });
-  }
-  catch(error) {
-    console.error('Error writing new message to Firebase Database', error);
-  }
-}
-
 // Returns the signed-in user's display name.
 function getUserName() {
   // TODO 5: Return the user's display name.
@@ -169,9 +154,8 @@ function loadRecords(year, month, day) {
       if (change.type === 'removed') {
         deleteRecord(change.doc.id);
       } else {
-        let itemData = change.doc.data();
-        let detailData = getDetailData(`${year}-${month}-${day}`, itemData);
-        displayRecord(`${year}-${month}-${day}`, change.doc.data(), detailData);
+        getDetailData(`${year}-${month}-${day}`, change.doc.data());
+        displayRecord(`${year}-${month}-${day}`, change.doc.data(), change.doc.id);
       }
     }, function(error){
       console.error(error);
@@ -192,8 +176,8 @@ function getDetailData(id, itemData) {
 
 // Template for messages.
 var MESSAGE_TEMPLATE =
-`<div>
-  <div class="row mb-3">
+`<div class="mb-2 border border-2 border-success rounded">
+  <div class="row mb-2 fs-5">
     <div class="col record-date"></div>
     <div class="col day-amount text-end"></div>
   </div>
@@ -240,16 +224,16 @@ function createAndInsertCategory(id, itemData) {
 
 
 var ITEM_TEMPLATE = 
-`<div class="row ps-3 pe-3">
-<div class="col item-name"></div>
-<div class="col text-end item-amount"></div>
+`<div class="btn item d-flex justify-content-between" data-bs-toggle="modal" data-bs-target="#add-record-modal" onclick="modalModeSwitch();">
+  <span class="item-name"></span>
+  <span class="item-amount align-self-center"></span>
 </div>`;
 
-function createAndInsertItem(id, itemData) {
+function createAndInsertItem(id, itemData, docID) {
   const container = document.createElement('div');
   container.innerHTML = ITEM_TEMPLATE;
   const item = container.firstChild;
-  item.setAttribute('id', `item${itemData.timestamp.seconds}`);
+  item.setAttribute('id', docID);
 
   recordListElement.querySelector(`#${itemData.category}${id}`).querySelector('.accordion-body').appendChild(item);
 
@@ -274,10 +258,10 @@ function createAndInsertMemo(id) {
   return memo;
 }
 // Displays a Message in the UI.
-function displayRecord(id, itemData) {
+function displayRecord(id, itemData, docID) {
   var div = document.getElementById('date' + id) || createAndInsertMessage(id);
   var category = document.getElementById(`${itemData.category}${id}`) || createAndInsertCategory(id, itemData);
-  var item = document.getElementById(`item${id}`) || createAndInsertItem(id, itemData);
+  var item = document.getElementById(docID) || createAndInsertItem(id, itemData, docID);
   var memo = document.getElementById(`memo${id}`) || createAndInsertMemo(id);
 
   div.querySelector('.record-date').textContent = moment(id).format('DD dddd YYYY MMMM');
@@ -337,9 +321,6 @@ function loadCategoriesList() {
         } else {
           categories[change.doc.id] = change.doc.data().name;
           createAndInsertCategoryOption(change.doc.id, change.doc.data());
-          // let itemData = change.doc.data();
-          // let detailData = getDetailData(`${year}-${month}-${day}`, itemData);
-          // displayRecord(`${year}-${month}-${day}`, change.doc.data(), detailData);
         }
       }, function(error){
         console.error(error);
@@ -401,9 +382,9 @@ function onRecordFormSubmit(e) {
   // Check that the user entered a message and is signed in.
   if (amountInputElement.value && checkSignedInWithMessage()) {
     submitData['amount'] = amountInputElement.value;
-
-    console.log(JSON.stringify(submitData));
-    //saveMessage(messageInputElement.value);
+    submitData['timestamp'] = new Date(dateSelectorElement.value);
+    saveMessage(submitData);
+    cleanUpModal();
   }
 }
 
@@ -429,15 +410,21 @@ function monthSelector() {
     if (day<10){day='0'+day}
     loadRecords(date[0], date[1], `${day}`);
   }
-  // monthSelectorElement.addEventListener('change', function(){
-  //   year = this.value.split('-')[0];
-  //   month = this.value.split('-')[1];
-  //   days = getDaysInMonth(year, month);
-    
-  //   for (let day=1; day<=days; day++){
-  //     loadRecords(year, month, day);
-  //   }
-  // })
+}
+
+// Saves a new message on the Cloud Firestore.
+async function saveMessage(messageText) {
+  console.log(JSON.stringify(messageText));
+  const date = moment(messageText.timestamp).format('YYYY-MM-DD').split('-');
+  const recordsRef = collection(getFirestore(), 'restaurant', date[0], 'months', date[1], 'days', date[2], 'records');
+  
+  // TODO 7: Push a new message to Cloud Firestore.
+  try {
+    await addDoc(recordsRef, messageText);
+  }
+  catch(error) {
+    console.error('Error writing new message to Firebase Database', error);
+  }
 }
 
 function selectChange(){
@@ -446,6 +433,31 @@ function selectChange(){
 
 function getDaysInMonth (year, month){
   return new Date(year, month, 0).getDate();
+}
+
+function focusInput(){
+  amountInputElement.focus();
+}
+
+function modalModeSwitch(){
+  if (this.id == 'add-record-button'){
+    deleteButtonElement.classList.add('d-none');
+    modifyButtonElement.classList.add('d-none');
+    dismissButtonElement.classList.remove('d-none');
+    submitButtonElement.classList.remove('d-none');
+    console.log('bb');
+  } else {
+    deleteButtonElement.classList.remove('d-none');
+    modifyButtonElement.classList.remove('d-none');
+    dismissButtonElement.classList.add('d-none');
+    submitButtonElement.classList.add('d-none');
+    console.log('aa');
+  }
+}
+
+function cleanUpModal(){
+  dismissButtonElement.click();
+  amountInputElement.value = '';
 }
 
 // Shortcuts to DOM Elements.
@@ -462,6 +474,12 @@ var expenseRadioElement = document.getElementById('expense-radio');
 var incomeRadioElement = document.getElementById('income-radio');
 var dateSelectorElement = document.getElementById('date-selector');
 var amountInputElement = document.getElementById('amount-input');
+var addRecordButtonElement = document.getElementById('add-record-button');
+var addRecordModalElement = document.getElementById('add-record-modal');
+var dismissButtonElement = document.getElementById('dismiss-button');
+var submitButtonElement = document.getElementById('submit-button');
+var deleteButtonElement = document.getElementById('delete-button');
+var modifyButtonElement = document.getElementById('modify-button');
 
 // Saves message on form submit.
 recordFormElement.addEventListener('submit', onRecordFormSubmit);
@@ -469,6 +487,8 @@ categorySelectElement.addEventListener('change', selectChange);
 itemSelectElement.addEventListener('change', selectChange);
 signOutButtonElement.addEventListener('click', signOutUser);
 signInButtonElement.addEventListener('click', signIn);
+addRecordModalElement.addEventListener('shown.bs.modal', focusInput);
+addRecordButtonElement.addEventListener('click', modalModeSwitch);
 
 //Radio button
 expenseRadioElement.addEventListener('change', toggleExpin);
