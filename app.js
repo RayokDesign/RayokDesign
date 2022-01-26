@@ -10,6 +10,7 @@ const session = require('express-session');
 
 /* Rayok ----- */
 var indexRouter = require('./routes/index');
+var financesRouter = require('./routes/finances');
 var memberRouter = require('./routes/member');
 var adminRouter = require('./routes/admin');
 var restaurantRouter = require('./routes/restaurant');
@@ -36,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* Rayok----- */
 app.use('/', indexRouter);
+app.use('/finances', financesRouter);
 app.use('/member', memberRouter);
 app.use('/admin', adminRouter);
 app.use('/restaurant', restaurantRouter);
