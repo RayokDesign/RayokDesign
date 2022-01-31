@@ -615,6 +615,8 @@ deleteButtonElement.addEventListener('click', deleteItem);
 expenseRadioElement.addEventListener('change', toggleExpin);
 incomeRadioElement.addEventListener('change', toggleExpin);
 
+//Show this month
+monthSelectorElement.value = moment(new Date()).format('MMMM-YY')
 //Show Toast
 signInToastElement.addEventListener('click', showToast); 
 
