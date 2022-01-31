@@ -39,6 +39,7 @@ import moment from 'moment';
 
 let categoryAmount = {}, dayAmount = {}
 let items = {}, categories = {}, submitData = {}, unsubscribes = {};
+let categoryMonthAmount = {}, itemMonthAmount = {};
 let timer = null;
 
 async function signIn(e) {
@@ -279,6 +280,45 @@ function updateMemo(){
   },2000)
 }
 
+var CATEGORY_MONTH_AMOUNT_TEMPLATE = 
+`<div class="row justify-content-between">
+<div class="col category-name"></div>
+<div class="col category-amount text-end"></div>
+</div>`;
+
+function createAndInsertCategoryMonthAmount(name, amount){
+  const container = document.createElement('div');
+  container.innerHTML = CATEGORY_MONTH_AMOUNT_TEMPLATE;
+  const category = container.firstChild;
+  category.querySelector('.category-name').textContent = name;
+  category.querySelector('.category-amount').textContent = amountFormat(amount);
+  if (amount > 0){
+    category.querySelector('.category-amount').classList.add('text-primary');
+  } else if (amount < 0) {
+    category.querySelector('.category-amount').classList.add('text-danger');
+  }
+  categoryMonthAmountElement.appendChild(category);
+}
+
+var ITEM_MONTH_AMOUNT_TEMPLATE = 
+`<div class="row justify-content-between">
+<div class="col item-name"></div>
+<div class="col item-amount text-end"></div>
+</div>`;
+
+function createAndInsertItemMonthAmount(name, amount){
+  const container = document.createElement('div');
+  container.innerHTML = ITEM_MONTH_AMOUNT_TEMPLATE;
+  const item = container.firstChild;
+  item.querySelector('.item-name').textContent = name;
+  item.querySelector('.item-amount').textContent = amountFormat(amount);
+  if (amount > 0){
+    item.querySelector('.item-amount').classList.add('text-primary');
+  } else if (amount < 0) {
+    item.querySelector('.item-amount').classList.add('text-danger');
+  }
+  itemMonthAmountElement.appendChild(item);
+}
 // Displays a Message in the UI.
 function displayRecord(id, itemData, docID) {
   const div = document.getElementById('date' + id) || createAndInsertMessage(id);
@@ -319,6 +359,32 @@ function displayRecord(id, itemData, docID) {
   }
   div.querySelector('.day-amount').setAttribute('data-amount', dayAmount['date'+id]);
   div.querySelector('.day-amount').textContent = amountFormat(dayAmount['date'+id]);
+
+  for (let key in categoryMonthAmount){
+    categoryMonthAmount[key] = 0;
+  }
+  let allCategoryAmount = document.getElementById('records').getElementsByClassName('category-name');
+  for (let i = 0; i < allCategoryAmount.length; i++){
+    categoryMonthAmount[allCategoryAmount[i].textContent] += parseInt(allCategoryAmount[i].nextElementSibling.getAttribute('data-amount'));
+  }
+  
+  categoryMonthAmountElement.textContent = '';
+  for (let i in categoryMonthAmount){
+    createAndInsertCategoryMonthAmount(i, categoryMonthAmount[i]);
+  }
+  
+  for (let key in itemMonthAmount){
+    itemMonthAmount[key] = 0;
+  }
+  let allItemAmount = document.getElementById('records').getElementsByClassName('item-name');
+  for (let i = 0; i < allItemAmount.length; i++){
+    itemMonthAmount[allitemAmount[i].textContent] += parseInt(allItemAmount[i].nextElementSibling.getAttribute('data-amount'));
+  }
+  
+  itemMonthAmountElement.textContent = '';
+  for (let i in itemMonthAmount){
+    createAndInsertItemMonthAmount(i, itemMonthAmount[i]);
+  }
 
   if (parseInt(item.querySelector('.item-amount').getAttribute('data-amount')) > 0 ){
     item.querySelector('.item-amount').classList.remove('text-danger');
@@ -399,6 +465,7 @@ function loadCategoriesList() {
           deleteRecord(change.doc.id, change.doc.data());
         } else {
           categories[change.doc.id] = change.doc.data().name;
+          categoryMonthAmount[change.doc.data().name] = 0;
           createAndInsertCategoryOption(change.doc.id, change.doc.data());
         }
       }, function(error){
@@ -431,6 +498,7 @@ function loadItemsList() {
         deleteRecord(change.doc.id, change.doc.data());
       } else {
         items[change.doc.id] = change.doc.data().name;
+        itemMonthAmount[change.doc.data().name] = 0;
         createAndInsertItemOption(change.doc.id, change.doc.data());
       }
     }, function(error){
@@ -488,7 +556,7 @@ async function monthSelector() {
   monthSelectorElement.setAttribute('value', date[0]+'-'+date[1]);
   dateSelectorElement.setAttribute('value', date[0]+'-'+date[1]+'-'+date[2]);
 
-  for (let day=1; day<=days; day++){
+  for (let day=days; day > 0; day--){
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
   }
@@ -598,6 +666,8 @@ var expinRadioElement = document.getElementById('expin-radio');
 var signInModalElement = document.getElementById('sign-in-modal');
 var emailInputElement = document.getElementById('email-input');
 var passwordInputElement = document.getElementById('password-input');
+var categoryMonthAmountElement = document.getElementById('category-month-amount');
+var itemMonthAmountElement = document.getElementById('item-month-amount');
 
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
