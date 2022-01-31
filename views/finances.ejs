@@ -22,7 +22,7 @@
                         <input id="month-selector" type="month" class="form-control">
                     </div>
                     <div class="user-container">
-                        <button type="button" id="sign-in" class="btn btn-primary"><i class="bi bi-google me-2"></i>Sign-in</button>
+                        <button type="button" id="sign-in" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-in-modal">Sign-in</button>
                         <button type="button" id="sign-out" class="btn btn-primary d-none"><i class="bi bi-door-closed me-2"></i>Sign-out</button>
                     </div>
                 </div>
@@ -52,66 +52,84 @@
         </div>
     </div>
     <!-- MODAL -->
-    <div class="modal fade" id="add-record-modal" tabindex="-1">
+    <!-- SIGN IN MODAL -->
+    <form id="sign-in-modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign In</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input id="email-input" type="email" placeholder="Email" required>
+                    <input id="password-input" type="password" placeholder="Password" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /SIGN IN MODAL -->
+
+    <form class="modal fade" action="#" id="add-record-modal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-body">
-                <form id="record-form" action="#" class="">
-                    <div class="row mb-2 justify-content-center">
-                        <div class="col-10">
-                            <div class="input-group">
-                                <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
-                                <span class="input-group-text">฿</span>
-                            </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-10">
+                        <div class="input-group">
+                            <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
+                            <span class="input-group-text">฿</span>
                         </div>
                     </div>
-                    <div class="row mb-2 justify-content-center">
-                        <div class="col-5">
-                            <div class="form-check">
-                                <input id="expense-radio" class="form-check-input" type="radio" name="expin" value="expense" checked>
-                                <label class="form-check-label" for="expense">
-                                    Expense
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-5">
-                            <div class="form-check">
-                                <input id="income-radio" class="form-check-input" type="radio" name="expin" value="income">
-                                <label class="form-check-label" for="income">
-                                    Income
-                                </label>
-                            </div>
+                </div>
+                <div id="expin-radio" class="row mb-2  justify-content-center">
+                    <div class="col-5">
+                        <div class="form-check">
+                            <input id="expense-radio" class="form-check-input" type="radio" name="expin" value="expense" checked>
+                            <label class="form-check-label" for="expense-radio">
+                                Expense
+                            </label>
                         </div>
                     </div>
-                    <div class="row mb-2 justify-content-center">
-                        <div class="col-5">
-                            <select id="category-select" class="form-select col-5" name="category" required>
-                                <option selected value="">Select a category</option>
-                            </select>
-                        </div>
-                        <div class="col-5">
-                            <select id="item-select" class="form-select col-5" name="item" required>
-                                <option selected value="">Select an item</option>
-                            </select>
+                    <div class="col-5">
+                        <div class="form-check">
+                            <input id="income-radio" class="form-check-input" type="radio" name="expin" value="income">
+                            <label class="form-check-label" for="income-radio">
+                                Income
+                            </label>
                         </div>
                     </div>
-                    <div class="row mb-2 justify-content-center">
-                        <div class="col-10">
-                            <input id="date-selector" type="date" class="form-control">
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-5">
+                        <select id="category-select" class="form-select col-5" name="category" required>
+                            <option selected value="">Select a category</option>
+                        </select>
+                    </div>
+                    <div class="col-5">
+                        <select id="item-select" class="form-select col-5" name="item" required>
+                            <option selected value="">Select an item</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-10">
+                        <input id="date-selector" type="date" class="form-control">
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-10 text-end">
+                        <div class="modal-footer">
+                            <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="submit-button" type="submit" class="btn btn-primary">Add</button>
+                            <button id="delete-button" class="btn btn-danger">Delete</button>
+                            <button id="modify-button" type="submit" class="btn btn-warning">Modify</button>
                         </div>
                     </div>
-                    <div class="row justify-content-center">
-                        <div class="col-10 text-end">
-                            <div class="modal-footer">
-                                <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button id="submit-button" type="submit" class="btn btn-primary">Add</button>
-                                <button id="delete-button" class="btn btn-danger">Delete</button>
-                                <button id="modify-button" class="btn btn-primary">Modify</button>
-                              </div>
-                            
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
           </div>
         </div>
