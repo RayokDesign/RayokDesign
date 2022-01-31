@@ -557,7 +557,7 @@ async function monthSelector() {
   monthSelectorElement.setAttribute('value', date[0]+'-'+date[1]);
   dateSelectorElement.setAttribute('value', date[0]+'-'+date[1]+'-'+date[2]);
 
-  for (let day=days; day > 0; day--){
+  for (let day = 0; day < days; day++){
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
   }
