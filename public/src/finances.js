@@ -557,7 +557,7 @@ async function monthSelector() {
   monthSelectorElement.setAttribute('value', date[0]+'-'+date[1]);
   dateSelectorElement.setAttribute('value', date[0]+'-'+date[1]+'-'+date[2]);
 
-  for (let day = 0; day < days; day++){
+  for (let day = 0; day <= days; day++){
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
   }
@@ -565,7 +565,7 @@ async function monthSelector() {
 
 // Saves a new message on the Cloud Firestore.
 async function saveMessage(messageText) {
-  const date = moment(messageText.timestamp).format('YYYY-MM-DD').split('-');
+  const date = moment(messageText.date).format('YYYY-MM-DD').split('-');
   const recordsRef = collection(getFirestore(), 'restaurant', date[0], 'months', date[1], 'days', date[2], 'records');
   
   // TODO 7: Push a new message to Cloud Firestore.
