@@ -616,7 +616,7 @@ expenseRadioElement.addEventListener('change', toggleExpin);
 incomeRadioElement.addEventListener('change', toggleExpin);
 
 //Show this month
-monthSelectorElement.value = moment(new Date()).format('MMMM-YY')
+monthSelectorElement.value = moment(new Date()).format('YYYY-MM')
 //Show Toast
 signInToastElement.addEventListener('click', showToast); 
 
