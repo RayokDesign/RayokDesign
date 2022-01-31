@@ -378,13 +378,14 @@ function displayRecord(id, itemData, docID) {
   }
   let allItemAmount = document.getElementById('records').getElementsByClassName('item-name');
   for (let i = 0; i < allItemAmount.length; i++){
-    itemMonthAmount[allitemAmount[i].textContent] += parseInt(allItemAmount[i].nextElementSibling.getAttribute('data-amount'));
+    itemMonthAmount[allItemAmount[i].textContent] += parseInt(allItemAmount[i].nextElementSibling.getAttribute('data-amount'));
   }
   
   itemMonthAmountElement.textContent = '';
   for (let i in itemMonthAmount){
     createAndInsertItemMonthAmount(i, itemMonthAmount[i]);
   }
+  
 
   if (parseInt(item.querySelector('.item-amount').getAttribute('data-amount')) > 0 ){
     item.querySelector('.item-amount').classList.remove('text-danger');
