@@ -7,13 +7,13 @@
  * 4. Copy the config object snippet, then add it here.
  */
 const config = {
-  apiKey: "AIzaSyBqGyOFp9my1L6EPrR5WiQbpPNHBiPQxMU",
-  authDomain: "friendlychat-feeec.firebaseapp.com",
-  databaseURL: "https://friendlychat-feeec.firebaseio.com",
-  projectId: "friendlychat-feeec",
-  storageBucket: "friendlychat-feeec.appspot.com",
-  messagingSenderId: "319867406444",
-  appId: "1:319867406444:web:30c83e870639ad14f07049"
+  apiKey: "AIzaSyCZHCKSZnH9WE5QkrGhtApo92NXe8tzNLY",
+  authDomain: "rayoktailand.firebaseapp.com",
+  projectId: "rayoktailand",
+  storageBucket: "rayoktailand.appspot.com",
+  messagingSenderId: "899005250836",
+  appId: "1:899005250836:web:e66795fa6f0db478e99601",
+  measurementId: "G-JFR0CCVL56"
 };
 
 export function getFirebaseConfig() {

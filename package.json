@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack",
     "start": "node ./bin/www",
-    "visualize-bundle": "webpack --analyze"
+    "visualize-bundle": "webpack --analyze",
+    "dev": "webpack --watch --progress"
   },
   "author": "rayok",
   "dependencies": {
