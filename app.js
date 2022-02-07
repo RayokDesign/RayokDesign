@@ -14,6 +14,7 @@ var financesRouter = require('./routes/finances');
 var memberRouter = require('./routes/member');
 var adminRouter = require('./routes/admin');
 var restaurantRouter = require('./routes/restaurant');
+var friendlychatRouter = require('./routes/friendlychat');
 /* ----- Rayok */
 
 var app = express();
@@ -41,6 +42,7 @@ app.use('/finances', financesRouter);
 app.use('/member', memberRouter);
 app.use('/admin', adminRouter);
 app.use('/restaurant', restaurantRouter);
+app.use('/friendlychat', friendlychatRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

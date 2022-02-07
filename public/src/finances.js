@@ -39,42 +39,45 @@ import moment from 'moment';
 
 let categoryAmount = {}, dayAmount = {}
 let items = {}, categories = {}, submitData = {}, unsubscribes = {};
-let categoryMonthAmount = {}, itemMonthAmount = {};
+let categoryMonthAmount = {}, itemMonthAmount = {}, financeMonthAmount = {income:0, outcome:0, earning:0};
 let timer = null;
 
-async function signIn(e) {
+async function signIn() {
+    // Sign in Firebase using popup auth and Google as the identity provider.
+    var provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider);
     // var provider = new GoogleAuthProvider();
     // await signInWithPopup(getAuth(), provider);
-  e.preventDefault();
-  const email = emailInputElement.value;
-  const password = passwordInputElement.value;
-  await signInWithEmailAndPassword(getAuth(), email, password)
-  .then(async (userCredential) => {
-      // Signed in
-      console.log(userCredential);
-      signInModalElement.querySelector('.btn-close').click();
-  })
-  .catch((error) => {
-      const errorCode = error.code;
-      switch (errorCode){
-          case 'auth/invalid-email':
-              req.session.error = '您的信箱格式輸入錯誤';
-              res.redirect('/member/signin');
-              break;
-          case 'auth/user-disabled':
-              req.session.error = '您的帳號目前停用，請聯絡管理員';
-              res.redirect('/member/signin');
-              break;
-          case 'auth/user-not-found':
-              req.session.error = '您的信箱尚未註冊';
-              res.redirect('/member/signin');
-              break;
-          case 'auth/wrong-password':
-              req.session.error = '您的密碼輸入錯誤';
-              res.redirect('/member/signin');
-              break;
-      }
-  });
+  // e.preventDefault();
+  // const email = emailInputElement.value;
+  // const password = passwordInputElement.value;
+  // await signInWithEmailAndPassword(getAuth(), email, password)
+  // .then(async (userCredential) => {
+  //     // Signed in
+  //     console.log(userCredential);
+  //     signInModalElement.querySelector('.btn-close').click();
+  // })
+  // .catch((error) => {
+  //     const errorCode = error.code;
+  //     switch (errorCode){
+  //         case 'auth/invalid-email':
+  //             req.session.error = '您的信箱格式輸入錯誤';
+  //             res.redirect('/member/signin');
+  //             break;
+  //         case 'auth/user-disabled':
+  //             req.session.error = '您的帳號目前停用，請聯絡管理員';
+  //             res.redirect('/member/signin');
+  //             break;
+  //         case 'auth/user-not-found':
+  //             req.session.error = '您的信箱尚未註冊';
+  //             res.redirect('/member/signin');
+  //             break;
+  //         case 'auth/wrong-password':
+  //             req.session.error = '您的密碼輸入錯誤';
+  //             res.redirect('/member/signin');
+  //             break;
+  //     }
+  // });
 }
 
 // Signs-out of Friendly Chat.
@@ -134,7 +137,7 @@ function authStateObserver(user) {
         
     loadCategoriesList();
     loadItemsList();
-    monthSelector();
+    monthSelector.apply(monthSelectorElement);
 
     signOutButtonElement.classList.remove('d-none');
     // Hide sign-in button.
@@ -319,6 +322,12 @@ function createAndInsertItemMonthAmount(name, amount){
   }
   itemMonthAmountElement.appendChild(item);
 }
+
+function createAndInsertFinanceMonthAmount(name){
+  console.log(name);
+  financeMonthAmountElement.querySelector(`.${name}-amount`).textContent = amountFormat(financeMonthAmount[name]);
+}
+
 // Displays a Message in the UI.
 function displayRecord(id, itemData, docID) {
   const div = document.getElementById('date' + id) || createAndInsertMessage(id);
@@ -360,6 +369,7 @@ function displayRecord(id, itemData, docID) {
   div.querySelector('.day-amount').setAttribute('data-amount', dayAmount['date'+id]);
   div.querySelector('.day-amount').textContent = amountFormat(dayAmount['date'+id]);
 
+  //Show all category total amount
   for (let key in categoryMonthAmount){
     categoryMonthAmount[key] = 0;
   }
@@ -373,6 +383,7 @@ function displayRecord(id, itemData, docID) {
     createAndInsertCategoryMonthAmount(i, categoryMonthAmount[i]);
   }
   
+  //Show all item total amount
   for (let key in itemMonthAmount){
     itemMonthAmount[key] = 0;
   }
@@ -384,6 +395,29 @@ function displayRecord(id, itemData, docID) {
   itemMonthAmountElement.textContent = '';
   for (let i in itemMonthAmount){
     createAndInsertItemMonthAmount(i, itemMonthAmount[i]);
+  }
+
+    //Show income and outcome amount
+  for (let key in financeMonthAmount){
+    financeMonthAmount[key] = 0;
+  }
+  
+  financeMonthAmountElement.querySelector('.income-amount').textContent = 0;
+  financeMonthAmountElement.querySelector('.outcome-amount').textContent = 0;
+  financeMonthAmountElement.querySelector('.earning-amount').textContent = 0;
+
+  let allDayAmount = document.getElementById('records').getElementsByClassName('day-amount');
+  for (let i = 0; i < allDayAmount.length; i++){
+    if (parseInt(allDayAmount[i].getAttribute('data-amount')) > 0){
+      financeMonthAmount['income'] += parseInt(allDayAmount[i].getAttribute('data-amount'));
+    } else {
+      financeMonthAmount['outcome'] += parseInt(allDayAmount[i].getAttribute('data-amount'));
+    }
+  }
+  financeMonthAmount['earning'] = financeMonthAmount['income'] + financeMonthAmount['outcome'];
+  console.log(financeMonthAmount);
+  for (let i in financeMonthAmount){
+    createAndInsertFinanceMonthAmount(i);
   }
   
 
@@ -552,11 +586,11 @@ function toggleExpin() {
 }
 //Load date from date
 async function monthSelector() {
-  let date = moment(new Date()).format('YYYY-MM-DD').split('-');
+  recordListElement.textContent = '';
+  let date = this.value.split('-') || moment(new Date()).format('YYYY-MM').split('-')
   let days = getDaysInMonth(date[0], date[1]);
-  monthSelectorElement.setAttribute('value', date[0]+'-'+date[1]);
-  dateSelectorElement.setAttribute('value', date[0]+'-'+date[1]+'-'+date[2]);
 
+  console.log('month');
   for (let day = 0; day <= days; day++){
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
@@ -669,6 +703,7 @@ var emailInputElement = document.getElementById('email-input');
 var passwordInputElement = document.getElementById('password-input');
 var categoryMonthAmountElement = document.getElementById('category-month-amount');
 var itemMonthAmountElement = document.getElementById('item-month-amount');
+var financeMonthAmountElement = document.getElementById('finance-month-amount');
 
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
@@ -687,7 +722,10 @@ expenseRadioElement.addEventListener('change', toggleExpin);
 incomeRadioElement.addEventListener('change', toggleExpin);
 
 //Show this month
-monthSelectorElement.value = moment(new Date()).format('YYYY-MM')
+monthSelectorElement.value = moment(new Date()).format('YYYY-MM');
+monthSelectorElement.addEventListener('change', monthSelector);
+dateSelectorElement.value = moment(new Date()).format('YYYY-MM-DD');;
+
 //Show Toast
 signInToastElement.addEventListener('click', showToast); 
 
