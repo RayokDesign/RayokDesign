@@ -12,23 +12,20 @@
 <body>
     <div class="container">
         <header>
-            <nav class="navbar navbar-light pt-3">
-                <div class="container-fluid">
-                    <a href="/finances" class="navbar-brand fs-2">
-                        <!--<img class="me-2" src="/images/icons/favicon-32x32.png" alt="" width="32" height="32" class="d-inline-block align-text-top">-->
-                        🐔 ร้านข้าวมันไก่ปอ
-                    </a>
-                    <div class="user-container">
-                        <button type="button" id="sign-in" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-in-modal">Sign-in</button>
-                        <button type="button" id="sign-up" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign-up</button>
-                        <button type="button" id="sign-out" class="btn btn-primary d-none"><i class="bi bi-door-closed me-2"></i>Sign-out</button>
-                    </div>
+            <nav class="navbar navbar-light pt-3 d-flex">
+                <a href="/finances" class="navbar-brand fs-2">
+                    🐔 ร้านข้าวมันไก่ปอ
+                </a>
+                <div class="user-container">
+                    <button type="button" id="sign-in" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-in-modal">Sign-in</button>
+                    <button type="button" id="sign-up" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign-up</button>
+                    <button type="button" id="sign-out" class="btn btn-primary d-none"><i class="bi bi-door-closed me-2"></i>Sign-out</button>
                 </div>
             </nav>
-            <div class="container-fluid mb-3">
+            <div class="mb-3">
                 <input class="form-control" type="month" id="month-selector">
             </div>
-            <div class="container-fluid mb-3">
+            <div class="mb-3">
                 <div class="accordion" id="accordionMonth">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
