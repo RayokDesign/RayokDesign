@@ -12,8 +12,8 @@ const config = {
   projectId: "rayoktailand",
   storageBucket: "rayoktailand.appspot.com",
   messagingSenderId: "899005250836",
-  appId: "1:899005250836:web:e66795fa6f0db478e99601",
-  measurementId: "G-JFR0CCVL56"
+  appId: "1:899005250836:web:6274621a59d56e3be99601",
+  measurementId: "G-4T12BRNEP7"
 };
 
 export function getFirebaseConfig() {

@@ -37,47 +37,75 @@ import { getPerformance } from 'firebase/performance';
 import { getFirebaseConfig } from './firebase-config.js';
 import moment from 'moment';
 
-let categoryAmount = {}, dayAmount = {}
 let items = {}, categories = {}, submitData = {}, unsubscribes = {};
-let categoryMonthAmount = {}, itemMonthAmount = {}, financeMonthAmount = {income:0, outcome:0, earning:0};
+let itemMonthAmount ={}, categoryMonthAmount = {};
 let timer = null;
 
-async function signIn() {
-    // Sign in Firebase using popup auth and Google as the identity provider.
-    var provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider);
-    // var provider = new GoogleAuthProvider();
-    // await signInWithPopup(getAuth(), provider);
-  // e.preventDefault();
-  // const email = emailInputElement.value;
-  // const password = passwordInputElement.value;
-  // await signInWithEmailAndPassword(getAuth(), email, password)
-  // .then(async (userCredential) => {
-  //     // Signed in
-  //     console.log(userCredential);
-  //     signInModalElement.querySelector('.btn-close').click();
-  // })
-  // .catch((error) => {
-  //     const errorCode = error.code;
-  //     switch (errorCode){
-  //         case 'auth/invalid-email':
-  //             req.session.error = '您的信箱格式輸入錯誤';
-  //             res.redirect('/member/signin');
-  //             break;
-  //         case 'auth/user-disabled':
-  //             req.session.error = '您的帳號目前停用，請聯絡管理員';
-  //             res.redirect('/member/signin');
-  //             break;
-  //         case 'auth/user-not-found':
-  //             req.session.error = '您的信箱尚未註冊';
-  //             res.redirect('/member/signin');
-  //             break;
-  //         case 'auth/wrong-password':
-  //             req.session.error = '您的密碼輸入錯誤';
-  //             res.redirect('/member/signin');
-  //             break;
-  //     }
-  // });
+function signIn(e) {
+  e.preventDefault();
+  const email = signInModalElement.querySelector('#sign-in-email-input').value;
+  const password = signInModalElement.querySelector('#sign-in-password-input').value;
+  signInWithEmailAndPassword(getAuth(), email, password)
+  .then((userCredential) => {
+      // Signed in
+      signInModalElement.querySelector('.btn-close').click();
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    switch (errorCode){
+      case 'auth/invalid-email':
+        promptToastElement.children[0].innerHTML = "您的信箱格式輸入錯誤";
+        promptToast.show();
+        break;
+      case 'auth/user-disabled':
+        promptToastElement.children[0].innerHTML = "您的帳號目前停用，請聯絡管理員";
+        promptToast.show();
+        break;
+      case 'auth/user-not-found':
+        promptToastElement.children[0].innerHTML = "您的信箱尚未註冊";
+        promptToast.show();
+        break;
+      case 'auth/wrong-password':
+        promptToastElement.children[0].innerHTML = "您的密碼輸入錯誤";
+        promptToast.show();
+        break;
+      case 'auth/too-many-requests':
+        promptToastElement.children[0].innerHTML = "錯誤次數過多，請稍後再試";
+        promptToast.show();
+        break;
+    }
+  });
+}
+
+function signUp(e) {
+  e.preventDefault();
+  const email = signUpModalElement.querySelector('#sign-up-email-input').value;
+  const password = signUpModalElement.querySelector('#sign-up-password-input').value;
+  
+  createUserWithEmailAndPassword(getAuth(), email, password)
+  .then((userCredential) => {
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    switch (errorCode){
+      case 'auth/email-already-in-use':
+        promptToastElement.children[0].innerHTML = "信箱已有人使用";
+        promptToast.show();
+        break;
+      case 'auth/invalid-email':
+        promptToastElement.children[0].innerHTML = "信箱格式錯誤";
+        promptToast.show();
+        break;
+      case 'auth/operation-not-allowed':
+        promptToastElement.children[0].innerHTML = "目前尚未開放註冊";
+        promptToast.show();
+        break;
+      case 'auth/weak-password':
+        promptToastElement.children[0].innerHTML = "密碼強度不足";
+        promptToast.show();
+        break;
+    }
+  })
 }
 
 // Signs-out of Friendly Chat.
@@ -90,22 +118,6 @@ function signOutUser() {
   }
 }
 
-// Returns the signed-in user's display name.
-function getUserName() {
-  // TODO 5: Return the user's display name.
-  return getAuth().currentUser.displayName;
-}
-
-// Enables or disables the submit button depending on the values of the input
-// fields.
-function toggleButton() {
-  if (messageInputElement.value) {
-    submitButtonElement.removeAttribute('disabled');
-  } else {
-    submitButtonElement.setAttribute('disabled', 'true');
-  }
-}
-
 // Returns true if user is signed-in. Otherwise false and displays a message.
 function checkSignedInWithMessage() {
   // Return true if the user is signed in Firebase
@@ -114,8 +126,8 @@ function checkSignedInWithMessage() {
   }
 
   // Display a message to the user using a Toast.
-  SignInToastElement.children[0].innerHTML = "You must sign-in first"
-  let toast = new bootstrap.Toast(SignInToastElement);
+  promptToastElement.children[0].innerHTML = "You must sign-in first"
+  let toast = new bootstrap.Toast(promptToastElement);
   toast.show();
   return false;
 }
@@ -139,29 +151,31 @@ function authStateObserver(user) {
     loadItemsList();
     monthSelector.apply(monthSelectorElement);
 
-    signOutButtonElement.classList.remove('d-none');
     // Hide sign-in button.
+    signOutButtonElement.classList.remove('d-none');
     signInButtonElement.classList.add('d-none');
+    signUpButtonElement.classList.add('d-none');
 
   } else {
-    signOutButtonElement.classList.add('d-none');
     // Show sign-in button.
+    signOutButtonElement.classList.add('d-none');
     signInButtonElement.classList.remove('d-none');
+    signUpButtonElement.classList.remove('d-none');
   }
 }
 
 // Loads chat messages history and listens for upcoming ones.
-function loadRecords(year, month, day) {
+async function loadRecords(year, month, day) {
   // TODO 8: Load and listen for new messages.
   const recentRecordsQuery = query(collection(getFirestore(), 'restaurant', year, 'months', month, 'days', day, 'records'), orderBy('timestamp', 'desc'));
-  
-  // Start listening to the query.
+
+
+  //Start listening to the query.
   unsubscribes[`${year}${month}${day}`] = onSnapshot(recentRecordsQuery, function(snapshot) {
     snapshot.docChanges().forEach(function(change) {
       if (change.type === 'removed') {
         deleteRecord(change.doc.id, change.doc.data());
       } else {
-        // getDetailData(`${year}-${month}-${day}`, change.doc.data());
         displayRecord(`${year}-${month}-${day}`, change.doc.data(), change.doc.id);
       }
     }, function(error){
@@ -169,17 +183,6 @@ function loadRecords(year, month, day) {
     });
   });
 }
-
-// // Loads chat messages history and listens for upcoming ones.
-// function getDetailData(date, itemData) {
-//   if (itemData.expin == 'income'){
-//     typeof(dayAmount[date]) == 'undefined' ? dayAmount[date] = itemData.amount : dayAmount[date] += itemData.amount;
-//     typeof(categoryAmount[`${itemData.category}${date}`]) == 'undefined' ? categoryAmount[`${itemData.category}${date}`] = itemData.amount : categoryAmount[`${itemData.category}${date}`] += itemData.amount;
-//   } else {
-//     typeof(dayAmount[date]) == 'undefined' ? dayAmount[date] = -itemData.amount : dayAmount[date] -= itemData.amount;
-//     typeof(categoryAmount[`${itemData.category}${date}`]) == 'undefined' ? categoryAmount[`${itemData.category}${date}`] = -itemData.amount : categoryAmount[`${itemData.category}${date}`] -= itemData.amount;
-//   }
-// }
 
 // Template for messages.
 var MESSAGE_TEMPLATE =
@@ -213,7 +216,7 @@ var CATEGORY_TEMPLATE =
     <span class="category-amount align-self-center"></span>
   </div>
   <div class="accordion-collapse collapse">
-    <div class="accordion-body p-0">
+    <div class="accordion-body px-2 py-0">
     </div>
   </div>
 </div>`;
@@ -231,7 +234,7 @@ function createAndInsertCategory(id, itemData) {
 
 
 var ITEM_TEMPLATE = 
-`<div class="btn item d-flex justify-content-between" data-bs-toggle="modal" data-bs-target="#add-record-modal">
+`<div class="mb-3 btn item d-flex justify-content-between" data-bs-toggle="modal" data-bs-target="#add-record-modal">
   <span class="item-name"></span>
   <span class="item-amount align-self-center"></span>
 </div>`;
@@ -243,9 +246,12 @@ function createAndInsertItem(id, itemData, docID) {
   item.addEventListener('click', modalModeSwitch);
   item.setAttribute('id', 'item'+docID);
 
-
-  recordListElement.querySelector(`#category${itemData.category}${id}`).querySelector('.accordion-body').appendChild(item);
-
+  if (itemData.category == undefined || itemData.category == ''){
+    recordListElement.querySelector('#date'+ id).querySelector('.accordion').appendChild(item);
+  } else {
+    recordListElement.querySelector(`#category${itemData.category}${id}`).querySelector('.accordion-body').appendChild(item);
+  }
+  
   return item;
 }
 
@@ -267,8 +273,13 @@ async function createAndInsertMemo(date) {
   const arrDate = moment(date).format('YYYY-MM-DD').split('-');
   const memoRef = doc(getFirestore(), 'restaurant', arrDate[0], 'months', arrDate[1], 'days', arrDate[2]);
   const memoSnap = await getDoc(memoRef);
+
+  if (memoSnap.exists()) {
+    memo.querySelector('textarea').value = memoSnap.data().memo;
+  } else {
+    memo.querySelector('textarea').value = '';
+  }
   
-  memo.querySelector('textarea').value = memoSnap.data().memo || '';
 
   return memo;
 }
@@ -280,66 +291,27 @@ function updateMemo(){
   clearTimeout(timer);
   timer = setTimeout(function(){
     setDoc(dateRef, { memo: memoElement.value }, { merge: true });
+    promptToastElement.children[0].innerHTML = "備註已更新";
+    promptToast.show();
   },2000)
-}
-
-var CATEGORY_MONTH_AMOUNT_TEMPLATE = 
-`<div class="row justify-content-between">
-<div class="col category-name"></div>
-<div class="col category-amount text-end"></div>
-</div>`;
-
-function createAndInsertCategoryMonthAmount(name, amount){
-  const container = document.createElement('div');
-  container.innerHTML = CATEGORY_MONTH_AMOUNT_TEMPLATE;
-  const category = container.firstChild;
-  category.querySelector('.category-name').textContent = name;
-  category.querySelector('.category-amount').textContent = amountFormat(amount);
-  if (amount > 0){
-    category.querySelector('.category-amount').classList.add('text-primary');
-  } else if (amount < 0) {
-    category.querySelector('.category-amount').classList.add('text-danger');
-  }
-  categoryMonthAmountElement.appendChild(category);
-}
-
-var ITEM_MONTH_AMOUNT_TEMPLATE = 
-`<div class="row justify-content-between">
-<div class="col item-name"></div>
-<div class="col item-amount text-end"></div>
-</div>`;
-
-function createAndInsertItemMonthAmount(name, amount){
-  const container = document.createElement('div');
-  container.innerHTML = ITEM_MONTH_AMOUNT_TEMPLATE;
-  const item = container.firstChild;
-  item.querySelector('.item-name').textContent = name;
-  item.querySelector('.item-amount').textContent = amountFormat(amount);
-  if (amount > 0){
-    item.querySelector('.item-amount').classList.add('text-primary');
-  } else if (amount < 0) {
-    item.querySelector('.item-amount').classList.add('text-danger');
-  }
-  itemMonthAmountElement.appendChild(item);
-}
-
-function createAndInsertFinanceMonthAmount(name){
-  console.log(name);
-  financeMonthAmountElement.querySelector(`.${name}-amount`).textContent = amountFormat(financeMonthAmount[name]);
 }
 
 // Displays a Message in the UI.
 function displayRecord(id, itemData, docID) {
   const div = document.getElementById('date' + id) || createAndInsertMessage(id);
-  const category = document.getElementById(`category${itemData.category}${id}`) || createAndInsertCategory(id, itemData);
+  // Category ----
+  if (itemData.category != undefined && itemData.category != ''){
+    const category = document.getElementById(`category${itemData.category}${id}`) || createAndInsertCategory(id, itemData);
+    category.parentNode.querySelector('.accordion-header').setAttribute('data-bs-target', '#category'+itemData.category+id);
+    category.parentNode.querySelector('.category-name').textContent = categories[itemData.category];
+  }
+  // ----Category
   const item = document.getElementById('item'+docID) || createAndInsertItem(id, itemData, docID);
   document.getElementById(`memo${id}`) || createAndInsertMemo(id);
 
   div.querySelector('.record-date').textContent = moment(id).format('DD dddd YYYY MMMM');
-  category.parentNode.querySelector('.accordion-header').setAttribute('data-bs-target', '#category'+itemData.category+id);
-  category.parentNode.querySelector('.category-name').textContent = categories[itemData.category];
+  
   item.querySelector('.item-name').textContent = items[itemData.item];
-  item.querySelector('.item-amount').textContent = amountFormat(itemData.amount);
   item.setAttribute('data-amount', itemData.amount);
   item.setAttribute('data-expin', itemData.expin);
   item.setAttribute('data-category', itemData.category);
@@ -352,141 +324,148 @@ function displayRecord(id, itemData, docID) {
   } else {
     item.querySelector('.item-amount').setAttribute('data-amount', itemData.amount);
   }
-  
-  categoryAmount['category'+itemData.category+id] = 0;
-  let aItemAmount = category.getElementsByClassName('item-amount');
-  for (let i = 0; i < aItemAmount.length; i++){
-    categoryAmount['category'+itemData.category+id] += parseInt(aItemAmount[i].getAttribute('data-amount'));
-  }
-  category.previousElementSibling.querySelector('.category-amount').setAttribute('data-amount', categoryAmount['category'+itemData.category+id]);
-  category.previousElementSibling.querySelector('.category-amount').textContent = amountFormat(categoryAmount['category'+itemData.category+id]);
+  item.querySelector('.item-amount').textContent = amountFormat(item.querySelector('.item-amount').getAttribute('data-amount'));
 
-  dayAmount['date'+id] = 0;
-  let aCategoryAmount = div.getElementsByClassName('category-amount');
-  for (let i = 0; i < aCategoryAmount.length; i++){
-    dayAmount['date'+id] += parseInt(aCategoryAmount[i].getAttribute('data-amount'));
-  }
-  div.querySelector('.day-amount').setAttribute('data-amount', dayAmount['date'+id]);
-  div.querySelector('.day-amount').textContent = amountFormat(dayAmount['date'+id]);
+  calculateAmount();
+  bodyResize();
+}
 
-  //Show all category total amount
-  for (let key in categoryMonthAmount){
-    categoryMonthAmount[key] = 0;
-  }
-  let allCategoryAmount = document.getElementById('records').getElementsByClassName('category-name');
-  for (let i = 0; i < allCategoryAmount.length; i++){
-    categoryMonthAmount[allCategoryAmount[i].textContent] += parseInt(allCategoryAmount[i].nextElementSibling.getAttribute('data-amount'));
-  }
+function calculateAmount() {
+  const aCategoryAmountElement = document.getElementsByClassName('category-amount');
+  const aDayAmountElement = document.getElementsByClassName('day-amount');
   
-  categoryMonthAmountElement.textContent = '';
-  for (let i in categoryMonthAmount){
-    createAndInsertCategoryMonthAmount(i, categoryMonthAmount[i]);
-  }
-  
-  //Show all item total amount
-  for (let key in itemMonthAmount){
-    itemMonthAmount[key] = 0;
-  }
-  let allItemAmount = document.getElementById('records').getElementsByClassName('item-name');
-  for (let i = 0; i < allItemAmount.length; i++){
-    itemMonthAmount[allItemAmount[i].textContent] += parseInt(allItemAmount[i].nextElementSibling.getAttribute('data-amount'));
-  }
-  
-  itemMonthAmountElement.textContent = '';
-  for (let i in itemMonthAmount){
-    createAndInsertItemMonthAmount(i, itemMonthAmount[i]);
+  for(let i=0; i<aCategoryAmountElement.length; i++){
+    const aItemAmount = aCategoryAmountElement[i].parentElement.parentElement.getElementsByClassName('item-amount');
+    aCategoryAmountElement[i].textContent = '0';
+    for(let j=0; j<aItemAmount.length; j++) {
+      aCategoryAmountElement[i].textContent = parseInt(aCategoryAmountElement[i].textContent) + parseInt(aItemAmount[j].getAttribute('data-amount'));
+    }
+    aCategoryAmountElement[i].setAttribute('data-amount', aCategoryAmountElement[i].textContent);
+    aCategoryAmountElement[i].textContent = amountFormat(aCategoryAmountElement[i].textContent);
   }
 
-    //Show income and outcome amount
-  for (let key in financeMonthAmount){
-    financeMonthAmount[key] = 0;
-  }
-  
-  financeMonthAmountElement.querySelector('.income-amount').textContent = 0;
-  financeMonthAmountElement.querySelector('.outcome-amount').textContent = 0;
-  financeMonthAmountElement.querySelector('.earning-amount').textContent = 0;
+  financeMonthAmountElement.querySelector('.income-amount').textContent = '0';
+  financeMonthAmountElement.querySelector('.outcome-amount').textContent = '0';
+  financeMonthAmountElement.querySelector('.earning-amount').textContent = '0';
+  for (let i=0; i<aDayAmountElement.length; i++){
+    const aItemAmount = aDayAmountElement[i].parentElement.parentElement.getElementsByClassName('item-amount');
+    aDayAmountElement[i].textContent = '0';
+    aDayAmountElement[i].classList.remove('text-primary');
+    aDayAmountElement[i].classList.remove('text-danger');
 
-  let allDayAmount = document.getElementById('records').getElementsByClassName('day-amount');
-  for (let i = 0; i < allDayAmount.length; i++){
-    if (parseInt(allDayAmount[i].getAttribute('data-amount')) > 0){
-      financeMonthAmount['income'] += parseInt(allDayAmount[i].getAttribute('data-amount'));
+    for(let j=0; j<aItemAmount.length; j++) {
+      aDayAmountElement[i].textContent = parseInt(aDayAmountElement[i].textContent) + parseInt(aItemAmount[j].getAttribute('data-amount'));
+      financeMonthAmountElement.querySelector('.earning-amount').textContent = parseInt(financeMonthAmountElement.querySelector('.earning-amount').textContent)+parseInt(aItemAmount[j].getAttribute('data-amount'));
+      if(parseInt(aItemAmount[j].getAttribute('data-amount')) > 0) {
+        financeMonthAmountElement.querySelector('.income-amount').textContent = parseInt(financeMonthAmountElement.querySelector('.income-amount').textContent)+parseInt(aItemAmount[j].getAttribute('data-amount'));
+      } else {
+        financeMonthAmountElement.querySelector('.outcome-amount').textContent = parseInt(financeMonthAmountElement.querySelector('.outcome-amount').textContent)+parseInt(aItemAmount[j].getAttribute('data-amount'));
+      }
+    }
+    aDayAmountElement[i].setAttribute('data-amount', aDayAmountElement[i].textContent);
+    if(parseInt(aDayAmountElement[i].getAttribute('data-amount')) > 0) {
+      aDayAmountElement[i].classList.add('text-primary');
+      aDayAmountElement[i].classList.remove('text-danger');
+    } else if (parseInt(aDayAmountElement[i].getAttribute('data-amount')) < 0){
+      aDayAmountElement[i].classList.remove('text-primary');
+      aDayAmountElement[i].classList.add('text-danger');
+    }
+    aDayAmountElement[i].textContent = amountFormat(aDayAmountElement[i].textContent);
+  }
+  //reset month amount
+  itemMonthAmount = {};
+  categoryMonthAmount = {};
+  let aItemElements = document.getElementsByClassName('item-name');
+  let aCategoryElements = document.getElementsByClassName('category-name');
+  
+  //Item Month Amount ------------
+
+  for (let i=0; i<aItemElements.length; i++){
+    if (itemMonthAmount[`${aItemElements[i].textContent}`] == undefined){
+      itemMonthAmount[`${aItemElements[i].textContent}`] = parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'));
     } else {
-      financeMonthAmount['outcome'] += parseInt(allDayAmount[i].getAttribute('data-amount'));
+      itemMonthAmount[`${aItemElements[i].textContent}`] = itemMonthAmount[`${aItemElements[i].textContent}`] + parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'));
     }
   }
-  financeMonthAmount['earning'] = financeMonthAmount['income'] + financeMonthAmount['outcome'];
-  console.log(financeMonthAmount);
-  for (let i in financeMonthAmount){
-    createAndInsertFinanceMonthAmount(i);
-  }
-  
 
-  if (parseInt(item.querySelector('.item-amount').getAttribute('data-amount')) > 0 ){
-    item.querySelector('.item-amount').classList.remove('text-danger');
-    item.querySelector('.item-amount').classList.add('text-primary');
-  } else {
-    item.querySelector('.item-amount').classList.remove('text-primary');
-    item.querySelector('.item-amount').classList.add('text-danger');
+  var ITEM_MONTH_AMOUNT_TEMPLATE =
+  `<div class="row justify-content-between">
+    <div class="col item-month-name"></div>
+    <div class="col item-month-amount text-end">0</div>
+  </div>`;
+
+  itemMonthAmountElement.textContent = '';
+
+  for (let itemName in itemMonthAmount){
+    const container = document.createElement('div');
+    container.innerHTML = ITEM_MONTH_AMOUNT_TEMPLATE;
+    const item = container.firstChild;
+    item.querySelector('.item-month-name').textContent = itemName;
+    item.querySelector('.item-month-amount').textContent = itemMonthAmount[itemName];
+  
+    itemMonthAmountElement.appendChild(item);
   }
-  if (parseInt(div.querySelector('.day-amount').getAttribute('data-amount')) > 0 ){
-    div.querySelector('.day-amount').classList.remove('text-danger');
-    div.querySelector('.day-amount').classList.add('text-primary');
-  } else {
-    div.querySelector('.day-amount').classList.remove('text-primary');
-    div.querySelector('.day-amount').classList.add('text-danger');
+
+  //------- Item Month Amount
+
+  //Category Month Amount -------
+  for (let i=0; i<aCategoryElements.length; i++){
+    if (categoryMonthAmount[`${aCategoryElements[i].textContent}`] == undefined){
+      categoryMonthAmount[`${aCategoryElements[i].textContent}`] = parseInt(aCategoryElements[i].nextElementSibling.getAttribute('data-amount'));
+    } else {
+      categoryMonthAmount[`${aCategoryElements[i].textContent}`] = categoryMonthAmount[`${aCategoryElements[i].textContent}`] + parseInt(aCategoryElements[i].nextElementSibling.getAttribute('data-amount'));
+    }
   }
+
+  var CATEGORY_MONTH_AMOUNT_TEMPLATE =
+  `<div class="row justify-content-between">
+    <div class="col category-month-name"></div>
+    <div class="col category-month-amount text-end">0</div>
+  </div>`;
+
+  categoryMonthAmountElement.textContent = '';
+
+  for (let categoryName in categoryMonthAmount){
+    const container = document.createElement('div');
+    container.innerHTML = CATEGORY_MONTH_AMOUNT_TEMPLATE;
+    const category = container.firstChild;
+    category.querySelector('.category-month-name').textContent = categoryName;
+    category.querySelector('.category-month-amount').textContent = categoryMonthAmount[categoryName];
+  
+    categoryMonthAmountElement.appendChild(category);
+  }
+  //------------ Category Month Amount 
 }
 
 // Delete a Message from the UI.
 function deleteRecord(docID, itemData) {
   let item = document.getElementById('item'+docID);
-  let accordionBody = item.parentNode;
   let div = document.getElementById('date'+itemData.date);
-  console.log(div);
-  let category = div.querySelector(`#category${itemData.category}${itemData.date}`);
+  let accordionBody = item.parentNode;
+  
   // If an element for that message exists we delete it.
+
   if (item) {
-    accordionBody.removeChild(item);
+    item.parentNode.removeChild(item);
   }
 
-  if (accordionBody.children.length == 0){
-    category.parentNode.parentNode.removeChild(category.parentNode);
-  } else {
-    categoryAmount['category'+itemData.category+itemData.date] = 0;
-    let aItemAmount = category.getElementsByClassName('item-amount');
-    for (let i = 0; i < aItemAmount.length; i++){
-      categoryAmount['category'+itemData.category+itemData.date] += parseInt(aItemAmount[i].getAttribute('data-amount'));
+  if (item.getAttribute('data-category') != ''){
+    let category = div.querySelector(`#category${itemData.category}${itemData.date}`);
+
+    if (accordionBody.children.length == 0){
+      category.parentNode.parentNode.removeChild(category.parentNode);
     }
-    category.previousElementSibling.querySelector('.category-amount').setAttribute('data-amount', categoryAmount['category'+itemData.category+itemData.date]);
-    category.previousElementSibling.querySelector('.category-amount').textContent = amountFormat(categoryAmount['category'+itemData.category+itemData.date]);
   }
 
   if (div.querySelector('.accordion').children.length == 0){
     div.parentNode.removeChild(div);
-  } else {
-    dayAmount['date'+itemData.date] = 0;
-    let aCategoryAmount = div.getElementsByClassName('category-amount');
-    for (let i = 0; i < aCategoryAmount.length; i++){
-      dayAmount['date'+itemData.date] += parseInt(aCategoryAmount[i].getAttribute('data-amount'));
-    }
-    div.querySelector('.day-amount').setAttribute('data-amount', dayAmount['date'+itemData.date]);
-    div.querySelector('.day-amount').textContent = amountFormat(dayAmount['date'+itemData.date]);
   }
+  calculateAmount();
+  bodyResize();
 }
 
 function amountFormat(amount) {
   return `${new Intl.NumberFormat().format(amount)} ฿`;
-}
-
-function showToast(){
-  var toastLiveExample = document.getElementById('liveToast')
-  if (toastTriggerElement) {
-    toastTriggerElement.addEventListener('click', function () {
-      var toast = new bootstrap.Toast(toastLiveExample)
-  
-      toast.show()
-    })
-  }
 }
 
 function loadCategoriesList() {
@@ -500,7 +479,6 @@ function loadCategoriesList() {
           deleteRecord(change.doc.id, change.doc.data());
         } else {
           categories[change.doc.id] = change.doc.data().name;
-          categoryMonthAmount[change.doc.data().name] = 0;
           createAndInsertCategoryOption(change.doc.id, change.doc.data());
         }
       }, function(error){
@@ -533,7 +511,6 @@ function loadItemsList() {
         deleteRecord(change.doc.id, change.doc.data());
       } else {
         items[change.doc.id] = change.doc.data().name;
-        itemMonthAmount[change.doc.data().name] = 0;
         createAndInsertItemOption(change.doc.id, change.doc.data());
       }
     }, function(error){
@@ -566,6 +543,8 @@ function onRecordFormSubmit(e) {
     submitData['amount'] = amountInputElement.value;
     submitData['date'] = dateSelectorElement.value;
     submitData['timestamp'] = serverTimestamp();
+    submitData['category'] = categorySelectElement.value;
+
     expenseRadioElement.checked == true ? submitData['expin'] = 'expense' : submitData['expin'] = 'income';
     saveMessage(submitData);
     dismissButtonElement.click();
@@ -590,7 +569,6 @@ async function monthSelector() {
   let date = this.value.split('-') || moment(new Date()).format('YYYY-MM').split('-')
   let days = getDaysInMonth(date[0], date[1]);
 
-  console.log('month');
   for (let day = 0; day <= days; day++){
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
@@ -643,6 +621,7 @@ function modalModeSwitch(){
     categorySelectElement.value = this.getAttribute("data-category");
     itemSelectElement.value = this.getAttribute("data-item");
     modifyButtonElement.setAttribute('data-date', this.getAttribute('data-date'));
+    modifyButtonElement.setAttribute('data-category', this.getAttribute('data-category'));
     deleteButtonElement.setAttribute('data-date', this.getAttribute('data-date'))
     modifyButtonElement.setAttribute('data-id', this.getAttribute('data-id'));
     deleteButtonElement.setAttribute('data-id', this.getAttribute('data-id'));
@@ -658,6 +637,8 @@ function cleanModal(){
 
 async function modifyItemData(e){
   e.preventDefault();
+  const item = document.getElementById('item'+this.getAttribute('data-id'));
+  const accordionBody = item.parentNode;
   const date = this.getAttribute('data-date').split('-');
   const itemRef = doc(getFirestore(), 'restaurant', date[0], 'months', date[1], 'days', date[2], 'records', this.getAttribute('data-id'));
   const itemData = {
@@ -666,6 +647,19 @@ async function modifyItemData(e){
     category: categorySelectElement.value,
     item: itemSelectElement.value
   }
+  if (this.getAttribute('data-category') != categorySelectElement.value){
+    if (this.getAttribute('data-category') == ''){
+      item.parentNode.removeChild(item);
+    } else {
+      item.parentNode.removeChild(item);
+      if (accordionBody.children.length == 0){
+        accordionBody.parentNode.parentNode.parentNode.removeChild(accordionBody.parentNode.parentNode);
+      }
+    }
+
+    
+  }
+
   dismissButtonElement.click();
   await updateDoc(itemRef, itemData);
 }
@@ -678,13 +672,20 @@ async function deleteItem(e){
   dismissButtonElement.click();
   await deleteDoc(itemRef);
 }
+function bodyResize(){
+  bodyElement.style.marginBottom = fixedBottomArea.offsetHeight +'px';
+}
 
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
+var signInModalElement = document.getElementById('sign-in-modal');
+var signUpModalElement = document.getElementById('sign-up-modal');
 var signInButtonElement = document.getElementById('sign-in');
+var signUpButtonElement = document.getElementById('sign-up');
 var monthSelectorElement = document.getElementById('month-selector');
 var signOutButtonElement = document.getElementById('sign-out');
-var signInToastElement = document.getElementById('must-signin-toast')
+var promptToastElement = document.getElementById('prompt-toast');
+var promptToast = new bootstrap.Toast(promptToastElement);
 var categorySelectElement = document.getElementById('category-select');
 var itemSelectElement = document.getElementById('item-select');
 var expenseRadioElement = document.getElementById('expense-radio');
@@ -698,20 +699,19 @@ var submitButtonElement = document.getElementById('submit-button');
 var deleteButtonElement = document.getElementById('delete-button');
 var modifyButtonElement = document.getElementById('modify-button');
 var expinRadioElement = document.getElementById('expin-radio');
-var signInModalElement = document.getElementById('sign-in-modal');
-var emailInputElement = document.getElementById('email-input');
-var passwordInputElement = document.getElementById('password-input');
 var categoryMonthAmountElement = document.getElementById('category-month-amount');
 var itemMonthAmountElement = document.getElementById('item-month-amount');
 var financeMonthAmountElement = document.getElementById('finance-month-amount');
+var bodyElement = document.body;
+var fixedBottomArea = document.getElementsByClassName('fixed-bottom')[0];
 
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
 signInModalElement.addEventListener('submit', signIn);
-categorySelectElement.addEventListener('change', selectChange);
+signUpModalElement.addEventListener('submit', signUp);
+//categorySelectElement.addEventListener('change', selectChange);
 itemSelectElement.addEventListener('change', selectChange);
 signOutButtonElement.addEventListener('click', signOutUser);
-//signInButtonElement.addEventListener('click', signIn);
 addRecordModalElement.addEventListener('shown.bs.modal', focusInput);
 addRecordModalElement.addEventListener('hidden.bs.modal', cleanModal);
 addRecordButtonElement.addEventListener('click', modalModeSwitch);
@@ -726,8 +726,6 @@ monthSelectorElement.value = moment(new Date()).format('YYYY-MM');
 monthSelectorElement.addEventListener('change', monthSelector);
 dateSelectorElement.value = moment(new Date()).format('YYYY-MM-DD');;
 
-//Show Toast
-signInToastElement.addEventListener('click', showToast); 
 
 const config = {
   apiKey: "AIzaSyCZHCKSZnH9WE5QkrGhtApo92NXe8tzNLY",

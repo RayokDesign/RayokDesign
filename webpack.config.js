@@ -10,9 +10,9 @@ const rootConfig = {
 
 const appConfig = {
   ...rootConfig,
-  entry: path.join(__dirname, './public/src/friendlychat.js'),
+  entry: path.join(__dirname, './public/src/finances.js'),
   output: {
-    filename: 'friendlychat_bundle.js',
+    filename: 'finances_bundle.js',
     path: path.join(__dirname, './public/dist'),
   },
 };

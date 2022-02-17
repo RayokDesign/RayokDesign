@@ -20,6 +20,7 @@
                     </a>
                     <div class="user-container">
                         <button type="button" id="sign-in" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-in-modal">Sign-in</button>
+                        <button type="button" id="sign-up" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign-up</button>
                         <button type="button" id="sign-out" class="btn btn-primary d-none"><i class="bi bi-door-closed me-2"></i>Sign-out</button>
                     </div>
                 </div>
@@ -90,16 +91,16 @@
     </div>
     <div class="plug-in">
         <!-- toast -->
-        <div class="position-absolute bottom-0 start-50 translate-middle-x p-3" style="z-index: 11">
-            <div id="must-signin-toast" class="toast text-white bg-black" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="2000">
+        <div class="position-absolute top-0 start-50 translate-middle-x" style="z-index: 9999">
+            <div id="prompt-toast" class="toast text-white bg-primary" role="alert" data-bs-delay="2000">
                 <div class="toast-body">
                 </div>
             </div>
         </div>
         <!-- /toast -->
     </div>
-    <div class="fixed-bottom mb-2 container">
-        <div class="row mb-2">
+    <div class="fixed-bottom py-3 container">
+        <div class="row">
             <div class="col text-center">
                 <button id="add-record-button" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-record-modal">
                     +
@@ -107,7 +108,33 @@
             </div>
         </div>
     </div>
-    <!-- MODAL -->
+    <!-- MODAL -->    
+    <!-- SIGN UP MODAL -->
+    <form id="sign-up-modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sign Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-1">
+                        <label for="sign-up-email-input" class="form-label">Email</label>
+                        <input id="sign-up-email-input" class="form-control" type="email" placeholder="Enter email" required><br>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sign-up-password-input" class="form-label">Password</label>
+                        <input id="sign-up-password-input" class="form-control" type="password" placeholder="Password" placeholder="Enter Password" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /SIGN UP MODAL -->
     <!-- SIGN IN MODAL -->
     <form id="sign-in-modal" class="modal fade" tabindex="-1">
         <div class="modal-dialog">
@@ -117,8 +144,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <input id="email-input" type="email" placeholder="Email" required>
-                    <input id="password-input" type="password" placeholder="Password" required>
+                    <div class="mb-1">
+                        <label for="sign-in-email-input" class="form-label">Email</label>
+                        <input id="sign-in-email-input" class="form-control" type="email" placeholder="Enter email" required><br>
+                    </div>
+                    <div class="mb-3">
+                        <label for="sign-in-password-input" class="form-label">Password</label>
+                        <input id="sign-in-password-input" class="form-control" type="password" placeholder="Password" placeholder="Enter Password" required>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -129,7 +162,7 @@
     </form>
     <!-- /SIGN IN MODAL -->
 
-    <form class="modal fade" action="#" id="add-record-modal" tabindex="-1">
+    <form class="modal fade" id="add-record-modal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-body">
@@ -161,12 +194,12 @@
                 </div>
                 <div class="row mb-2 justify-content-center">
                     <div class="col-5">
-                        <select id="category-select" class="form-select col-5" name="category" required>
+                        <select id="category-select" class="form-select" name="category">
                             <option selected value="">Select a category</option>
                         </select>
                     </div>
                     <div class="col-5">
-                        <select id="item-select" class="form-select col-5" name="item" required>
+                        <select id="item-select" class="form-select" name="item" required>
                             <option selected value="">Select an item</option>
                         </select>
                     </div>
@@ -191,6 +224,6 @@
         </div>
     </div>
     <script src="https://rayok.tw/javascripts/bootstrap.min.js"></script>
-    <script src="dist/finances_bundle.js"></script>
+    <script src="/dist/finances_bundle.js"></script>
 </body>
 </html>
