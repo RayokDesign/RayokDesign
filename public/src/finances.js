@@ -363,6 +363,10 @@ function calculateAmount() {
       }
     }
     aDayAmountElement[i].setAttribute('data-amount', aDayAmountElement[i].textContent);
+    financeMonthAmountElement.querySelector('.income-amount').textContent = amountFormat(parseInt(financeMonthAmountElement.querySelector('.income-amount').textContent));
+    financeMonthAmountElement.querySelector('.outcome-amount').textContent = amountFormat(parseInt(financeMonthAmountElement.querySelector('.outcome-amount').textContent));
+    financeMonthAmountElement.querySelector('.earning-amount').textContent = amountFormat(parseInt(financeMonthAmountElement.querySelector('.earning-amount').textContent));
+
     if(parseInt(aDayAmountElement[i].getAttribute('data-amount')) > 0) {
       aDayAmountElement[i].classList.add('text-primary');
       aDayAmountElement[i].classList.remove('text-danger');
@@ -401,7 +405,7 @@ function calculateAmount() {
     container.innerHTML = ITEM_MONTH_AMOUNT_TEMPLATE;
     const item = container.firstChild;
     item.querySelector('.item-month-name').textContent = itemName;
-    item.querySelector('.item-month-amount').textContent = itemMonthAmount[itemName];
+    item.querySelector('.item-month-amount').textContent = amountFormat(itemMonthAmount[itemName]);
   
     itemMonthAmountElement.appendChild(item);
   }
@@ -430,7 +434,7 @@ function calculateAmount() {
     container.innerHTML = CATEGORY_MONTH_AMOUNT_TEMPLATE;
     const category = container.firstChild;
     category.querySelector('.category-month-name').textContent = categoryName;
-    category.querySelector('.category-month-amount').textContent = categoryMonthAmount[categoryName];
+    category.querySelector('.category-month-amount').textContent = amountFormat(categoryMonthAmount[categoryName]);
   
     categoryMonthAmountElement.appendChild(category);
   }
@@ -598,7 +602,7 @@ function getDaysInMonth (year, month){
 }
 
 function focusInput(){
-  amountInputElement.focus();
+  this.querySelector('input').focus();
 }
 
 function modalModeSwitch(){
@@ -708,7 +712,9 @@ var fixedBottomArea = document.getElementsByClassName('fixed-bottom')[0];
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
 signInModalElement.addEventListener('submit', signIn);
+signInModalElement.addEventListener('shown.bs.modal', focusInput);
 signUpModalElement.addEventListener('submit', signUp);
+signUpModalElement.addEventListener('shown.bs.modal', focusInput);
 //categorySelectElement.addEventListener('change', selectChange);
 itemSelectElement.addEventListener('change', selectChange);
 signOutButtonElement.addEventListener('click', signOutUser);
