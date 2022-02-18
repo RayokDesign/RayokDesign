@@ -144,21 +144,33 @@ function initFirebaseAuth() {
   onAuthStateChanged(getAuth(), authStateObserver);
 }
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-function authStateObserver(user) {
+async function authStateObserver(user) {
   if (user) {
-        
-    loadCategoriesList();
-    loadItemsList();
-    monthSelector.apply(monthSelectorElement);
+    const userRef = doc(getFirestore(), "users", user.uid);
+    try {
+      await getDoc(userRef);
+      loadCategoriesList();
+      loadItemsList();
+      monthSelector.apply(monthSelectorElement);
+    } catch (e){
+      recordListElement.innerHTML = 
+      `<div class="container">
+        <p class="fs-3 text-center">您的權限不足，無法讀取資料</p>
+        <p class="fs-3 text-center">Missing or insufficient permissions</p>
+      </div>`;
+    }
 
+    
     // Hide sign-in button.
     signOutButtonElement.classList.remove('d-none');
+    manageButtonElement.classList.remove('d-none');
     signInButtonElement.classList.add('d-none');
     signUpButtonElement.classList.add('d-none');
 
   } else {
     // Show sign-in button.
     signOutButtonElement.classList.add('d-none');
+    manageButtonElement.classList.add('d-none');
     signInButtonElement.classList.remove('d-none');
     signUpButtonElement.classList.remove('d-none');
   }
@@ -472,6 +484,13 @@ function amountFormat(amount) {
   return `${new Intl.NumberFormat().format(amount)} ฿`;
 }
 
+var MANAGE_TABLE_TEMPLATE = 
+`<tbody>
+  <tr>
+    <td><input type="text"/></td>
+    <td><input type="text"/></td>
+  </tr>
+  </tbody>`;
 function loadCategoriesList() {
     // TODO 8: Load and listen for new messages.
     const recentRecordsQuery = query(collection(getFirestore(), 'categories'), orderBy('index'));
@@ -484,6 +503,11 @@ function loadCategoriesList() {
         } else {
           categories[change.doc.id] = change.doc.data().name;
           createAndInsertCategoryOption(change.doc.id, change.doc.data());
+          const container = document.createElement('table');
+          container.innerHTML = MANAGE_TABLE_TEMPLATE;
+          const category = container.firstElementChild.firstElementChild;
+          category.firstElementChild.firstElementChild.value = change.doc.data().name;
+          manageModalElement.querySelector('tbody').appendChild(category);
         }
       }, function(error){
         console.error(error);
@@ -516,6 +540,11 @@ function loadItemsList() {
       } else {
         items[change.doc.id] = change.doc.data().name;
         createAndInsertItemOption(change.doc.id, change.doc.data());
+        const container = document.createElement('table');
+        container.innerHTML = MANAGE_TABLE_TEMPLATE;
+        const item = container.firstElementChild.firstElementChild;
+        item.children[1].firstElementChild.value = change.doc.data().name;
+        manageModalElement.querySelector('tbody').appendChild(item);
       }
     }, function(error){
       console.error(error);
@@ -577,6 +606,7 @@ async function monthSelector() {
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
   }
+  
 }
 
 // Saves a new message on the Cloud Firestore.
@@ -684,9 +714,11 @@ function bodyResize(){
 var recordListElement = document.getElementById('records');
 var signInModalElement = document.getElementById('sign-in-modal');
 var signUpModalElement = document.getElementById('sign-up-modal');
+var manageModalElement = document.getElementById('manage-modal');
 var signInButtonElement = document.getElementById('sign-in');
 var signUpButtonElement = document.getElementById('sign-up');
 var monthSelectorElement = document.getElementById('month-selector');
+var manageButtonElement = document.getElementById('manage');
 var signOutButtonElement = document.getElementById('sign-out');
 var promptToastElement = document.getElementById('prompt-toast');
 var promptToast = new bootstrap.Toast(promptToastElement);
@@ -715,7 +747,6 @@ signInModalElement.addEventListener('submit', signIn);
 signInModalElement.addEventListener('shown.bs.modal', focusInput);
 signUpModalElement.addEventListener('submit', signUp);
 signUpModalElement.addEventListener('shown.bs.modal', focusInput);
-//categorySelectElement.addEventListener('change', selectChange);
 itemSelectElement.addEventListener('change', selectChange);
 signOutButtonElement.addEventListener('click', signOutUser);
 addRecordModalElement.addEventListener('shown.bs.modal', focusInput);
@@ -723,6 +754,7 @@ addRecordModalElement.addEventListener('hidden.bs.modal', cleanModal);
 addRecordButtonElement.addEventListener('click', modalModeSwitch);
 modifyButtonElement.addEventListener('click', modifyItemData);
 deleteButtonElement.addEventListener('click', deleteItem);
+
 //Radio button
 expenseRadioElement.addEventListener('change', toggleExpin);
 incomeRadioElement.addEventListener('change', toggleExpin);

@@ -5,7 +5,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ร้านข้าวมันไก่ปอ</title>
-    <link rel="icon" type="shortcut icon" href="/images/icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/por.ico/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/por.ico/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/por.ico/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/por.ico/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/por.ico/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/por.ico/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/por.ico/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/por.ico/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/por.ico/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/por.ico/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/por.ico/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/por.ico/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/por.ico/favicon-16x16.png">
+    <link rel="manifest" href="/images/por.ico/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/por.ico/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="https://rayok.tw/stylesheets/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 </head>
@@ -19,6 +35,7 @@
                 <div class="user-container">
                     <button type="button" id="sign-in" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-in-modal">Sign-in</button>
                     <button type="button" id="sign-up" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign-up</button>
+                    <button type="button" id="manage" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#manage-modal"><i class="bi bi-pencil-fill me-2"></i>Manage</button>
                     <button type="button" id="sign-out" class="btn btn-primary d-none"><i class="bi bi-door-closed me-2"></i>Sign-out</button>
                 </div>
             </nav>
@@ -157,7 +174,33 @@
             </div>
         </div>
     </form>
-    <!-- /SIGN IN MODAL -->
+    <!-- /SIGN IN MODAL -->    
+    
+    <!-- MANAGE MODAL -->
+    <form id="manage-modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Manage</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Item</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /MANAGE IN MODAL -->
 
     <form class="modal fade" id="add-record-modal" tabindex="-1">
         <div class="modal-dialog">
