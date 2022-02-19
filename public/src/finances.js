@@ -519,7 +519,7 @@ var MANAGE_TABLE_TEMPLATE =
         <div class="input-group-text">
           <input type="checkbox" class="form-check-input mt-0">
         </div>
-        <input class="form-control" type="text" disabled/>
+        <input class="form-control text-capitalize" type="text" disabled/>
       </div>
     </td>
   </tr>
@@ -551,14 +551,6 @@ async function loadCategoriesList() {
   querySnapshot.forEach((doc) => {
     categories[doc.id] = doc.data().name;
     createAndInsertCategoryOption(doc.id, doc.data());
-    // const container = document.createElement('table');
-    // container.innerHTML = MANAGE_TABLE_TEMPLATE;
-    // const category = container.querySelector('tr');
-    // category.querySelector('input[type="checkbox"]').addEventListener('change', toggleInputDisabled);
-    // category.querySelector('input[type="text"]').value = doc.data().name;
-    // category.querySelector('input[type="text"]').addEventListener('input', updateCategory);
-    // category.querySelector('input[type="text"]').setAttribute('data-category', doc.id);
-    // manageCategoryElement.appendChild(category);
     appendToManageList(manageCategoryElement, doc.id, doc.data().name);
   });
 }
@@ -572,6 +564,7 @@ function createAndInsertCategoryOption(id, itemData) {
   container.innerHTML = OPTION_TEMPLATE;
   const option = container.firstChild;
   option.setAttribute('value', id);
+  option.classList.add('text-capitalize');
   option.textContent = itemData.name;
 
   categorySelectElement.appendChild(option);
@@ -594,6 +587,7 @@ function createAndInsertItemOption(id, itemData) {
   container.innerHTML = OPTION_TEMPLATE;
   const option = container.firstChild;
   option.setAttribute('value', id);
+  option.classList.add('text-capitalize');
   option.textContent = itemData.name;
   if (itemData.expin == 'income'){
     option.classList.add('income');
@@ -700,21 +694,23 @@ function modalModeSwitch(){
     dateSelectorElement.value = this.getAttribute('data-date');
 
     if (items[this.getAttribute("data-item")] == undefined){
-      itemCheckBoxElement.setAttribute('checked','true');
+      console.log('no have in select');
+      itemCheckBoxElement.checked = true;
       switchMode.apply(itemCheckBoxElement);
       itemInputElement.value = this.getAttribute('data-item');
     } else {
-      itemCheckBoxElement.removeAttribute('checked');
+      console.log('have in select');
+      itemCheckBoxElement.checked = false;
       switchMode.apply(itemCheckBoxElement);
       itemSelectElement.value = this.getAttribute("data-item");
     }
 
     if (categories[this.getAttribute("data-category")] == undefined){
-      categoryCheckBoxElement.setAttribute('checked','true');
+      categoryCheckBoxElement.checked = true;
       switchMode.apply(categoryCheckBoxElement);
       categoryInputElement.value = this.getAttribute('data-category');
     } else {
-      categoryCheckBoxElement.removeAttribute('checked');
+      categoryCheckBoxElement.checked = false;
       switchMode.apply(categoryCheckBoxElement);
       categorySelectElement.value = this.getAttribute("data-category");
     }
@@ -731,10 +727,10 @@ function cleanModal(){
   amountInputElement.value = '';
   expenseRadioElement.setAttribute('checked', 'true');
   if (categoryCheckBoxElement.checked == true){
-    categoryCheckBoxElement.click();
+    categoryCheckBoxElement.checked = false;
   }
   if (itemCheckBoxElement.checked == true){
-    itemCheckBoxElement.click();
+    itemCheckBoxElement.checked = false;
   }
   switchMode.apply(categoryCheckBoxElement);
   switchMode.apply(itemCheckBoxElement);
@@ -808,7 +804,7 @@ function switchMode(){
 }
 
 async function newCategory(){
-  const categoryName = this.previousElementSibling.value;
+  const categoryName = (this.previousElementSibling.value).toLowerCase;
   const categoryRef = await addDoc(collection(getFirestore(), "categories"), {
     name: categoryName,
     timestamp: serverTimestamp()
@@ -818,7 +814,7 @@ async function newCategory(){
 }
 
 async function newItem(){
-  const itemName = this.previousElementSibling.value;
+  const itemName = (this.previousElementSibling.value).toLowerCase;
   const itemRef = await addDoc(collection(getFirestore(), "items"), {
     name: itemName,
     timestamp: serverTimestamp()
@@ -871,7 +867,6 @@ signInModalElement.addEventListener('submit', signIn);
 signInModalElement.addEventListener('shown.bs.modal', focusInput);
 signUpModalElement.addEventListener('submit', signUp);
 signUpModalElement.addEventListener('shown.bs.modal', focusInput);
-// itemSelectElement.addEventListener('change', selectChange);
 itemCheckBoxElement.addEventListener('change', switchMode);
 categoryCheckBoxElement.addEventListener('change', switchMode);
 signOutButtonElement.addEventListener('click', signOutUser);

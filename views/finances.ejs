@@ -211,7 +211,13 @@
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Item</th>
+                                            <th>
+                                                <span class="me-2">Item</span>
+                                                <input id="manage-item-expense-radio" type="radio" name="manage-item-expin">
+                                                <label class="me-2" for="manage-item-expense-radio"><i class="bi bi-basket2"></i></label>
+                                                <input id="manage-item-income-radio" type="radio" name="manage-item-expin">
+                                                <label for="manage-item-income-radio"><i class="bi bi-piggy-bank"></i></label>
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody id="manage-item"></tbody>
@@ -276,8 +282,8 @@
                             <div class="input-group-text">
                                 <input id="category-checkbox" class="form-check-input mt-0" type="checkbox">
                             </div>
-                            <input id="category-input" class="d-none form-control" placeholder="Category" type="text">
-                            <select id="category-select" class="form-select" name="category">
+                            <input id="category-input" class="d-none form-control text-capitalize" placeholder="Category" type="text">
+                            <select id="category-select" class="form-select text-capitalize" name="category">
                                 <option selected value="">Category</option>
                             </select>
                         </div>
@@ -287,8 +293,8 @@
                             <div class="input-group-text">
                                 <input id="item-checkbox" class="form-check-input mt-0" type="checkbox">
                             </div>
-                            <input id="item-input" class="d-none form-control" placeholder="Item" type="text" disabled required>
-                            <select id="item-select" class="form-select" required>
+                            <input id="item-input" class="d-none form-control text-capitalize" placeholder="Item" type="text" disabled required>
+                            <select id="item-select" class="form-select text-capitalize" required>
                                 <option selected value="">Item</option>
                             </select>
                         </div>
