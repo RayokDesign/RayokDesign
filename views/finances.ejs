@@ -52,7 +52,7 @@
                         </h2>
                         <div id="collapseCategory" class="accordion-collapse collapse" data-bs-parent="#accordionMonth">
                             <div class="accordion-body">
-                                <div id="category-month-amount" class="container-fluid mb-4">
+                                <div id="category-month-amount" class="container-fluid">
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                         </h2>
                         <div id="collapseItem" class="accordion-collapse collapse" data-bs-parent="#accordionMonth">
                             <div class="accordion-body">
-                                <div id="item-month-amount" class="container-fluid mb-4">
+                                <div id="item-month-amount" class="container-fluid">
                                 </div>
                             </div>
                         </div>
@@ -77,8 +77,8 @@
                         </button>
                     </h2>
                     <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionMonth">
-                        <div class="accordion-body">
-                            <div id="finance-month-amount" class="container-fluid mb-4">
+                        <div class="accordion-body mb-0">
+                            <div id="finance-month-amount" class="container-fluid">
                                 <div class="row justify-content-between">
                                     <div class="col">Income</div>
                                     <div class="col income-amount text-end">0</div>
@@ -240,7 +240,25 @@
         </div>
     </form>
     <!-- /MANAGE IN MODAL -->
-
+    <!-- MANAGE DELETE MODAL -->
+    <div id="manage-delete-modal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Manage Delection</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Would you like to delete <span id="manage-delete-type"></span>: <span class="fw-bold fs-3 text-capitalize" id="manage-delete-name"></span></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button id="manage-delete-button" type="button" class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- /MANAGE DELETE MODAL -->
     <form class="modal fade" id="add-record-modal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">

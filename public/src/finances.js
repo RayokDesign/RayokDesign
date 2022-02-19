@@ -181,7 +181,7 @@ async function authStateObserver(user) {
 async function loadRecords(year, month, day) {
   // TODO 8: Load and listen for new messages.
   const recentRecordsQuery = query(collection(getFirestore(), 'restaurant', year, 'months', month, 'days', day, 'records'), orderBy('timestamp', 'desc'));
-
+  createAndInsertMessage(`${year}-${month}-${day}`)
 
   //Start listening to the query.
   unsubscribes[`${year}${month}${day}`] = onSnapshot(recentRecordsQuery, function(snapshot) {
@@ -211,12 +211,12 @@ var MESSAGE_TEMPLATE =
   </div>
 </div>`;
 
-function createAndInsertMessage(id) {
+function createAndInsertMessage(date) {
   const container = document.createElement('div');
   container.innerHTML = MESSAGE_TEMPLATE;
   const table = container.firstChild;
-  table.setAttribute('id', 'date' + id);
-
+  table.setAttribute('id', 'date' + date);
+  table.classList.add('d-none');
   recordListElement.appendChild(table);
 
   return table;
@@ -337,7 +337,8 @@ function updateItem(){
 
 // Displays a Message in the UI.
 function displayRecord(id, itemData, docID) {
-  const div = document.getElementById('date' + id) || createAndInsertMessage(id);
+  const div = document.getElementById('date' + id);
+  div.classList.remove('d-none');
   // Category ----
   if (itemData.category != undefined && itemData.category != ''){
     const category = document.getElementById(`category${itemData.category}${id}`) || createAndInsertCategory(id, itemData);
@@ -383,9 +384,6 @@ function calculateAmount() {
     aCategoryAmountElement[i].textContent = amountFormat(aCategoryAmountElement[i].textContent);
   }
 
-  financeMonthAmountElement.querySelector('.income-amount').textContent = '0';
-  financeMonthAmountElement.querySelector('.outcome-amount').textContent = '0';
-  financeMonthAmountElement.querySelector('.earning-amount').textContent = '0';
   for (let i=0; i<aDayAmountElement.length; i++){
     const aItemAmount = aDayAmountElement[i].parentElement.parentElement.getElementsByClassName('item-amount');
     aDayAmountElement[i].textContent = '0';
@@ -394,17 +392,8 @@ function calculateAmount() {
 
     for(let j=0; j<aItemAmount.length; j++) {
       aDayAmountElement[i].textContent = parseInt(aDayAmountElement[i].textContent) + parseInt(aItemAmount[j].getAttribute('data-amount'));
-      financeMonthAmountElement.querySelector('.earning-amount').textContent = parseInt(financeMonthAmountElement.querySelector('.earning-amount').textContent)+parseInt(aItemAmount[j].getAttribute('data-amount'));
-      if(parseInt(aItemAmount[j].getAttribute('data-amount')) > 0) {
-        financeMonthAmountElement.querySelector('.income-amount').textContent = parseInt(financeMonthAmountElement.querySelector('.income-amount').textContent)+parseInt(aItemAmount[j].getAttribute('data-amount'));
-      } else {
-        financeMonthAmountElement.querySelector('.outcome-amount').textContent = parseInt(financeMonthAmountElement.querySelector('.outcome-amount').textContent)+parseInt(aItemAmount[j].getAttribute('data-amount'));
-      }
     }
     aDayAmountElement[i].setAttribute('data-amount', aDayAmountElement[i].textContent);
-    financeMonthAmountElement.querySelector('.income-amount').textContent = amountFormat(parseInt(financeMonthAmountElement.querySelector('.income-amount').textContent));
-    financeMonthAmountElement.querySelector('.outcome-amount').textContent = amountFormat(parseInt(financeMonthAmountElement.querySelector('.outcome-amount').textContent));
-    financeMonthAmountElement.querySelector('.earning-amount').textContent = amountFormat(parseInt(financeMonthAmountElement.querySelector('.earning-amount').textContent));
 
     if(parseInt(aDayAmountElement[i].getAttribute('data-amount')) > 0) {
       aDayAmountElement[i].classList.add('text-primary');
@@ -421,9 +410,17 @@ function calculateAmount() {
   let aItemElements = document.getElementsByClassName('item-name');
   let aCategoryElements = document.getElementsByClassName('category-name');
   
-  //Item Month Amount ------------
-
+  //Item Month Amount and Finances Amount------------
+  
+  incomeAmountElement.textContent = '0';
+  outcomeAmountElement.textContent = '0';
+  earningAmountElement.textContent = '0';
   for (let i=0; i<aItemElements.length; i++){
+    if (aItemElements[i].nextElementSibling.getAttribute('data-amount') > 0){
+      incomeAmountElement.textContent = `${parseInt(incomeAmountElement.textContent)+parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'))}`;
+    } else {
+      outcomeAmountElement.textContent = `${parseInt(outcomeAmountElement.textContent)+parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'))}`;
+    }
     if (itemMonthAmount[`${aItemElements[i].textContent}`] == undefined){
       itemMonthAmount[`${aItemElements[i].textContent}`] = parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'));
     } else {
@@ -431,9 +428,14 @@ function calculateAmount() {
     }
   }
 
+  earningAmountElement.textContent = `${parseInt(incomeAmountElement.textContent)+parseInt(outcomeAmountElement.textContent)}`;
+  incomeAmountElement.textContent = amountFormat(incomeAmountElement.textContent);
+  outcomeAmountElement.textContent = amountFormat(outcomeAmountElement.textContent);
+  earningAmountElement.textContent = amountFormat(earningAmountElement.textContent);
+
   var ITEM_MONTH_AMOUNT_TEMPLATE =
   `<div class="row justify-content-between">
-    <div class="col item-month-name"></div>
+    <div class="col item-month-name text-capitalize"></div>
     <div class="col item-month-amount text-end">0</div>
   </div>`;
 
@@ -449,7 +451,7 @@ function calculateAmount() {
     itemMonthAmountElement.appendChild(item);
   }
 
-  //------- Item Month Amount
+  //------- Item Month Amount and Finances Amount
 
   //Category Month Amount -------
   for (let i=0; i<aCategoryElements.length; i++){
@@ -462,7 +464,7 @@ function calculateAmount() {
 
   var CATEGORY_MONTH_AMOUNT_TEMPLATE =
   `<div class="row justify-content-between">
-    <div class="col category-month-name"></div>
+    <div class="col category-month-name text-capitalize"></div>
     <div class="col category-month-amount text-end">0</div>
   </div>`;
 
@@ -501,7 +503,8 @@ function deleteRecord(docID, itemData) {
   }
 
   if (div.querySelector('.accordion').children.length == 0){
-    div.parentNode.removeChild(div);
+    //div.parentNode.removeChild(div);
+    div.classList.add('d-none');
   }
   calculateAmount();
   bodyResize();
@@ -532,7 +535,7 @@ function toggleInputDisabled(){
     this.parentElement.nextElementSibling.setAttribute('disabled', 'true');
   }
 }
-function appendToManageList(el, id, name){
+function appendToManageList(el, id, name, expin, type){
   const container = document.createElement('table');
   container.innerHTML = MANAGE_TABLE_TEMPLATE;
   const newTr = container.querySelector('tr');
@@ -540,7 +543,32 @@ function appendToManageList(el, id, name){
   newTr.querySelector('input[type="text"]').value = name;
   newTr.querySelector('input[type="text"]').addEventListener('input', updateCategory);
   newTr.querySelector('input[type="text"]').setAttribute('data-category', id);
+  newTr.setAttribute('data-id', id);
+  newTr.setAttribute('data-name', name);
+  newTr.setAttribute('data-type', type);
+  newTr.addEventListener('dblclick', showManageDeleteModal);
+  if (expin){
+    newTr.setAttribute('data-expin', expin);
+  }
   el.appendChild(newTr);
+}
+function showManageDeleteModal(){
+  manageDeleteModal.show();
+  manageDeleteTr = this;
+  manageDeleteModalElement.querySelector('#manage-delete-type').textContent = this.getAttribute('data-type');
+  manageDeleteModalElement.querySelector('#manage-delete-name').textContent = this.getAttribute('data-name');
+  manageDeleteModalElement.querySelector('#manage-delete-button').setAttribute('data-id', this.getAttribute('data-id'));
+  if (this.getAttribute('data-type') == 'item'){
+    manageDeleteModalElement.querySelector('#manage-delete-button').setAttribute('data-type-ref', 'items');
+  } else {
+    manageDeleteModalElement.querySelector('#manage-delete-button').setAttribute('data-type-ref', 'categories');
+  }
+  manageDeleteModalElement.querySelector('#manage-delete-button').addEventListener('click', manageDeletion);
+}
+async function manageDeletion(){
+  manageDeleteModal.hide();
+  await deleteDoc(doc(getFirestore(), this.getAttribute('data-type-ref'), this.getAttribute('data-id')));
+  manageDeleteTr.parentElement.removeChild(manageDeleteTr);
 }
 
 async function loadCategoriesList() {
@@ -551,7 +579,7 @@ async function loadCategoriesList() {
   querySnapshot.forEach((doc) => {
     categories[doc.id] = doc.data().name;
     createAndInsertCategoryOption(doc.id, doc.data());
-    appendToManageList(manageCategoryElement, doc.id, doc.data().name);
+    appendToManageList(manageCategoryElement, doc.id, doc.data().name, false, 'category');
   });
 }
 
@@ -578,8 +606,35 @@ async function loadItemsList() {
   querySnapshot.forEach((doc) => {
     items[doc.id] = doc.data().name;
     createAndInsertItemOption(doc.id, doc.data());
-    appendToManageList(manageItemElement, doc.id, doc.data().name);
+    appendToManageList(manageItemElement, doc.id, doc.data().name, doc.data().expin, 'item');
   });
+
+  manageItemExpenseRadio.checked = true;
+  manageItemRadioStateChanged();
+}
+
+function manageItemRadioStateChanged(){
+  const manageItemTrElements = manageItemElement.getElementsByTagName('tr');
+
+  if (manageItemExpenseRadio.checked){
+    for (let i=0; i<manageItemTrElements.length; i++){
+      if (manageItemTrElements[i].getAttribute('data-expin') == 'expense'){
+        manageItemTrElements[i].classList.remove('d-none');
+      } else {
+        manageItemTrElements[i].classList.add('d-none');
+      }
+    }
+    newItemButtonElement.setAttribute('data-expin', 'expense');
+  } else {
+    for (let i=0; i<manageItemTrElements.length; i++){
+      if (manageItemTrElements[i].getAttribute('data-expin') == 'income'){
+        manageItemTrElements[i].classList.remove('d-none');
+      } else {
+        manageItemTrElements[i].classList.add('d-none');
+      }
+    }
+    newItemButtonElement.setAttribute('data-expin', 'income');
+  }
 }
 
 function createAndInsertItemOption(id, itemData) {
@@ -619,7 +674,6 @@ function onRecordFormSubmit(e) {
     } else {
       submitData['item'] = itemSelectElement.value;
     }
-    console.log(submitData);
     expenseRadioElement.checked == true ? submitData['expin'] = 'expense' : submitData['expin'] = 'income';
     saveMessage(submitData);
     dismissButtonElement.click();
@@ -694,12 +748,10 @@ function modalModeSwitch(){
     dateSelectorElement.value = this.getAttribute('data-date');
 
     if (items[this.getAttribute("data-item")] == undefined){
-      console.log('no have in select');
       itemCheckBoxElement.checked = true;
       switchMode.apply(itemCheckBoxElement);
       itemInputElement.value = this.getAttribute('data-item');
     } else {
-      console.log('have in select');
       itemCheckBoxElement.checked = false;
       switchMode.apply(itemCheckBoxElement);
       itemSelectElement.value = this.getAttribute("data-item");
@@ -743,7 +795,8 @@ async function modifyItemData(e){
   const item = document.getElementById('item'+this.getAttribute('data-id'));
   const accordionBody = item.parentNode;
   const date = this.getAttribute('data-date').split('-');
-  const itemRef = doc(getFirestore(), 'restaurant', date[0], 'months', date[1], 'days', date[2], 'records', this.getAttribute('data-id'));
+  const dateSelectValue = dateSelectorElement.value.split('-');
+  const itemRef = doc(getFirestore(), 'restaurant', dateSelectValue[0], 'months', dateSelectValue[1], 'days', dateSelectValue[2], 'records', this.getAttribute('data-id'));
   const itemData = {
     amount: parseInt(amountInputElement.value),
     expin: expenseRadioElement.checked == true ? 'expense' : 'income',
@@ -772,7 +825,14 @@ async function modifyItemData(e){
   }
 
   dismissButtonElement.click();
-  await updateDoc(itemRef, itemData);
+  if (dateSelectorElement.value != this.getAttribute('data-date')){
+    itemData['timestamp'] = serverTimestamp();
+    itemData['date'] = dateSelectorElement.value;
+    await deleteDoc(doc(getFirestore(), 'restaurant', date[0], 'months', date[1], 'days', date[2], 'records', this.getAttribute('data-id')));
+    saveMessage(itemData);
+  } else {
+    await updateDoc(itemRef, itemData);
+  }
 }
 
 async function deleteItem(e){
@@ -804,23 +864,27 @@ function switchMode(){
 }
 
 async function newCategory(){
-  const categoryName = (this.previousElementSibling.value).toLowerCase;
+  const categoryName = (this.previousElementSibling.value).toLowerCase();
   const categoryRef = await addDoc(collection(getFirestore(), "categories"), {
     name: categoryName,
     timestamp: serverTimestamp()
   });
   
-  appendToManageList(manageCategoryElement, categoryRef.id, categoryName);
+  appendToManageList(manageCategoryElement, categoryRef.id, categoryName, false, 'category');
 }
 
 async function newItem(){
-  const itemName = (this.previousElementSibling.value).toLowerCase;
+  const itemName = (this.previousElementSibling.value).toLowerCase();
+  const itemExpin = this.getAttribute('data-expin');
+  console.log(itemName+','+itemExpin);
   const itemRef = await addDoc(collection(getFirestore(), "items"), {
     name: itemName,
+    expin: itemExpin,
     timestamp: serverTimestamp()
   });
   
-  appendToManageList(manageItemElement, itemRef.id, itemName);
+  appendToManageList(manageItemElement, itemRef.id, itemName, itemExpin, 'item');
+  this.previousElementSibling.value = '';
 }
 
 // Shortcuts to DOM Elements.
@@ -860,6 +924,14 @@ var itemMonthAmountElement = document.getElementById('item-month-amount');
 var financeMonthAmountElement = document.getElementById('finance-month-amount');
 var bodyElement = document.body;
 var fixedBottomArea = document.getElementsByClassName('fixed-bottom')[0];
+var manageItemExpenseRadio = document.getElementById('manage-item-expense-radio');
+var manageItemIncomeRadio = document.getElementById('manage-item-income-radio');
+var manageDeleteModalElement = document.getElementById('manage-delete-modal');
+var manageDeleteModal = new bootstrap.Modal(document.getElementById('manage-delete-modal'));
+var manageDeleteTr = null;
+var incomeAmountElement = financeMonthAmountElement.querySelector('.income-amount');
+var outcomeAmountElement = financeMonthAmountElement.querySelector('.outcome-amount');
+var earningAmountElement = financeMonthAmountElement.querySelector('.earning-amount');
 
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
@@ -875,6 +947,10 @@ addRecordModalElement.addEventListener('hidden.bs.modal', cleanModal);
 addRecordButtonElement.addEventListener('click', modalModeSwitch);
 modifyButtonElement.addEventListener('click', modifyItemData);
 deleteButtonElement.addEventListener('click', deleteItem);
+
+//Manage Item List
+manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
+manageItemIncomeRadio.addEventListener('change', manageItemRadioStateChanged);
 
 //Radio button
 expenseRadioElement.addEventListener('change', toggleExpin);
