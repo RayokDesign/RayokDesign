@@ -178,24 +178,57 @@
     
     <!-- MANAGE MODAL -->
     <form id="manage-modal" class="modal fade" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Manage</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Item</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                        </tbody>
-                    </table>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-6">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="manage-category"></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control">
+                                                    <button id="new-category-button" class="btn btn-outline-primary" type="button">New</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="manage-item"></tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control">
+                                                    <button id="new-item-button" class="btn btn-outline-primary" type="button">New</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -216,32 +249,49 @@
                 </div>
                 <div id="expin-radio" class="row mb-2  justify-content-center">
                     <div class="col-5">
-                        <div class="form-check">
-                            <input id="expense-radio" class="form-check-input" type="radio" name="expin" value="expense" checked>
-                            <label class="form-check-label" for="expense-radio">
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <input id="expense-radio" class="form-check-input mt-0" type="radio" name="expin" value="expense" checked>
+                            </div>
+                            <label class="form-control" for="expense-radio">
                                 Expense
                             </label>
                         </div>
                     </div>
                     <div class="col-5">
-                        <div class="form-check">
-                            <input id="income-radio" class="form-check-input" type="radio" name="expin" value="income">
-                            <label class="form-check-label" for="income-radio">
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <input id="income-radio" class="form-check-input mt-0" type="radio" name="expin" value="income">
+                            </div>
+                            <label class="form-control" for="income-radio">
                                 Income
                             </label>
                         </div>
+                        
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">
                     <div class="col-5">
-                        <select id="category-select" class="form-select" name="category">
-                            <option selected value="">Select a category</option>
-                        </select>
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <input id="category-checkbox" class="form-check-input mt-0" type="checkbox">
+                            </div>
+                            <input id="category-input" class="d-none form-control" placeholder="Category" type="text">
+                            <select id="category-select" class="form-select" name="category">
+                                <option selected value="">Category</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="col-5">
-                        <select id="item-select" class="form-select" name="item" required>
-                            <option selected value="">Select an item</option>
-                        </select>
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <input id="item-checkbox" class="form-check-input mt-0" type="checkbox">
+                            </div>
+                            <input id="item-input" class="d-none form-control" placeholder="Item" type="text" disabled required>
+                            <select id="item-select" class="form-select" required>
+                                <option selected value="">Item</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">

@@ -25,6 +25,7 @@ import {
   getDoc,
   Timestamp,
   DocumentSnapshot,
+  getDocs,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -224,7 +225,7 @@ function createAndInsertMessage(id) {
 var CATEGORY_TEMPLATE =
 `<div class="accordion-item mb-3">
   <div class="btn accordion-header d-flex justify-content-between"  data-bs-toggle="collapse">
-    <span class="category-name"></span>
+    <span class="category-name text-capitalize"></span>
     <span class="category-amount align-self-center"></span>
   </div>
   <div class="accordion-collapse collapse">
@@ -247,7 +248,7 @@ function createAndInsertCategory(id, itemData) {
 
 var ITEM_TEMPLATE = 
 `<div class="mb-3 btn item d-flex justify-content-between" data-bs-toggle="modal" data-bs-target="#add-record-modal">
-  <span class="item-name"></span>
+  <span class="item-name text-capitalize"></span>
   <span class="item-amount align-self-center"></span>
 </div>`;
 
@@ -308,6 +309,32 @@ function updateMemo(){
   },2000)
 }
 
+function updateCategory(){
+  const inputElement = this;
+  const categoriesRef = doc(getFirestore(), 'categories', this.getAttribute('data-category'));
+  clearTimeout(timer);
+  timer = setTimeout(function(){
+    setDoc(categoriesRef, { name: inputElement.value }, { merge: true });
+    promptToastElement.children[0].innerHTML = "Category Updated!";
+    promptToast.show();
+    inputElement.previousElementSibling.querySelector('input[type="checkbox"').click();
+    toggleInputDisabled.apply(inputElement.previousElementSibling.querySelector('input[type="checkbox"'));
+  },2000)
+}
+
+function updateItem(){
+  const inputElement = this;
+  const itemsRef = doc(getFirestore(), 'items', this.getAttribute('data-item'));
+  clearTimeout(timer);
+  timer = setTimeout(function(){
+    setDoc(itemsRef, { name: inputElement.value }, { merge: true });
+    promptToastElement.children[0].innerHTML = "Item Updated!";
+    promptToast.show();
+    inputElement.previousElementSibling.querySelector('input[type="checkbox"').click();
+    toggleInputDisabled.apply(inputElement.previousElementSibling.querySelector('input[type="checkbox"'));
+  },2000)
+}
+
 // Displays a Message in the UI.
 function displayRecord(id, itemData, docID) {
   const div = document.getElementById('date' + id) || createAndInsertMessage(id);
@@ -315,7 +342,7 @@ function displayRecord(id, itemData, docID) {
   if (itemData.category != undefined && itemData.category != ''){
     const category = document.getElementById(`category${itemData.category}${id}`) || createAndInsertCategory(id, itemData);
     category.parentNode.querySelector('.accordion-header').setAttribute('data-bs-target', '#category'+itemData.category+id);
-    category.parentNode.querySelector('.category-name').textContent = categories[itemData.category];
+    category.parentNode.querySelector('.category-name').textContent = categories[itemData.category] || itemData.category;
   }
   // ----Category
   const item = document.getElementById('item'+docID) || createAndInsertItem(id, itemData, docID);
@@ -323,7 +350,7 @@ function displayRecord(id, itemData, docID) {
 
   div.querySelector('.record-date').textContent = moment(id).format('DD dddd YYYY MMMM');
   
-  item.querySelector('.item-name').textContent = items[itemData.item];
+  item.querySelector('.item-name').textContent = items[itemData.item] || itemData.item;
   item.setAttribute('data-amount', itemData.amount);
   item.setAttribute('data-expin', itemData.expin);
   item.setAttribute('data-category', itemData.category);
@@ -487,33 +514,55 @@ function amountFormat(amount) {
 var MANAGE_TABLE_TEMPLATE = 
 `<tbody>
   <tr>
-    <td><input type="text"/></td>
-    <td><input type="text"/></td>
+    <td>
+      <div class="input-group">
+        <div class="input-group-text">
+          <input type="checkbox" class="form-check-input mt-0">
+        </div>
+        <input class="form-control" type="text" disabled/>
+      </div>
+    </td>
   </tr>
   </tbody>`;
-function loadCategoriesList() {
-    // TODO 8: Load and listen for new messages.
-    const recentRecordsQuery = query(collection(getFirestore(), 'categories'), orderBy('index'));
-  
-    // Start listening to the query.
-    unsubscribes['category'] = onSnapshot(recentRecordsQuery, function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-        if (change.type === 'removed') {
-          deleteRecord(change.doc.id, change.doc.data());
-        } else {
-          categories[change.doc.id] = change.doc.data().name;
-          createAndInsertCategoryOption(change.doc.id, change.doc.data());
-          const container = document.createElement('table');
-          container.innerHTML = MANAGE_TABLE_TEMPLATE;
-          const category = container.firstElementChild.firstElementChild;
-          category.firstElementChild.firstElementChild.value = change.doc.data().name;
-          manageModalElement.querySelector('tbody').appendChild(category);
-        }
-      }, function(error){
-        console.error(error);
-      });
-    });
+
+function toggleInputDisabled(){
+  if (this.checked){
+    this.parentElement.nextElementSibling.removeAttribute('disabled');
+  } else {
+    this.parentElement.nextElementSibling.setAttribute('disabled', 'true');
+  }
 }
+function appendToManageList(el, id, name){
+  const container = document.createElement('table');
+  container.innerHTML = MANAGE_TABLE_TEMPLATE;
+  const newTr = container.querySelector('tr');
+  newTr.querySelector('input[type="checkbox"]').addEventListener('change', toggleInputDisabled);
+  newTr.querySelector('input[type="text"]').value = name;
+  newTr.querySelector('input[type="text"]').addEventListener('input', updateCategory);
+  newTr.querySelector('input[type="text"]').setAttribute('data-category', id);
+  el.appendChild(newTr);
+}
+
+async function loadCategoriesList() {
+  const categoriesQuery = query(collection(getFirestore(), 'categories'), orderBy('timestamp'));
+
+  const querySnapshot = await getDocs(categoriesQuery);
+  
+  querySnapshot.forEach((doc) => {
+    categories[doc.id] = doc.data().name;
+    createAndInsertCategoryOption(doc.id, doc.data());
+    // const container = document.createElement('table');
+    // container.innerHTML = MANAGE_TABLE_TEMPLATE;
+    // const category = container.querySelector('tr');
+    // category.querySelector('input[type="checkbox"]').addEventListener('change', toggleInputDisabled);
+    // category.querySelector('input[type="text"]').value = doc.data().name;
+    // category.querySelector('input[type="text"]').addEventListener('input', updateCategory);
+    // category.querySelector('input[type="text"]').setAttribute('data-category', doc.id);
+    // manageCategoryElement.appendChild(category);
+    appendToManageList(manageCategoryElement, doc.id, doc.data().name);
+  });
+}
+
 
 var OPTION_TEMPLATE = 
 `<option></option>`;
@@ -528,27 +577,15 @@ function createAndInsertCategoryOption(id, itemData) {
   categorySelectElement.appendChild(option);
 }
 
-function loadItemsList() {
-  // TODO 8: Load and listen for new messages.
-  const recentRecordsQuery = query(collection(getFirestore(), 'items'), orderBy('index'));
+async function loadItemsList() {
+  const itemsQuery = query(collection(getFirestore(), 'items'), orderBy('timestamp'));
 
-  // Start listening to the query.
-  unsubscribes['item'] = onSnapshot(recentRecordsQuery, function(snapshot) {
-    snapshot.docChanges().forEach(function(change) {
-      if (change.type === 'removed') {
-        deleteRecord(change.doc.id, change.doc.data());
-      } else {
-        items[change.doc.id] = change.doc.data().name;
-        createAndInsertItemOption(change.doc.id, change.doc.data());
-        const container = document.createElement('table');
-        container.innerHTML = MANAGE_TABLE_TEMPLATE;
-        const item = container.firstElementChild.firstElementChild;
-        item.children[1].firstElementChild.value = change.doc.data().name;
-        manageModalElement.querySelector('tbody').appendChild(item);
-      }
-    }, function(error){
-      console.error(error);
-    });
+  const querySnapshot = await getDocs(itemsQuery);
+  
+  querySnapshot.forEach((doc) => {
+    items[doc.id] = doc.data().name;
+    createAndInsertItemOption(doc.id, doc.data());
+    appendToManageList(manageItemElement, doc.id, doc.data().name);
   });
 }
 
@@ -576,8 +613,19 @@ function onRecordFormSubmit(e) {
     submitData['amount'] = amountInputElement.value;
     submitData['date'] = dateSelectorElement.value;
     submitData['timestamp'] = serverTimestamp();
-    submitData['category'] = categorySelectElement.value;
 
+    if (categoryCheckBoxElement.checked){
+      submitData['category'] = (categoryCheckBoxElement.parentElement.nextElementSibling.value).toLowerCase();
+    } else {
+      submitData['category'] = categorySelectElement.value;
+    }
+
+    if (itemCheckBoxElement.checked){
+      submitData['item'] = (itemCheckBoxElement.parentElement.nextElementSibling.value).toLowerCase();
+    } else {
+      submitData['item'] = itemSelectElement.value;
+    }
+    console.log(submitData);
     expenseRadioElement.checked == true ? submitData['expin'] = 'expense' : submitData['expin'] = 'income';
     saveMessage(submitData);
     dismissButtonElement.click();
@@ -623,10 +671,6 @@ async function saveMessage(messageText) {
   }
 }
 
-function selectChange(){
-  submitData[this.name] = this.value;
-}
-
 function getDaysInMonth (year, month){
   return new Date(year, month, 0).getDate();
 }
@@ -653,7 +697,28 @@ function modalModeSwitch(){
     amountInputElement.value = this.getAttribute('data-amount');
     expinRadioElement.querySelector(`#${this.getAttribute('data-expin')}-radio`).checked = true;
     categorySelectElement.value = this.getAttribute("data-category");
-    itemSelectElement.value = this.getAttribute("data-item");
+    dateSelectorElement.value = this.getAttribute('data-date');
+
+    if (items[this.getAttribute("data-item")] == undefined){
+      itemCheckBoxElement.setAttribute('checked','true');
+      switchMode.apply(itemCheckBoxElement);
+      itemInputElement.value = this.getAttribute('data-item');
+    } else {
+      itemCheckBoxElement.removeAttribute('checked');
+      switchMode.apply(itemCheckBoxElement);
+      itemSelectElement.value = this.getAttribute("data-item");
+    }
+
+    if (categories[this.getAttribute("data-category")] == undefined){
+      categoryCheckBoxElement.setAttribute('checked','true');
+      switchMode.apply(categoryCheckBoxElement);
+      categoryInputElement.value = this.getAttribute('data-category');
+    } else {
+      categoryCheckBoxElement.removeAttribute('checked');
+      switchMode.apply(categoryCheckBoxElement);
+      categorySelectElement.value = this.getAttribute("data-category");
+    }
+    
     modifyButtonElement.setAttribute('data-date', this.getAttribute('data-date'));
     modifyButtonElement.setAttribute('data-category', this.getAttribute('data-category'));
     deleteButtonElement.setAttribute('data-date', this.getAttribute('data-date'))
@@ -665,6 +730,14 @@ function modalModeSwitch(){
 function cleanModal(){
   amountInputElement.value = '';
   expenseRadioElement.setAttribute('checked', 'true');
+  if (categoryCheckBoxElement.checked == true){
+    categoryCheckBoxElement.click();
+  }
+  if (itemCheckBoxElement.checked == true){
+    itemCheckBoxElement.click();
+  }
+  switchMode.apply(categoryCheckBoxElement);
+  switchMode.apply(itemCheckBoxElement);
   categorySelectElement.value = '';
   itemSelectElement.value = '';;
 }
@@ -678,9 +751,19 @@ async function modifyItemData(e){
   const itemData = {
     amount: parseInt(amountInputElement.value),
     expin: expenseRadioElement.checked == true ? 'expense' : 'income',
-    category: categorySelectElement.value,
-    item: itemSelectElement.value
   }
+  if (itemCheckBoxElement.checked){
+    itemData['item'] = (itemInputElement.value).toLowerCase();
+  } else {
+    itemData['item'] = itemSelectElement.value
+  }
+
+  if (categoryCheckBoxElement.checked){
+    itemData['category'] = (categoryInputElement.value).toLowerCase();
+  } else {
+    itemData['category'] = categorySelectElement.value
+  }
+
   if (this.getAttribute('data-category') != categorySelectElement.value){
     if (this.getAttribute('data-category') == ''){
       item.parentNode.removeChild(item);
@@ -690,8 +773,6 @@ async function modifyItemData(e){
         accordionBody.parentNode.parentNode.parentNode.removeChild(accordionBody.parentNode.parentNode);
       }
     }
-
-    
   }
 
   dismissButtonElement.click();
@@ -709,20 +790,63 @@ async function deleteItem(e){
 function bodyResize(){
   bodyElement.style.marginBottom = fixedBottomArea.offsetHeight +'px';
 }
+function switchMode(){
+  if (this.checked){
+    this.parentElement.nextElementSibling.classList.remove('d-none');
+    this.parentElement.nextElementSibling.focus();
+    this.parentElement.nextElementSibling.nextElementSibling.classList.add('d-none');
+    
+    this.parentElement.nextElementSibling.removeAttribute('disabled');
+    this.parentElement.nextElementSibling.nextElementSibling.setAttribute('disabled', 'true');
+  } else {
+    this.parentElement.nextElementSibling.classList.add('d-none');
+    this.parentElement.nextElementSibling.nextElementSibling.classList.remove('d-none');
+    
+    this.parentElement.nextElementSibling.setAttribute('disabled', 'true');
+    this.parentElement.nextElementSibling.nextElementSibling.removeAttribute('disabled');
+  }
+}
+
+async function newCategory(){
+  const categoryName = this.previousElementSibling.value;
+  const categoryRef = await addDoc(collection(getFirestore(), "categories"), {
+    name: categoryName,
+    timestamp: serverTimestamp()
+  });
+  
+  appendToManageList(manageCategoryElement, categoryRef.id, categoryName);
+}
+
+async function newItem(){
+  const itemName = this.previousElementSibling.value;
+  const itemRef = await addDoc(collection(getFirestore(), "items"), {
+    name: itemName,
+    timestamp: serverTimestamp()
+  });
+  
+  appendToManageList(manageItemElement, itemRef.id, itemName);
+}
 
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
 var signInModalElement = document.getElementById('sign-in-modal');
 var signUpModalElement = document.getElementById('sign-up-modal');
-var manageModalElement = document.getElementById('manage-modal');
 var signInButtonElement = document.getElementById('sign-in');
 var signUpButtonElement = document.getElementById('sign-up');
 var monthSelectorElement = document.getElementById('month-selector');
 var manageButtonElement = document.getElementById('manage');
+var manageCategoryElement = document.getElementById('manage-category');
+var manageItemElement = document.getElementById('manage-item');
+var newCategoryButtonElement = document.getElementById('new-category-button');
+var newItemButtonElement = document.getElementById('new-item-button');
 var signOutButtonElement = document.getElementById('sign-out');
 var promptToastElement = document.getElementById('prompt-toast');
 var promptToast = new bootstrap.Toast(promptToastElement);
+var categoryCheckBoxElement = document.getElementById('category-checkbox');
+var categoryInputElement = document.getElementById('category-input');
 var categorySelectElement = document.getElementById('category-select');
+var itemCheckBoxElement = document.getElementById('item-checkbox');
+var itemInputElement = document.getElementById('item-input');
 var itemSelectElement = document.getElementById('item-select');
 var expenseRadioElement = document.getElementById('expense-radio');
 var incomeRadioElement = document.getElementById('income-radio');
@@ -747,7 +871,9 @@ signInModalElement.addEventListener('submit', signIn);
 signInModalElement.addEventListener('shown.bs.modal', focusInput);
 signUpModalElement.addEventListener('submit', signUp);
 signUpModalElement.addEventListener('shown.bs.modal', focusInput);
-itemSelectElement.addEventListener('change', selectChange);
+// itemSelectElement.addEventListener('change', selectChange);
+itemCheckBoxElement.addEventListener('change', switchMode);
+categoryCheckBoxElement.addEventListener('change', switchMode);
 signOutButtonElement.addEventListener('click', signOutUser);
 addRecordModalElement.addEventListener('shown.bs.modal', focusInput);
 addRecordModalElement.addEventListener('hidden.bs.modal', cleanModal);
@@ -764,6 +890,9 @@ monthSelectorElement.value = moment(new Date()).format('YYYY-MM');
 monthSelectorElement.addEventListener('change', monthSelector);
 dateSelectorElement.value = moment(new Date()).format('YYYY-MM-DD');;
 
+//Append new category/item
+newCategoryButtonElement.addEventListener('click', newCategory);
+newItemButtonElement.addEventListener('click', newItem);
 
 const config = {
   apiKey: "AIzaSyCZHCKSZnH9WE5QkrGhtApo92NXe8tzNLY",
