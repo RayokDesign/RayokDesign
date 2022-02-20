@@ -453,6 +453,7 @@ function calculateAmount() {
   
     itemMonthAmountElement.appendChild(item);
   }
+  itemMonthRadioCheck();
 
   //------- Item Month Amount and Finances Amount
 
@@ -485,8 +486,8 @@ function calculateAmount() {
   //------------ Category Month Amount 
 }
 function itemMonthRadioCheck(){
-  let aExpenseItems = itemMonthAmountElement.querySelectorAll('div[data-expin = "expense"]');
-  let aIncomeItems = itemMonthAmountElement.querySelectorAll('div[data-expin = "income"]');
+  const aExpenseItems = itemMonthAmountElement.querySelectorAll('div[data-expin = "expense"]');
+  const aIncomeItems = itemMonthAmountElement.querySelectorAll('div[data-expin = "income"]');
   if (itemMonthExpenseRadio.checked){
     if (aExpenseItems.length != 0){
       for (let i=0; i<aExpenseItems.length; i++){
@@ -726,6 +727,7 @@ function toggleExpin() {
 //Load date from date
 async function monthSelector() {
   recordListElement.textContent = '';
+  itemMonthExpenseRadio.checked = true;
   let date = this.value.split('-') || moment(new Date()).format('YYYY-MM').split('-')
   let days = getDaysInMonth(date[0], date[1]);
 
@@ -733,8 +735,6 @@ async function monthSelector() {
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
   }
-  itemMonthExpenseRadio.checked = true;
-  itemMonthRadioCheck();
 }
 
 // Saves a new message on the Cloud Firestore.
@@ -966,6 +966,8 @@ var outcomeAmountElement = financeMonthAmountElement.querySelector('.outcome-amo
 var earningAmountElement = financeMonthAmountElement.querySelector('.earning-amount');
 var itemMonthExpenseRadio = document.getElementById('item-month-expense-radio');
 var itemMonthIncomeRadio = document.getElementById('item-month-income-radio');
+
+
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
 signInModalElement.addEventListener('submit', signIn);
