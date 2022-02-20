@@ -422,12 +422,14 @@ function calculateAmount() {
       outcomeAmountElement.textContent = `${parseInt(outcomeAmountElement.textContent)+parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'))}`;
     }
     if (itemMonthAmount[`${aItemElements[i].textContent}`] == undefined){
-      itemMonthAmount[`${aItemElements[i].textContent}`] = parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'));
+      itemMonthAmount[`${aItemElements[i].textContent}`] = {
+        amount: parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount')),
+        expin: aItemElements[i].parentElement.getAttribute('data-expin')
+      }
     } else {
-      itemMonthAmount[`${aItemElements[i].textContent}`] = itemMonthAmount[`${aItemElements[i].textContent}`] + parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'));
+      itemMonthAmount[`${aItemElements[i].textContent}`].amount = itemMonthAmount[`${aItemElements[i].textContent}`].amount + parseInt(aItemElements[i].nextElementSibling.getAttribute('data-amount'));
     }
   }
-
   earningAmountElement.textContent = `${parseInt(incomeAmountElement.textContent)+parseInt(outcomeAmountElement.textContent)}`;
   incomeAmountElement.textContent = amountFormat(incomeAmountElement.textContent);
   outcomeAmountElement.textContent = amountFormat(outcomeAmountElement.textContent);
@@ -445,8 +447,9 @@ function calculateAmount() {
     const container = document.createElement('div');
     container.innerHTML = ITEM_MONTH_AMOUNT_TEMPLATE;
     const item = container.firstChild;
+    item.setAttribute('data-expin', itemMonthAmount[itemName].expin);
     item.querySelector('.item-month-name').textContent = itemName;
-    item.querySelector('.item-month-amount').textContent = amountFormat(itemMonthAmount[itemName]);
+    item.querySelector('.item-month-amount').textContent = amountFormat(itemMonthAmount[itemName].amount);
   
     itemMonthAmountElement.appendChild(item);
   }
@@ -481,6 +484,34 @@ function calculateAmount() {
   }
   //------------ Category Month Amount 
 }
+function itemMonthRadioCheck(){
+  let aExpenseItems = itemMonthAmountElement.querySelectorAll('div[data-expin = "expense"]');
+  let aIncomeItems = itemMonthAmountElement.querySelectorAll('div[data-expin = "income"]');
+  if (itemMonthExpenseRadio.checked){
+    if (aExpenseItems.length != 0){
+      for (let i=0; i<aExpenseItems.length; i++){
+        aExpenseItems[i].classList.remove('d-none');
+      }
+    }
+    if (aIncomeItems.length != 0){
+      for (let i=0; i<aIncomeItems.length; i++){
+        aIncomeItems[i].classList.add('d-none');
+      }
+    }
+  } else {
+    if (aExpenseItems.length != 0){
+      for (let i=0; i<aExpenseItems.length; i++){
+        aExpenseItems[i].classList.add('d-none');
+      }
+    }
+    if (aIncomeItems.length != 0){
+      for (let i=0; i<aIncomeItems.length; i++){
+        aIncomeItems[i].classList.remove('d-none');
+      }
+    }
+  }
+}
+
 
 // Delete a Message from the UI.
 function deleteRecord(docID, itemData) {
@@ -702,7 +733,8 @@ async function monthSelector() {
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
   }
-  
+  itemMonthExpenseRadio.checked = true;
+  itemMonthRadioCheck();
 }
 
 // Saves a new message on the Cloud Firestore.
@@ -787,7 +819,8 @@ function cleanModal(){
   switchMode.apply(categoryCheckBoxElement);
   switchMode.apply(itemCheckBoxElement);
   categorySelectElement.value = '';
-  itemSelectElement.value = '';;
+  itemSelectElement.value = '';
+  itemInputElement.value = '';
 }
 
 async function modifyItemData(e){
@@ -876,7 +909,6 @@ async function newCategory(){
 async function newItem(){
   const itemName = (this.previousElementSibling.value).toLowerCase();
   const itemExpin = this.getAttribute('data-expin');
-  console.log(itemName+','+itemExpin);
   const itemRef = await addDoc(collection(getFirestore(), "items"), {
     name: itemName,
     expin: itemExpin,
@@ -932,7 +964,8 @@ var manageDeleteTr = null;
 var incomeAmountElement = financeMonthAmountElement.querySelector('.income-amount');
 var outcomeAmountElement = financeMonthAmountElement.querySelector('.outcome-amount');
 var earningAmountElement = financeMonthAmountElement.querySelector('.earning-amount');
-
+var itemMonthExpenseRadio = document.getElementById('item-month-expense-radio');
+var itemMonthIncomeRadio = document.getElementById('item-month-income-radio');
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
 signInModalElement.addEventListener('submit', signIn);
@@ -947,6 +980,8 @@ addRecordModalElement.addEventListener('hidden.bs.modal', cleanModal);
 addRecordButtonElement.addEventListener('click', modalModeSwitch);
 modifyButtonElement.addEventListener('click', modifyItemData);
 deleteButtonElement.addEventListener('click', deleteItem);
+itemMonthExpenseRadio.addEventListener('change', itemMonthRadioCheck);
+itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
 
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
