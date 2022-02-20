@@ -350,8 +350,12 @@ function displayRecord(id, itemData, docID) {
   document.getElementById(`memo${id}`) || createAndInsertMemo(id);
 
   div.querySelector('.record-date').textContent = moment(id).format('DD dddd YYYY MMMM');
-  
-  item.querySelector('.item-name').textContent = items[itemData.item] || itemData.item;
+
+  if (items[itemData.item]){
+    item.querySelector('.item-name').textContent = items[itemData.item].name;
+  } else {
+    item.querySelector('.item-name').textContent = itemData.item;
+  }
   item.setAttribute('data-amount', itemData.amount);
   item.setAttribute('data-expin', itemData.expin);
   item.setAttribute('data-category', itemData.category);
@@ -610,24 +614,27 @@ async function loadCategoriesList() {
   
   querySnapshot.forEach((doc) => {
     categories[doc.id] = doc.data().name;
-    createAndInsertCategoryOption(doc.id, doc.data());
     appendToManageList(manageCategoryElement, doc.id, doc.data().name, false, 'category');
   });
+  
+  createAndInsertCategoryOption();
 }
 
 
 var OPTION_TEMPLATE = 
 `<option></option>`;
 
-function createAndInsertCategoryOption(id, itemData) {
-  const container = document.createElement('div');
-  container.innerHTML = OPTION_TEMPLATE;
-  const option = container.firstChild;
-  option.setAttribute('value', id);
-  option.classList.add('text-capitalize');
-  option.textContent = itemData.name;
-
-  categorySelectElement.appendChild(option);
+function createAndInsertCategoryOption() {
+  for (let category in categories){
+    const container = document.createElement('div');
+    container.innerHTML = OPTION_TEMPLATE;
+    const option = container.firstChild;
+    option.setAttribute('value', category);
+    option.classList.add('text-capitalize');
+    option.textContent = categories[category];
+  
+    categorySelectElement.appendChild(option);
+  }
 }
 
 async function loadItemsList() {
@@ -636,11 +643,14 @@ async function loadItemsList() {
   const querySnapshot = await getDocs(itemsQuery);
   
   querySnapshot.forEach((doc) => {
-    items[doc.id] = doc.data().name;
-    createAndInsertItemOption(doc.id, doc.data());
+    items[doc.id] = {
+      name: doc.data().name,
+      expin: doc.data().expin
+    }
     appendToManageList(manageItemElement, doc.id, doc.data().name, doc.data().expin, 'item');
   });
 
+  createAndInsertItemOption();
   manageItemExpenseRadio.checked = true;
   manageItemRadioStateChanged();
 }
@@ -669,21 +679,22 @@ function manageItemRadioStateChanged(){
   }
 }
 
-function createAndInsertItemOption(id, itemData) {
-  const container = document.createElement('div');
-  container.innerHTML = OPTION_TEMPLATE;
-  const option = container.firstChild;
-  option.setAttribute('value', id);
-  option.classList.add('text-capitalize');
-  option.textContent = itemData.name;
-  if (itemData.expin == 'income'){
-    option.classList.add('income');
-    option.classList.add('d-none');
-  } else {
-    option.classList.add('expense');
+function createAndInsertItemOption() {
+  for (let item in items){
+    const container = document.createElement('div');
+    container.innerHTML = OPTION_TEMPLATE;
+    const option = container.firstChild;
+    option.setAttribute('value', item);
+    option.classList.add('text-capitalize');
+    option.textContent = items[item].name;
+    if (items[item].expin == 'income'){
+      option.setAttribute('data-expin', 'income');
+      option.classList.add('d-none');
+    } else {
+      option.setAttribute("data-expin", 'expense');
+    }
+    itemSelectElement.appendChild(option);
   }
-
-  itemSelectElement.appendChild(option);
 }
 
 // Triggered when the send new message form is submitted.

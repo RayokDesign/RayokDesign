@@ -28,15 +28,28 @@
 <body>
     <div class="container">
         <header>
-            <nav class="navbar navbar-light pt-3 d-flex">
+            <nav class="navbar navbar-light">
                 <a href="/finances" class="navbar-brand fs-2">
                     🐔 ร้านข้าวมันไก่ปอ
                 </a>
-                <div class="user-container">
-                    <button type="button" id="sign-in" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-in-modal">Sign-in</button>
-                    <button type="button" id="sign-up" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign-up</button>
-                    <button type="button" id="manage" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#manage-modal"><i class="bi bi-pencil-fill me-2"></i>Manage</button>
-                    <button type="button" id="sign-out" class="btn btn-primary d-none"><i class="bi bi-door-closed me-2"></i>Sign-out</button>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-list">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar-list">
+                    <ul class="navbar-nav text-end">
+                        <li class="nav-item">
+                            <a href="#" id="sign-in" class="nav-link" data-bs-toggle="modal" data-bs-target="#sign-in-modal">Sign-in</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" id="sign-up" class="nav-link" data-bs-toggle="modal" data-bs-target="#sign-up-modal">Sign-up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" id="manage" class="nav-link" data-bs-toggle="modal" data-bs-target="#manage-modal"><i class="bi bi-pencil-fill me-2"></i>Manage</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" id="sign-out" class="nav-link"><i class="bi bi-door-closed me-2"></i>Sign-out</a>
+                        </li>
+                    </ul>
                 </div>
             </nav>
             <div class="mb-3">
