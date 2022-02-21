@@ -576,6 +576,7 @@ function appendToManageList(el, id, name, expin, type){
   container.innerHTML = MANAGE_TABLE_TEMPLATE;
   const newTr = container.querySelector('tr');
   newTr.querySelector('input[type="checkbox"]').addEventListener('change', toggleInputDisabled);
+  newTr.querySelector('input[type="text"]').classList.add('manage-item-name');
   newTr.querySelector('input[type="text"]').value = name;
   newTr.querySelector('input[type="text"]').addEventListener('input', updateCategory);
   newTr.querySelector('input[type="text"]').setAttribute('data-category', id);
