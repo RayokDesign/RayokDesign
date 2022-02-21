@@ -147,6 +147,8 @@ function initFirebaseAuth() {
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
 async function authStateObserver(user) {
   if (user) {
+    manageCategoryElement.textContent= "";
+    manageItemElement.textContent = "";
     const userRef = doc(getFirestore(), "users", user.uid);
     try {
       await getDoc(userRef);
@@ -168,11 +170,16 @@ async function authStateObserver(user) {
 
   } else {
     // Show sign-in button.
+    initWebSite();
     signOutButtonElement.classList.add('d-none');
     manageButtonElement.classList.add('d-none');
     signInButtonElement.classList.remove('d-none');
     signUpButtonElement.classList.remove('d-none');
   }
+}
+
+function initWebSite(){
+  manageCategoryElement.textContent=""
 }
 
 // Loads chat messages history and listens for upcoming ones.
@@ -537,7 +544,6 @@ function deleteRecord(docID, itemData) {
   }
 
   if (div.querySelector('.accordion').children.length == 0){
-    //div.parentNode.removeChild(div);
     div.classList.add('d-none');
   }
   calculateAmount();
@@ -945,7 +951,6 @@ async function newItem(){
   this.previousElementSibling.value = '';
 }
 function focusItemSelectElement(){
-  console.log('itemSelectFocus');
   itemSelectElement.focus();
 }
 
