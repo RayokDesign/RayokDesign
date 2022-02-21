@@ -955,9 +955,9 @@ function focusItemSelectElement(){
 }
 
 function focusNumInput(){
-  amountInputElement.focus();
+  console.log('aa');
+  signInModalElement.querySelector('input').focus();
 }
-
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
 var signInModalElement = document.getElementById('sign-in-modal');
@@ -1024,6 +1024,7 @@ deleteButtonElement.addEventListener('click', deleteItem);
 itemMonthExpenseRadio.addEventListener('change', itemMonthRadioCheck);
 itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
 itemSelectElement.addEventListener('change', focusNumInput);
+document.getElementById('sign-in-logo').addEventListener('click', focusNumInput);
 
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
