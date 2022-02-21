@@ -1024,7 +1024,7 @@ deleteButtonElement.addEventListener('click', deleteItem);
 itemMonthExpenseRadio.addEventListener('change', itemMonthRadioCheck);
 itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
 itemSelectElement.addEventListener('change', focusNumInput);
-
+document.getElementById('add-record-logo').addEventListener('click', focusNumInput);
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
 manageItemIncomeRadio.addEventListener('change', manageItemRadioStateChanged);
