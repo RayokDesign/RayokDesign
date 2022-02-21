@@ -376,7 +376,7 @@ function displayRecord(id, itemData, docID) {
   item.querySelector('.item-amount').textContent = amountFormat(item.querySelector('.item-amount').getAttribute('data-amount'));
 
   calculateAmount();
-  bodyResize();
+  //bodyResize();
 }
 
 function calculateAmount() {
@@ -547,7 +547,7 @@ function deleteRecord(docID, itemData) {
     div.classList.add('d-none');
   }
   calculateAmount();
-  bodyResize();
+  //bodyResize();
 }
 
 function amountFormat(amount) {
