@@ -576,8 +576,14 @@ function appendToManageList(el, id, name, expin, type){
   newTr.querySelector('input[type="checkbox"]').addEventListener('change', toggleInputDisabled);
   newTr.querySelector('input[type="text"]').classList.add('manage-item-name');
   newTr.querySelector('input[type="text"]').value = name;
-  newTr.querySelector('input[type="text"]').addEventListener('input', updateCategory);
-  newTr.querySelector('input[type="text"]').setAttribute('data-category', id);
+  if (type == "item"){
+    newTr.querySelector('input[type="text"]').addEventListener('input', updateItem);
+    newTr.querySelector('input[type="text"]').setAttribute('data-item', id);
+  } else {
+    newTr.querySelector('input[type="text"]').addEventListener('input', updateCategory);
+    newTr.querySelector('input[type="text"]').setAttribute('data-category', id);
+  }
+  
   newTr.setAttribute('data-id', id);
   newTr.setAttribute('data-name', name);
   newTr.setAttribute('data-type', type);
@@ -621,7 +627,7 @@ async function loadCategoriesList() {
 
 
 var OPTION_TEMPLATE = 
-`<option><span></span></option>`;
+`<option></option>`;
 
 function createAndInsertCategoryOption() {
   for (let category in categories){
@@ -679,20 +685,34 @@ function manageItemRadioStateChanged(){
 }
 
 function createAndInsertItemOption() {
-  for (let item in items){
-    const container = document.createElement('div');
-    container.innerHTML = OPTION_TEMPLATE;
-    const option = container.firstChild;
-    option.setAttribute('value', item);
-    option.firstChild.classList.add('text-capitalize');
-    option.firstChild.textContent = items[item].name;
-    if (items[item].expin == 'income'){
-      option.setAttribute('data-expin', 'income');
-      option.classList.add('d-none');
-    } else {
-      option.setAttribute("data-expin", 'expense');
+  const aExpenseItem = manageItemElement.querySelectorAll('tr[data-expin="expense"]');
+  const aIncomeItem = manageItemElement.querySelectorAll('tr[data-expin="income"]');
+  const emptyOption = itemSelectElement.firstElementChild;
+  console.log(emptyOption);
+  itemSelectElement.textContent = "";
+  itemSelectElement.appendChild(emptyOption);
+  if (expenseRadioElement.checked){
+    console.log("expense");
+    for (let i=0; i<aExpenseItem.length; i++){
+      const container = document.createElement('div');
+      container.innerHTML = OPTION_TEMPLATE;
+      const option = container.firstChild;
+      option.setAttribute('value', aExpenseItem[i].getAttribute('data-id'));
+      option.classList.add('text-capitalize');
+      option.textContent = aExpenseItem[i].querySelector('input[type="text"]').value;
+      itemSelectElement.appendChild(option);
     }
-    itemSelectElement.appendChild(option);
+  } else {
+    console.log('Income');
+    for (let i=0; i<aIncomeItem.length; i++){
+      const container = document.createElement('div');
+      container.innerHTML = OPTION_TEMPLATE;
+      const option = container.firstChild;
+      option.setAttribute('value', aIncomeItem[i].getAttribute('data-id'));
+      option.classList.add('text-capitalize');
+      option.textContent = aIncomeItem[i].querySelector('input[type="text"]').value;
+      itemSelectElement.appendChild(option);
+    }
   }
 }
 
@@ -723,25 +743,7 @@ function onRecordFormSubmit(e) {
 }
 
 function toggleExpin() {
-  itemSelectElement.value = '';
-  const expenseOptions = document.querySelectorAll('option[data-expin="expense"]');
-  const incomeOptions = document.querySelectorAll('option[data-expin="income"]');
-
-  if (expenseRadioElement.checked){
-    for (let i = 0; i < incomeOptions.length; i++){
-      incomeOptions[i].classList.add('d-none');
-    }
-    for (let i = 0; i < expenseOptions.length; i++){
-      expenseOptions[i].classList.remove('d-none');
-    }
-  } else {
-    for (let i = 0; i < incomeOptions.length; i++){
-      incomeOptions[i].classList.remove('d-none');
-    }
-    for (let i = 0; i < expenseOptions.length; i++){
-      expenseOptions[i].classList.add('d-none');
-    }
-  }
+  createAndInsertItemOption();
   
   itemSelectElement.focus();
 }
