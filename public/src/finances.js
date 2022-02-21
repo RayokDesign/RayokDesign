@@ -945,11 +945,13 @@ async function newItem(){
   this.previousElementSibling.value = '';
 }
 function focusItemSelectElement(){
+  console.log('itemSelectFocus');
   itemSelectElement.focus();
 }
 
 function focusNumInput(){
-  amountInputElement.focus();
+  console.log('amountInputFoucs');
+  amountInputElement.focus({preventScroll:true});
 }
 
 // Shortcuts to DOM Elements.
