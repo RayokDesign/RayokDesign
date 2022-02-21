@@ -743,6 +743,7 @@ function toggleExpin() {
       expenseOptions[i].classList.add('d-none');
     }
   }
+  
   itemSelectElement.focus();
 }
 var mouseDownEvent = new MouseEvent('mousedown', {
@@ -945,6 +946,9 @@ async function newItem(){
   appendToManageList(manageItemElement, itemRef.id, itemName, itemExpin, 'item');
   this.previousElementSibling.value = '';
 }
+function focusItemSelectElement(){
+  itemSelectElement.focus();
+}
 
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
@@ -1004,7 +1008,7 @@ signUpModalElement.addEventListener('shown.bs.modal', focusInput);
 itemCheckBoxElement.addEventListener('change', switchMode);
 categoryCheckBoxElement.addEventListener('change', switchMode);
 signOutButtonElement.addEventListener('click', signOutUser);
-addRecordModalElement.addEventListener('shown.bs.modal', toggleExpin);
+addRecordModalElement.addEventListener('shown.bs.modal', focusItemSelectElement);
 addRecordModalElement.addEventListener('hidden.bs.modal', cleanModal);
 addRecordButtonElement.addEventListener('click', modalModeSwitch);
 modifyButtonElement.addEventListener('click', modifyItemData);
