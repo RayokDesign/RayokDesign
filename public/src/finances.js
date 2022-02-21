@@ -956,7 +956,7 @@ function focusItemSelectElement(){
 
 function focusNumInput(){
   console.log('a');
-  amountInputElement.focus();
+  amountInputElement.nextElementSibling.click();
 }
 
 function blurItemSelect(){
