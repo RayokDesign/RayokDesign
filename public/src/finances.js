@@ -955,7 +955,7 @@ function focusItemSelectElement(){
 }
 
 function focusNumInput(){
-  amountInputElement.focus();
+  amountInputElement.nextElementSibling.click();
 }
 
 // Shortcuts to DOM Elements.
