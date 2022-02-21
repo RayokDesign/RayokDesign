@@ -160,8 +160,6 @@ async function authStateObserver(user) {
         <p class="fs-3 text-center">Missing or insufficient permissions</p>
       </div>`;
     }
-
-    
     // Hide sign-in button.
     signOutButtonElement.classList.remove('d-none');
     manageButtonElement.classList.remove('d-none');
@@ -623,7 +621,7 @@ async function loadCategoriesList() {
 
 
 var OPTION_TEMPLATE = 
-`<option></option>`;
+`<option><span></span></option>`;
 
 function createAndInsertCategoryOption() {
   for (let category in categories){
@@ -686,8 +684,8 @@ function createAndInsertItemOption() {
     container.innerHTML = OPTION_TEMPLATE;
     const option = container.firstChild;
     option.setAttribute('value', item);
-    option.classList.add('text-capitalize');
-    option.textContent = items[item].name;
+    option.firstChild.classList.add('text-capitalize');
+    option.firstChild.textContent = items[item].name;
     if (items[item].expin == 'income'){
       option.setAttribute('data-expin', 'income');
       option.classList.add('d-none');
