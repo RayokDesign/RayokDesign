@@ -688,11 +688,9 @@ function createAndInsertItemOption() {
   const aExpenseItem = manageItemElement.querySelectorAll('tr[data-expin="expense"]');
   const aIncomeItem = manageItemElement.querySelectorAll('tr[data-expin="income"]');
   const emptyOption = itemSelectElement.firstElementChild;
-  console.log(emptyOption);
   itemSelectElement.textContent = "";
   itemSelectElement.appendChild(emptyOption);
   if (expenseRadioElement.checked){
-    console.log("expense");
     for (let i=0; i<aExpenseItem.length; i++){
       const container = document.createElement('div');
       container.innerHTML = OPTION_TEMPLATE;
@@ -703,7 +701,6 @@ function createAndInsertItemOption() {
       itemSelectElement.appendChild(option);
     }
   } else {
-    console.log('Income');
     for (let i=0; i<aIncomeItem.length; i++){
       const container = document.createElement('div');
       container.innerHTML = OPTION_TEMPLATE;
@@ -951,6 +948,10 @@ function focusItemSelectElement(){
   itemSelectElement.focus();
 }
 
+function focusNumInput(){
+  amountInputElement.focus();
+}
+
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
 var signInModalElement = document.getElementById('sign-in-modal');
@@ -1016,7 +1017,7 @@ modifyButtonElement.addEventListener('click', modifyItemData);
 deleteButtonElement.addEventListener('click', deleteItem);
 itemMonthExpenseRadio.addEventListener('change', itemMonthRadioCheck);
 itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
-
+itemSelectElement.addEventListener('change', focusNumInput)
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
 manageItemIncomeRadio.addEventListener('change', manageItemRadioStateChanged);
