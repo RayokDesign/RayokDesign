@@ -955,11 +955,15 @@ function focusItemSelectElement(){
 }
 
 function focusNumInput(){
+  console.log('a');
   amountInputElement.focus();
 }
 
 function blurItemSelect(){
   itemSelectElement.blur();
+  setTimeout(function(){
+    focusNumInput();
+  }, 500);
 }
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
@@ -1027,7 +1031,6 @@ deleteButtonElement.addEventListener('click', deleteItem);
 itemMonthExpenseRadio.addEventListener('change', itemMonthRadioCheck);
 itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
 itemSelectElement.addEventListener('change', blurItemSelect);
-itemSelectElement.addEventListener('focusout', focusNumInput);
 
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
