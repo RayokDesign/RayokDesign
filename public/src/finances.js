@@ -725,16 +725,30 @@ function onRecordFormSubmit(e) {
 
 function toggleExpin() {
   itemSelectElement.value = '';
-  const expenseOptions = document.getElementsByClassName('expense');
-  const incomeOptions = document.getElementsByClassName('income');
+  const expenseOptions = document.querySelectorAll('option[data-expin="expense"]');
+  const incomeOptions = document.querySelectorAll('option[data-expin="income"]');
 
-  for (let i = 0; i < incomeOptions.length; i++){
-    incomeOptions[i].classList.toggle('d-none');
+  if (expenseRadioElement.checked){
+    for (let i = 0; i < incomeOptions.length; i++){
+      incomeOptions[i].classList.add('d-none');
+    }
+    for (let i = 0; i < expenseOptions.length; i++){
+      expenseOptions[i].classList.remove('d-none');
+    }
+  } else {
+    for (let i = 0; i < incomeOptions.length; i++){
+      incomeOptions[i].classList.remove('d-none');
+    }
+    for (let i = 0; i < expenseOptions.length; i++){
+      expenseOptions[i].classList.add('d-none');
+    }
   }
-  for (let i = 0; i < expenseOptions.length; i++){
-    expenseOptions[i].classList.toggle('d-none');
-  }
+  itemSelectElement.focus();
 }
+var mouseDownEvent = new MouseEvent('mousedown', {
+    'bubbleds': true,
+    'cancelable': true
+});
 //Load date from date
 async function monthSelector() {
   recordListElement.textContent = '';
@@ -778,7 +792,9 @@ function modalModeSwitch(){
     submitButtonElement.classList.remove('d-none');
     modifyButtonElement.setAttribute('disabled', 'true');
     submitButtonElement.removeAttribute('disabled');
+    categorySelectDivElement.classList.add('d-none');
   } else {
+    categorySelectDivElement.classList.remove('d-none');
     deleteButtonElement.classList.remove('d-none');
     modifyButtonElement.classList.remove('d-none');
     dismissButtonElement.classList.add('d-none');
@@ -800,7 +816,7 @@ function modalModeSwitch(){
       itemSelectElement.value = this.getAttribute("data-item");
     }
 
-    if (categories[this.getAttribute("data-category")] == undefined){
+    if (categories[this.getAttribute("data-category")] == undefined && this.getAttribute('data-category') != ''){
       categoryCheckBoxElement.checked = true;
       switchMode.apply(categoryCheckBoxElement);
       categoryInputElement.value = this.getAttribute('data-category');
@@ -977,7 +993,7 @@ var outcomeAmountElement = financeMonthAmountElement.querySelector('.outcome-amo
 var earningAmountElement = financeMonthAmountElement.querySelector('.earning-amount');
 var itemMonthExpenseRadio = document.getElementById('item-month-expense-radio');
 var itemMonthIncomeRadio = document.getElementById('item-month-income-radio');
-
+var categorySelectDivElement = document.getElementById('category-select-div');
 
 // Saves message on form submit.
 addRecordModalElement.addEventListener('submit', onRecordFormSubmit);
@@ -988,7 +1004,7 @@ signUpModalElement.addEventListener('shown.bs.modal', focusInput);
 itemCheckBoxElement.addEventListener('change', switchMode);
 categoryCheckBoxElement.addEventListener('change', switchMode);
 signOutButtonElement.addEventListener('click', signOutUser);
-addRecordModalElement.addEventListener('shown.bs.modal', focusInput);
+addRecordModalElement.addEventListener('shown.bs.modal', toggleExpin);
 addRecordModalElement.addEventListener('hidden.bs.modal', cleanModal);
 addRecordButtonElement.addEventListener('click', modalModeSwitch);
 modifyButtonElement.addEventListener('click', modifyItemData);

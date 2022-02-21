@@ -278,19 +278,12 @@
         </div>
       </div>
     <!-- /MANAGE DELETE MODAL -->
+    <!-- ADD RECORD MODAL -->
     <form class="modal fade" id="add-record-modal" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-body">
-                <div class="row mb-2 justify-content-center">
-                    <div class="col-10">
-                        <div class="input-group">
-                            <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
-                            <span class="input-group-text">฿</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="expin-radio" class="row mb-2  justify-content-center">
+                <div id="expin-radio" class="row mb-2 justify-content-center">
                     <div class="col-5">
                         <div class="input-group">
                             <div class="input-group-text">
@@ -310,11 +303,31 @@
                                 Income
                             </label>
                         </div>
-                        
                     </div>
                 </div>
                 <div class="row mb-2 justify-content-center">
-                    <div class="col-5">
+                    <div class="col-10">
+                        <div class="input-group">
+                            <div class="input-group-text">
+                                <input id="item-checkbox" class="form-check-input mt-0" type="checkbox">
+                            </div>
+                            <input id="item-input" class="d-none form-control text-capitalize" placeholder="Item" type="text" disabled required>
+                            <select id="item-select" class="form-select text-capitalize" required autofocus>
+                                <option selected value="">Item</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-2 justify-content-center">
+                    <div class="col-10">
+                        <div class="input-group">
+                            <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
+                            <span class="input-group-text">฿</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="category-select-div" class="row mb-2 justify-content-center">
+                    <div class="col-10">
                         <div class="input-group">
                             <div class="input-group-text">
                                 <input id="category-checkbox" class="form-check-input mt-0" type="checkbox">
@@ -322,17 +335,6 @@
                             <input id="category-input" class="d-none form-control text-capitalize" placeholder="Category" type="text">
                             <select id="category-select" class="form-select text-capitalize" name="category">
                                 <option selected value="">Category</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <input id="item-checkbox" class="form-check-input mt-0" type="checkbox">
-                            </div>
-                            <input id="item-input" class="d-none form-control text-capitalize" placeholder="Item" type="text" disabled required>
-                            <select id="item-select" class="form-select text-capitalize" required>
-                                <option selected value="">Item</option>
                             </select>
                         </div>
                     </div>
@@ -356,6 +358,7 @@
           </div>
         </div>
     </div>
+    <!-- /ADD RECORD MODAL-->
     <script src="https://rayok.tw/javascripts/bootstrap.min.js"></script>
     <script src="/dist/finances_bundle.js"></script>
 </body>
