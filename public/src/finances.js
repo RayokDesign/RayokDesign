@@ -661,9 +661,9 @@ async function loadItemsList() {
     appendToManageList(manageItemElement, doc.id, doc.data().name, doc.data().expin, 'item');
   });
 
-  createAndInsertItemOption();
   manageItemExpenseRadio.checked = true;
   manageItemRadioStateChanged();
+  createAndInsertItemOption();
 }
 
 function manageItemRadioStateChanged(){
@@ -750,10 +750,7 @@ function toggleExpin() {
   
   itemSelectElement.focus();
 }
-var mouseDownEvent = new MouseEvent('mousedown', {
-    'bubbleds': true,
-    'cancelable': true
-});
+
 //Load date from date
 async function monthSelector() {
   recordListElement.textContent = '';
@@ -841,7 +838,7 @@ function modalModeSwitch(){
 
 function cleanModal(){
   amountInputElement.value = '';
-  expenseRadioElement.setAttribute('checked', 'true');
+  expenseRadioElement.checked = true;
   if (categoryCheckBoxElement.checked == true){
     categoryCheckBoxElement.checked = false;
   }
@@ -853,6 +850,7 @@ function cleanModal(){
   categorySelectElement.value = '';
   itemSelectElement.value = '';
   itemInputElement.value = '';
+  createAndInsertItemOption();
 }
 
 async function modifyItemData(e){
