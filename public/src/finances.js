@@ -955,9 +955,11 @@ function focusItemSelectElement(){
 }
 
 function focusNumInput(){
-  console.log('aa');
-  itemSelectElement.blur();
   amountInputElement.focus();
+}
+
+function blurItemSelect(){
+  itemSelectElement.blur();
 }
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
@@ -1024,8 +1026,9 @@ modifyButtonElement.addEventListener('click', modifyItemData);
 deleteButtonElement.addEventListener('click', deleteItem);
 itemMonthExpenseRadio.addEventListener('change', itemMonthRadioCheck);
 itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
-itemSelectElement.addEventListener('change', focusNumInput);
-document.getElementById('add-record-logo').addEventListener('click', focusNumInput);
+itemSelectElement.addEventListener('change', blurItemSelect);
+itemSelectElement.addEventListener('focusout', focusNumInput);
+
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
 manageItemIncomeRadio.addEventListener('change', manageItemRadioStateChanged);
