@@ -281,80 +281,87 @@
     <!-- ADD RECORD MODAL -->
     <form class="modal fade" id="add-record-modal" tabindex="-1">
         <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-body">
-                <div id="expin-radio" class="row mb-2 justify-content-center">
-                    <div class="col-5">
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <input id="expense-radio" class="form-check-input mt-0" type="radio" name="expin" value="expense" checked>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Record</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="expin-radio" class="row mb-2 justify-content-center">
+                        <div class="col-5">
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <input id="expense-radio" class="form-check-input mt-0" type="radio" name="expin" value="expense" checked>
+                                </div>
+                                <label class="form-control" for="expense-radio">
+                                    Expense
+                                </label>
                             </div>
-                            <label class="form-control" for="expense-radio">
-                                Expense
-                            </label>
+                        </div>
+                        <div class="col-5">
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <input id="income-radio" class="form-check-input mt-0" type="radio" name="expin" value="income">
+                                </div>
+                                <label class="form-control" for="income-radio">
+                                    Income
+                                </label>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-5">
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <input id="income-radio" class="form-check-input mt-0" type="radio" name="expin" value="income">
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-10">
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <input id="item-checkbox" class="form-check-input mt-0" type="checkbox">
+                                </div>
+                                <input id="item-input" class="d-none form-control text-capitalize" placeholder="Item" type="text" disabled required>
+                                <select id="item-select" class="form-select text-capitalize" required>
+                                    <option class="text-capitalize" selected value="">item</option>
+                                </select>
                             </div>
-                            <label class="form-control" for="income-radio">
-                                Income
-                            </label>
                         </div>
                     </div>
-                </div>
-                <div class="row mb-2 justify-content-center">
-                    <div class="col-10">
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <input id="item-checkbox" class="form-check-input mt-0" type="checkbox">
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-10">
+                            <div class="input-group">
+                                <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
+                                <label for="amount-input" class="input-group-text">฿</label>
                             </div>
-                            <input id="item-input" class="d-none form-control text-capitalize" placeholder="Item" type="text" disabled required>
-                            <select id="item-select" class="form-select text-capitalize" required>
-                                <option class="text-capitalize" selected value="">item</option>
-                            </select>
                         </div>
                     </div>
-                </div>
-                <div class="row mb-2 justify-content-center">
-                    <div class="col-10">
-                        <input id="amount-input" class="form-control" name="amount" type="number" required="required" placeholder="0">
-                    </div>
-                </div>
-                <div id="category-select-div" class="row mb-2 justify-content-center">
-                    <div class="col-10">
-                        <div class="input-group">
-                            <div class="input-group-text">
-                                <input id="category-checkbox" class="form-check-input mt-0" type="checkbox">
+                    <div id="category-select-div" class="row mb-2 justify-content-center">
+                        <div class="col-10">
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <input id="category-checkbox" class="form-check-input mt-0" type="checkbox">
+                                </div>
+                                <input id="category-input" class="d-none form-control text-capitalize" placeholder="Category" type="text">
+                                <select id="category-select" class="form-select text-capitalize" name="category">
+                                    <option class="text-capitalize" selected value="">Category</option>
+                                </select>
                             </div>
-                            <input id="category-input" class="d-none form-control text-capitalize" placeholder="Category" type="text">
-                            <select id="category-select" class="form-select text-capitalize" name="category">
-                                <option class="text-capitalize" selected value="">Category</option>
-                            </select>
                         </div>
                     </div>
-                </div>
-                <div class="row mb-2 justify-content-center">
-                    <div class="col-10">
-                        <input id="date-selector" type="date" class="form-control">
+                    <div class="row mb-2 justify-content-center">
+                        <div class="col-10">
+                            <input id="date-selector" type="date" class="form-control">
+                        </div>
                     </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-10 text-end">
-                        <div class="modal-footer">
-                            <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button id="submit-button" type="submit" class="btn btn-primary">Add</button>
-                            <button id="delete-button" class="btn btn-danger">Delete</button>
-                            <button id="modify-button" type="submit" class="btn btn-warning">Modify</button>
+                    <div class="modal-footer">
+                        <div class="row justify-content-center">
+                            <div class="col-10 text-end">
+                                <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id="submit-button" type="submit" class="btn btn-primary">Add</button>
+                                <button id="delete-button" class="btn btn-danger">Delete</button>
+                                <button id="modify-button" type="submit" class="btn btn-warning">Modify</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-          </div>
         </div>
-    </div>
+    </form>
     <!-- /ADD RECORD MODAL-->
     <script src="https://rayok.tw/javascripts/bootstrap.min.js"></script>
     <script src="/dist/finances_bundle.js"></script>
