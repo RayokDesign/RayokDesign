@@ -951,7 +951,9 @@ function focusItemSelectElement(){
 
 function focusNumInput(){
   itemSelectElement.blur();
-  amountInputElement.focus();
+  setTimeout(function(){
+    amountInputElement.focus();
+  }, 500);
 }
 
 // Shortcuts to DOM Elements.
