@@ -951,7 +951,9 @@ function focusItemSelectElement(){
 
 function focusNumInput(){
   console.log('amountInputFoucs');
-  amountInputElement.focus({preventScroll:true});
+  setInterval(function(){
+    amountInputElement.focus();
+  },200);
 }
 
 // Shortcuts to DOM Elements.
@@ -1019,7 +1021,8 @@ modifyButtonElement.addEventListener('click', modifyItemData);
 deleteButtonElement.addEventListener('click', deleteItem);
 itemMonthExpenseRadio.addEventListener('change', itemMonthRadioCheck);
 itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
-itemSelectElement.addEventListener('change', focusNumInput)
+itemSelectElement.addEventListener('change', focusNumInput);
+
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
 manageItemIncomeRadio.addEventListener('change', manageItemRadioStateChanged);
