@@ -956,6 +956,7 @@ function focusItemSelectElement(){
 
 function focusNumInput(){
   console.log('aa');
+  itemSelectElement.blur();
   amountInputElement.focus();
 }
 // Shortcuts to DOM Elements.
