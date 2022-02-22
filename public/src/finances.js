@@ -154,6 +154,7 @@ async function authStateObserver(user) {
       await getDoc(userRef);
       loadCategoriesList();
       loadItemsList();
+      loadStaffList();
       monthSelector.apply(monthSelectorElement);
     } catch (e){
       recordListElement.innerHTML = 
@@ -667,33 +668,65 @@ async function loadItemsList() {
     appendToManageList(manageItemElement, doc.id, doc.data().name, doc.data().expin, 'item');
   });
 
-  manageItemExpenseRadio.checked = true;
-  manageItemRadioStateChanged();
   createAndInsertItemOption();
 }
 
-function manageItemRadioStateChanged(){
-  const manageItemTrElements = manageItemElement.getElementsByTagName('tr');
+async function loadStaffList() {
+  const staffQuery = query(collection(getFirestore(), 'staff'), orderBy('timestamp'));
 
-  if (manageItemExpenseRadio.checked){
-    for (let i=0; i<manageItemTrElements.length; i++){
-      if (manageItemTrElements[i].getAttribute('data-expin') == 'expense'){
-        manageItemTrElements[i].classList.remove('d-none');
-      } else {
-        manageItemTrElements[i].classList.add('d-none');
-      }
-    }
-    newItemButtonElement.setAttribute('data-expin', 'expense');
-  } else {
-    for (let i=0; i<manageItemTrElements.length; i++){
-      if (manageItemTrElements[i].getAttribute('data-expin') == 'income'){
-        manageItemTrElements[i].classList.remove('d-none');
-      } else {
-        manageItemTrElements[i].classList.add('d-none');
-      }
-    }
-    newItemButtonElement.setAttribute('data-expin', 'income');
+  const querySnapshot = await getDocs(staffQuery);
+  
+  querySnapshot.forEach((doc) => {
+  //   items[doc.id] = {
+  //     name: doc.data().name,
+  //     expin: doc.data().expin
+  //   }
+    appendToManageList(manageItemElement, doc.id, doc.data().name, 'staff', 'item');
+  });
+  
+  manageItemRadioStateChanged.apply(manageItemExpenseRadio);
+}
+
+function manageItemRadioStateChanged(){
+  const manageItemRadios = manageItemHeadElement.querySelectorAll('input[name="manage-item-radio"]');
+  const manageItemTrElements = manageItemElement.getElementsByTagName('tr');
+  for (let i=0; i<manageItemRadios.length; i++){
+    manageItemRadios[i].checked = false;
   }
+  this.checked = true;
+
+  for (let i=0; i<manageItemTrElements.length; i++){
+    manageItemTrElements[i].classList.add('d-none');
+  }
+  for (let i=0; i<manageItemTrElements.length; i++){
+    if (manageItemTrElements[i].getAttribute('data-expin') == this.getAttribute('data-type')){
+      manageItemTrElements[i].classList.remove('d-none');
+    }
+  }
+  newItemButtonElement.setAttribute('data-expin', this.getAttribute('data-type'));
+//   if (manageItemExpenseRadio.checked){
+//     for (let i=0; i<manageItemTrElements.length; i++){
+//       if (manageItemTrElements[i].getAttribute('data-expin') == 'expense'){
+//         manageItemTrElements[i].classList.remove('d-none');
+//       } else {
+//         manageItemTrElements[i].classList.add('d-none');
+//       }
+//     }
+//     newItemButtonElement.setAttribute('data-expin', 'expense');
+//   } else if (manageItemIncomeRadio.checked) {
+//     for (let i=0; i<manageItemTrElements.length; i++){
+//       if (manageItemTrElements[i].getAttribute('data-expin') == 'income'){
+//         manageItemTrElements[i].classList.remove('d-none');
+//       } else {
+//         manageItemTrElements[i].classList.add('d-none');
+//       }
+//     }
+//     newItemButtonElement.setAttribute('data-expin', 'income');
+//   } else {
+//     for (let i=0; i<manageItemTrElements.length; i++){
+//         manageItemTrElements[i].classList.add('d-none');
+//     }
+//   }
 }
 
 function createAndInsertItemOption() {
@@ -940,6 +973,7 @@ async function newCategory(){
   });
   
   appendToManageList(manageCategoryElement, categoryRef.id, categoryName, false, 'category');
+  this.previousElementSibling.value = '';
 }
 
 async function newItem(){
@@ -953,7 +987,20 @@ async function newItem(){
   
   appendToManageList(manageItemElement, itemRef.id, itemName, itemExpin, 'item');
   this.previousElementSibling.value = '';
+  createAndInsertItemOption();
 }
+
+async function newStaff(){
+  const staffName = (this.previousElementSibling.value).toLowerCase();
+  const staffRef = await addDoc(collection(getFirestore(), "staff"), {
+    name: staffName,
+    timestamp: serverTimestamp()
+  });
+  
+  appendToManageList(manageItemElement, staffRef.id, staffName, 'staff');
+  this.previousElementSibling.value = '';
+}
+
 function focusItemSelectElement(){
   itemSelectElement.focus();
 }
@@ -967,7 +1014,9 @@ var signUpButtonElement = document.getElementById('sign-up');
 var monthSelectorElement = document.getElementById('month-selector');
 var manageButtonElement = document.getElementById('manage');
 var manageCategoryElement = document.getElementById('manage-category');
+var manageItemHeadElement = document.getElementById('manage-item-head'); 
 var manageItemElement = document.getElementById('manage-item');
+document.getElementById('manage-item-head')
 var newCategoryButtonElement = document.getElementById('new-category-button');
 var newItemButtonElement = document.getElementById('new-item-button');
 var signOutButtonElement = document.getElementById('sign-out');
@@ -997,6 +1046,7 @@ var bodyElement = document.body;
 var fixedBottomArea = document.getElementsByClassName('fixed-bottom')[0];
 var manageItemExpenseRadio = document.getElementById('manage-item-expense-radio');
 var manageItemIncomeRadio = document.getElementById('manage-item-income-radio');
+var manageItemStaffRadio = document.getElementById('manage-item-staff-radio');
 var manageDeleteModalElement = document.getElementById('manage-delete-modal');
 var manageDeleteModal = new bootstrap.Modal(document.getElementById('manage-delete-modal'));
 var manageDeleteTr = null;
@@ -1027,6 +1077,7 @@ itemMonthIncomeRadio.addEventListener('change', itemMonthRadioCheck);
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
 manageItemIncomeRadio.addEventListener('change', manageItemRadioStateChanged);
+manageItemStaffRadio.addEventListener('change', manageItemRadioStateChanged);
 
 //Radio button
 expenseRadioElement.addEventListener('change', toggleExpin);

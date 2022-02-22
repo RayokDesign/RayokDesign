@@ -44,10 +44,10 @@
                             <a href="#" id="sign-up" class="nav-link" data-bs-toggle="modal" data-bs-target="#sign-up-modal"><i class="bi bi-person-plus-fill me-2"></i>Sign-up</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" id="manage" class="nav-link" data-bs-toggle="modal" data-bs-target="#manage-modal"><i class="bi bi-pencil-fill me-2"></i>Manage</a>
+                            <a href="#" id="manage" class="nav-link d-none" data-bs-toggle="modal" data-bs-target="#manage-modal"><i class="bi bi-pencil-fill me-2"></i>Manage</a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" id="sign-out" class="nav-link"><i class="bi bi-door-closed me-2"></i>Sign-out</a>
+                            <a href="#" id="sign-out" class="nav-link d-none"><i class="bi bi-door-closed me-2"></i>Sign-out</a>
                         </li>
                     </ul>
                 </div>
@@ -82,7 +82,9 @@
                                     <input id="item-month-expense-radio" type="radio" name="item-month-list-expin">
                                     <label class="me-2" for="item-month-expense-radio"><i class="bi bi-basket2"></i> Expense</label>
                                     <input id="item-month-income-radio" type="radio" name="item-month-list-expin">
-                                    <label for="item-month-income-radio"><i class="bi bi-piggy-bank"></i> Income</label>
+                                    <label class="me-2" for="item-month-income-radio"><i class="bi bi-piggy-bank"></i> Income</label>
+                                    <input id="item-month-income-radio" type="radio" name="item-month-list-expin">
+                                    <label for="item-month-income-radio"><i class="bi bi-people"></i> Staff</label>
                                 </div>
                                 <div id="item-month-amount" class="container-fluid">
                                 </div>
@@ -228,14 +230,16 @@
                             </div>
                             <div class="col-6">
                                 <table class="table">
-                                    <thead>
+                                    <thead id="manage-item-head">
                                         <tr>
                                             <th>
                                                 <span class="me-2">Item</span>
-                                                <input id="manage-item-expense-radio" type="radio" name="manage-item-expin">
+                                                <input id="manage-item-expense-radio" type="radio" name="manage-item-radio" data-type="expense">
                                                 <label class="me-2" for="manage-item-expense-radio"><i class="bi bi-basket2"></i></label>
-                                                <input id="manage-item-income-radio" type="radio" name="manage-item-expin">
-                                                <label for="manage-item-income-radio"><i class="bi bi-piggy-bank"></i></label>
+                                                <input id="manage-item-income-radio" type="radio" name="manage-item-radio" data-type="income">
+                                                <label class="me-2" for="manage-item-income-radio"><i class="bi bi-piggy-bank"></i></label>
+                                                <input id="manage-item-staff-radio" type="radio" name="manage-item-radio" data-type="staff">
+                                                <label for="manage-item-staff-radio"><i class="bi bi-people"></i></label>
                                             </th>
                                         </tr>
                                     </thead>
