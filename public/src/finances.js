@@ -179,7 +179,13 @@ async function authStateObserver(user) {
 }
 
 function initWebSite(){
-  manageCategoryElement.textContent=""
+  manageCategoryElement.textContent = ""
+  categoryMonthAmountElement.textContent = "";
+  itemMonthAmountElement.textContent = "";
+  incomeAmountElement.textContent = "0 ฿";
+  outcomeAmountElement.textContent = "0 ฿";
+  earningAmountElement.textContent = "0 ฿";
+  monthSelectorElement.value = moment(new Date).format('YYYY-MM');
 }
 
 // Loads chat messages history and listens for upcoming ones.
@@ -758,7 +764,7 @@ async function monthSelector() {
   let date = this.value.split('-') || moment(new Date()).format('YYYY-MM').split('-')
   let days = getDaysInMonth(date[0], date[1]);
 
-  for (let day = 0; day <= days; day++){
+  for (let day = days; day > 0; day--){
     if (day<10){day='0'+day}
     await loadRecords(date[0], date[1], `${day}`);
   }
