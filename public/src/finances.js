@@ -986,6 +986,10 @@ async function newItem(){
   });
   
   appendToManageList(manageItemElement, itemRef.id, itemName, itemExpin, 'item');
+  items[itemRef.id] = {
+    name: itemName,
+    expin: itemExpin
+  }
   this.previousElementSibling.value = '';
   createAndInsertItemOption();
 }
