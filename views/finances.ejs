@@ -79,14 +79,17 @@
                         <div id="collapseItem" class="accordion-collapse collapse" data-bs-parent="#accordionMonth">
                             <div class="accordion-body">
                                 <div id="item-month-list-expin" class="mb-2">
-                                    <input id="item-month-expense-radio" type="radio" name="item-month-list-expin">
+                                    <input id="item-month-expense-radio" type="radio" name="item-month-list-expin" data-target="expenseMonthList">
                                     <label class="me-2" for="item-month-expense-radio"><i class="bi bi-basket2"></i> Expense</label>
-                                    <input id="item-month-income-radio" type="radio" name="item-month-list-expin">
+                                    <input id="item-month-income-radio" type="radio" name="item-month-list-expin" data-target="incomeMonthList">
                                     <label class="me-2" for="item-month-income-radio"><i class="bi bi-piggy-bank"></i> Income</label>
-                                    <input id="item-month-income-radio" type="radio" name="item-month-list-expin">
-                                    <label for="item-month-income-radio"><i class="bi bi-people"></i> Staff</label>
+                                    <input id="item-month-staff-radio" type="radio" name="item-month-list-expin" data-target="staffMonthList">
+                                    <label for="item-month-staff-radio"><i class="bi bi-people"></i> Staff</label>
                                 </div>
                                 <div id="item-month-amount" class="container-fluid">
+                                    <div class="expenseMonthList"></div>
+                                    <div class="incomeMonthList"></div>
+                                    <div class="staffMonthList"></div>
                                 </div>
                             </div>
                         </div>
@@ -353,6 +356,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
+                        <button id="staff-salary-modal-button" type="button" data-bs-target="#staff-salary-modal" data-bs-toggle="modal" class="btn btn-info">Staff</button>
                         <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button id="submit-button" type="submit" class="btn btn-primary">Add</button>
                         <button id="delete-button" class="btn btn-danger">Delete</button>
@@ -363,6 +367,119 @@
         </div>
     </form>
     <!-- /ADD RECORD MODAL-->
+    <!-- MODIFY STAFF AMOUNT MODAL -->
+    <div class="modal fade" tabindex="-1" id="modify-staff-amount-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Modify Salary Amount</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="staff-name" class="form-label">Staff Name</label>
+                    <input type="text" class="form-control" id="staff-name" disabled>
+                </div>
+                <div class="mb-3">
+                    <label for="staff-amount" class="form-label">Amount</label>
+                    <input type="number" class="form-control" id="staff-amount">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button id="modify-staff-amount-button" type="button" class="btn btn-warning">Modify</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- /MODIFY STAFF MODAL-->
+    <!-- STAFF SALARY MODAL -->
+    <div class="modal fade" id="staff-salary-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Staff Salary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row justify-content-center mb-3">
+                        <div class="col-10 mb-3">
+                            <input type="month" id="staff-salary-month-selector" class="form-control" disabled>
+                        </div>
+                        <div class="col-5">
+                            <select id="staff-select" class="form-select text-capitalize" required>
+                                <option class="text-capitalize" selected value="">Staff</option>
+                            </select>
+                        </div>
+                        <div class="col-5">
+                            <div class="input-group">
+                                <div class="input-group-text">
+                                    <input id="staff-day-salary-checkbox" class="form-check-input mt-0" disabled type="checkbox">
+                                </div>
+                                <input id="staff-day-salary-default" class="form-control" type="number" disabled value="300">
+                                <span class="input-group-text">฿</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="staff-salary-calendar" class="row justify-content-center d-none">
+                        <div class="col-10 text-center">
+                            <div class="d-inline-flex">
+                                <div class="text-start">
+                                    <div class="d-flex">
+                                        <button id="day01" type="button" class="btn m-1" autocomplete="off">01</button>
+                                        <button id="day02" type="button" class="btn m-1" autocomplete="off">02</button>
+                                        <button id="day03" type="button" class="btn m-1" autocomplete="off">03</button>
+                                        <button id="day04" type="button" class="btn m-1" autocomplete="off">04</button>
+                                        <button id="day05" type="button" class="btn m-1" autocomplete="off">05</button>
+                                        <button id="day06" type="button" class="btn m-1" autocomplete="off">06</button>
+                                        <button id="day07" type="button" class="btn m-1" autocomplete="off">07</button>
+                                    </div>
+                                    <div class="d-flex">
+                                        <button id="day08" type="button" class="btn m-1" autocomplete="off">08</button>
+                                        <button id="day09" type="button" class="btn m-1" autocomplete="off">09</button>
+                                        <button id="day10" type="button" class="btn m-1" autocomplete="off">10</button>
+                                        <button id="day11" type="button" class="btn m-1" autocomplete="off">11</button>
+                                        <button id="day12" type="button" class="btn m-1" autocomplete="off">12</button>
+                                        <button id="day13" type="button" class="btn m-1" autocomplete="off">13</button>
+                                        <button id="day14" type="button" class="btn m-1" autocomplete="off">14</button>
+                                    </div>
+                                    <div class="d-flex">
+                                        <button id="day15" type="button" class="btn m-1" autocomplete="off">15</button>
+                                        <button id="day16" type="button" class="btn m-1" autocomplete="off">16</button>
+                                        <button id="day17" type="button" class="btn m-1" autocomplete="off">17</button>
+                                        <button id="day18" type="button" class="btn m-1" autocomplete="off">18</button>
+                                        <button id="day19" type="button" class="btn m-1" autocomplete="off">19</button>
+                                        <button id="day20" type="button" class="btn m-1" autocomplete="off">20</button>
+                                        <button id="day21" type="button" class="btn m-1" autocomplete="off">21</button>
+                                    </div>
+                                    <div class="d-flex">
+                                        <button id="day22" type="button" class="btn m-1" autocomplete="off">22</button>
+                                        <button id="day23" type="button" class="btn m-1" autocomplete="off">23</button>
+                                        <button id="day24" type="button" class="btn m-1" autocomplete="off">24</button>
+                                        <button id="day25" type="button" class="btn m-1" autocomplete="off">25</button>
+                                        <button id="day26" type="button" class="btn m-1" autocomplete="off">26</button>
+                                        <button id="day27" type="button" class="btn m-1" autocomplete="off">27</button>
+                                        <button id="day28" type="button" class="btn m-1" autocomplete="off">28</button>
+                                    </div>
+                                    <div class="d-flix">
+                                        <button id="day29" type="button" class="btn m-1" autocomplete="off">29</button>
+                                        <button id="day30" type="button" class="btn" autocomplete="off">30</button>
+                                        <button id="day31" type="button" class="btn m-1" autocomplete="off">31</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button id="add-record-modal-button" type="button" data-bs-target="#add-record-modal" data-bs-toggle="modal" class="btn btn-info">Record</button>
+                    <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /STAFF SALARY MODAL-->
     <script src="https://rayok.tw/javascripts/bootstrap.min.js"></script>
     <script src="/dist/finances_bundle.js"></script>
 </body>
