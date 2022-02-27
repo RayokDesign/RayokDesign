@@ -166,6 +166,7 @@ async function authStateObserver(user) {
     // Hide sign-in button.
     signOutButtonElement.classList.remove('d-none');
     manageButtonElement.classList.remove('d-none');
+    staffButtonElement.classList.remove('d-none');
     signInButtonElement.classList.add('d-none');
     signUpButtonElement.classList.add('d-none');
 
@@ -174,6 +175,7 @@ async function authStateObserver(user) {
     initWebSite();
     signOutButtonElement.classList.add('d-none');
     manageButtonElement.classList.add('d-none');
+    staffButtonElement.classList.add('d-none');
     signInButtonElement.classList.remove('d-none');
     signUpButtonElement.classList.remove('d-none');
   }
@@ -234,7 +236,7 @@ function displayStaffData(date, id, data) {
   div.querySelector('.record-date').textContent = moment(date).format('DD dddd YYYY MMMM');
   // Category ----
   const category = document.getElementById(`salary${date}`) || createAndInsertSalaryCategory(date, data);
-  category.parentNode.querySelector('.category-name').textContent = "Salary";
+  category.parentNode.querySelector('.salary-category-name').textContent = "Salary";
   // ----Category
 
   // Salary Item --------
@@ -248,13 +250,27 @@ function displayStaffData(date, id, data) {
   salaryItem.querySelector('.salary-item-name').textContent = staff[id].name;
   salaryItem.querySelector('.salary-item-amount').textContent = amountFormat(salaryItem.getAttribute('data-amount'));
   // ----- Item
-
   calculateSalaryAmount();
   bodyResize();
 }
 
 async function calculateSalaryAmount(){
   const aSalaryItems = document.getElementsByClassName('salary-item-amount');
+  //初始化員工薪水
+  for (let staffId in staff){
+    document.getElementById(staffId).querySelector('.staff-item-this-month-amount').textContent = '0 ฿';
+    document.getElementById(staffId).querySelector('.staff-item-last-month-amount').textContent = '0 ฿';
+    document.getElementById(staffId).querySelector('.staff-item-month-total-amount').textContent = '0 ฿';
+    document.getElementById(staffId).querySelector('.staff-item-this-month-amount').setAttribute('data-amount', '0');
+    document.getElementById(staffId).querySelector('.staff-item-last-month-amount').setAttribute('data-amount', '0');
+    document.getElementById(staffId).querySelector('.staff-item-month-total-amount').setAttribute('data-amount', '0');
+  }
+  for (let staffId in staffSalaryLastMonthAmount){
+    const staffMonthItemId = document.getElementById(staffId);
+    staffMonthItemId.querySelector('.staff-item-last-month-amount').textContent = amountFormat(staffSalaryLastMonthAmount[staffId]);
+    staffMonthItemId.querySelector('.staff-item-last-month-amount').setAttribute('data-amount', staffSalaryLastMonthAmount[staffId]);
+  }
+
   staffSalaryMonthAmount = {};
   for (let i = 0; i < aSalaryItems.length; i++){
     if(aSalaryItems[i].parentElement.getAttribute('data-payment-status') == 'pending'){
@@ -265,36 +281,23 @@ async function calculateSalaryAmount(){
       }
     }
   }
-  
-
-  var SALARY_ITEM_MONTH_AMOUNT_TEMPLATE =
-  `<div class="row justify-content-between">
-    <div class="col staff-item-month-name text-capitalize"></div>
-    <div class="col text-end">
-      <span class="staff-item-this-month-amount">0</span> +
-      <span class="staff-item-last-month-amount">0</span> =
-      <span class="staff-item-month-total-amount">0</span>
-    </div>
-  </div>`;
-
-  itemMonthAmountElement.querySelector('.staffMonthList').textContent = '';
 
   const date = monthSelectorElement.value.split('-');
   const monthRef = doc(getFirestore(), 'restaurant', date[0], 'months', date[1]);
 
   for (let staffId in staffSalaryMonthAmount){
-    const container = document.createElement('div');
-    container.innerHTML = SALARY_ITEM_MONTH_AMOUNT_TEMPLATE;
-    const item = container.firstChild;
-    item.querySelector('.staff-item-month-name').textContent = staff[staffId].name;
-    item.querySelector('.staff-item-this-month-amount').textContent = amountFormat(staffSalaryMonthAmount[staffId]);
-    item.setAttribute
-    itemMonthAmountElement.querySelector('.staffMonthList').appendChild(item);
+    let staffMonthItemId = document.getElementById(staffId);
+    staffMonthItemId.querySelector('.staff-item-this-month-amount').textContent = amountFormat(staffSalaryMonthAmount[staffId]);
+    staffMonthItemId.querySelector('.staff-item-this-month-amount').setAttribute('data-amount', staffSalaryMonthAmount[staffId]);
+    staffMonthItemId.querySelector('.staff-item-month-total-amount').textContent = amountFormat(parseInt(staffMonthItemId.querySelector('.staff-item-this-month-amount').getAttribute('data-amount'))+parseInt(staffMonthItemId.querySelector('.staff-item-last-month-amount').getAttribute('data-amount')));
+  }
 
-    const data = `{
-      '${staffId}': ${staffSalaryMonthAmount[staffId]}
+
+  for (let staffId in staff){
+    let data = `{
+      '${staffId}': ${parseInt(document.getElementById(staffId).querySelector('.staff-item-this-month-amount').getAttribute('data-amount'))}
     }`
-    //write data in month salary
+
     await setDoc(monthRef, eval('('+data+')'), {merge: true});
   }
 };
@@ -340,7 +343,7 @@ var SALARY_CATEGORY_TEMPLATE =
 `<div class="accordion-item mb-3">
   <h2 class="accordion-header">
     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse">
-      <span class="category-name text-capitalize"></span>
+      <span class="salary-category-name text-capitalize"></span>
     </button>
   </h2>
   <div class="accordion-collapse collapse">
@@ -525,7 +528,7 @@ function displayRecord(id, itemData, docID) {
   }
   item.querySelector('.item-amount').textContent = amountFormat(item.querySelector('.item-amount').getAttribute('data-amount'));
 
-  calculateAmount();
+  calculateAmount()
   bodyResize();
 }
 
@@ -815,7 +818,7 @@ async function loadItemsList() {
 }
 
 async function loadStaffList() {
-  const staffQuery = query(collection(getFirestore(), 'staff'));
+  const staffQuery = query(collection(getFirestore(), 'staff'), orderBy('timestamp'));
 
   const querySnapshot = await getDocs(staffQuery);
   
@@ -825,6 +828,24 @@ async function loadStaffList() {
       daySalaryDefault: doc.data().daySalaryDefault
     }
     appendToManageList(manageItemElement, doc.id, doc.data().name, 'staff', 'item');
+    if(!document.getElementById(doc.id)){
+      const SALARY_ITEM_MONTH_AMOUNT_TEMPLATE =
+      `<div class="row justify-content-between">
+        <div class="col staff-item-month-name text-capitalize"></div>
+        <div class="col text-end">
+          <span class="staff-item-this-month-amount" data-amount="0">0 ฿</span> +
+          <span class="staff-item-last-month-amount" data-amount="0">0 ฿</span> =
+          <span class="staff-item-month-total-amount" data-amount="0">0 ฿</span>
+        </div>
+      </div>`;
+    
+      const container = document.createElement('div');
+      container.innerHTML = SALARY_ITEM_MONTH_AMOUNT_TEMPLATE;
+      const item = container.firstChild;
+      item.querySelector('.staff-item-month-name').textContent = doc.data().name;
+      item.setAttribute('id', doc.id);
+      itemMonthAmountElement.querySelector('.staffMonthList').appendChild(item);
+    }
   });
 
   
@@ -943,6 +964,7 @@ function onRecordFormSubmit(e) {
     expenseRadioElement.checked == true ? submitData['expin'] = 'expense' : submitData['expin'] = 'income';
     saveMessage(submitData);
     dismissButtonElement.click();
+    
   }
 }
 
@@ -956,6 +978,7 @@ function submitStaffSalaryData() {
 
     saveStaffSalaryData(id, data);
   }
+  
 }
 
 async function updateStaffSalaryData() {
@@ -985,6 +1008,7 @@ function toggleExpin() {
 async function monthSelector() {
   recordListElement.textContent = '';
   itemMonthExpenseRadio.checked = true;
+  itemMonthRadioCheck.apply(itemMonthExpenseRadio);
   staffSalaryMonthSelectorElement.value = this.value;
   let date = this.value.split('-') || moment(new Date()).format('YYYY-MM').split('-')
   let days = getDaysInMonth(date[0], date[1]);
@@ -1010,17 +1034,19 @@ async function monthSelector() {
     await loadStaffData(date[0], date[1], `${day}`);
   }
   
-  const monthRef = doc(getFirestore(), 'restaurant', date[0], 'months', date[1]);
-  const monthSnap = await getDoc(monthRef);
+  const lastMonthDate = getLastMonth(date[0],date[1]).split('-');
+  const lastMonthRef = doc(getFirestore(), 'restaurant', lastMonthDate[0], 'months', lastMonthDate[1]);
+  const lastMonthSnap = await getDoc(lastMonthRef);
 
-  if (monthSnap.exists()) {
-    staffSalaryLastMonthAmount = monthSnap.data();
-    console.log(staffSalaryLastMonthAmount)
+  if (lastMonthSnap.exists()) {
+    staffSalaryLastMonthAmount = lastMonthSnap.data();
   } else {
     // doc.data() will be undefined in this case
-    console.log("No such document!");
+    staffSalaryLastMonthAmount = {};
   }
-  staffSalaryLastMonthAmount
+
+  calculateAmount();
+  calculateSalaryAmount();
 }
 
 // Saves a new message on the Cloud Firestore.
@@ -1058,6 +1084,12 @@ async function deleteStaffSalaryData(){
 
 function getDaysInMonth (year, month){
   return new Date(year, month, 0).getDate();
+}
+function getLastMonth (year, month){
+  const lastMonthDate = new Date(year, parseInt(month)-1, 0);
+  const date = moment(lastMonthDate).format('YYYY-MM');
+  
+  return date;
 }
 
 function focusInput(){
@@ -1349,6 +1381,12 @@ function modifyStaffAmountData(){
   }
 }
 
+function closeCollapseElement(){
+  if (!this.classList.contains('collapsed')){
+    this.click();
+  }
+}
+
 // Shortcuts to DOM Elements.
 var recordListElement = document.getElementById('records');
 var signInModalElement = document.getElementById('sign-in-modal');
@@ -1358,6 +1396,7 @@ var signUpButtonElement = document.getElementById('sign-up');
 var monthSelectorElement = document.getElementById('month-selector');
 var staffSalaryMonthSelectorElement = document.getElementById('staff-salary-month-selector');
 var manageButtonElement = document.getElementById('manage');
+var staffButtonElement = document.getElementById('staff');
 var manageCategoryElement = document.getElementById('manage-category');
 var manageItemHeadElement = document.getElementById('manage-item-head'); 
 var manageItemElement = document.getElementById('manage-item');
@@ -1408,6 +1447,7 @@ var staffSalaryModal = document.getElementById('staff-salary-modal');
 var staffDaySalaryCheckBox = document.getElementById('staff-day-salary-checkbox');
 var modifyStaffAmountModalElement = document.getElementById('modify-staff-amount-modal');
 var modifyStaffAmountButtonElement =document.getElementById('modify-staff-amount-button');
+var rightSideNavbarButton = document.getElementById('right-side-navbar-button');
 
 //calendar button
 const aStaffSalaryCalendarDayButtonElement = staffSalaryCalendarElement.getElementsByTagName('button');
@@ -1438,6 +1478,7 @@ staffSelectElement.addEventListener('change', showStaffSalaryCalendar);
 staffDaySalaryCheckBox.addEventListener('change', toggleStaffDaySalaryDefaultInput)
 staffDaySalaryDefault.addEventListener('input', updateStaffDaySalaryDefault);
 modifyStaffAmountButtonElement.addEventListener('click', modifyStaffAmountData);
+rightSideNavbarButton.addEventListener('blur', closeCollapseElement)
 //Manage Item List
 manageItemExpenseRadio.addEventListener('change', manageItemRadioStateChanged);
 manageItemIncomeRadio.addEventListener('change', manageItemRadioStateChanged);

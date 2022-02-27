@@ -32,7 +32,7 @@
                 <a href="/finances" class="navbar-brand fs-2">
                     🐔 ร้านข้าวมันไก่ปอ
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-list">
+                <button id="right-side-navbar-button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-list">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar-list">
@@ -42,6 +42,9 @@
                         </li>
                         <li class="nav-item">
                             <a href="#" id="sign-up" class="nav-link" data-bs-toggle="modal" data-bs-target="#sign-up-modal"><i class="bi bi-person-plus-fill me-2"></i>Sign-up</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" id="staff" class="nav-link d-none" data-bs-toggle="modal" data-bs-target="#staff-salary-modal"><i class="bi bi-people me-2"></i>Staff</a>
                         </li>
                         <li class="nav-item">
                             <a href="#" id="manage" class="nav-link d-none" data-bs-toggle="modal" data-bs-target="#manage-modal"><i class="bi bi-pencil-fill me-2"></i>Manage</a>
@@ -356,7 +359,6 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button id="staff-salary-modal-button" type="button" data-bs-target="#staff-salary-modal" data-bs-toggle="modal" class="btn btn-info">Staff</button>
                         <button id="dismiss-button" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button id="submit-button" type="submit" class="btn btn-primary">Add</button>
                         <button id="delete-button" class="btn btn-danger">Delete</button>
