@@ -23,6 +23,7 @@
     <meta name="msapplication-TileImage" content="/images/por.ico/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="https://rayok.tw/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.0/font/bootstrap-icons.css">
 </head>
 <body>
@@ -405,9 +406,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="row justify-content-center mb-3">
-                        <div class="col-10 mb-3">
+                        <div class="col-10">
                             <input type="month" id="staff-salary-month-selector" class="form-control" disabled>
                         </div>
+                    </div>
+                    <div class="row justify-content-center mb-3">
                         <div class="col-5">
                             <select id="staff-select" class="form-select text-capitalize" required>
                                 <option class="text-capitalize" selected value="">Staff</option>
@@ -424,55 +427,51 @@
                         </div>
                     </div>
                     <div id="staff-salary-calendar" class="row justify-content-center d-none">
-                        <div class="col-10 text-center">
-                            <div class="d-inline-flex">
-                                <div class="text-start">
-                                    <div class="d-flex">
-                                        <button id="day01" type="button" class="btn m-1" autocomplete="off">01</button>
-                                        <button id="day02" type="button" class="btn m-1" autocomplete="off">02</button>
-                                        <button id="day03" type="button" class="btn m-1" autocomplete="off">03</button>
-                                        <button id="day04" type="button" class="btn m-1" autocomplete="off">04</button>
-                                        <button id="day05" type="button" class="btn m-1" autocomplete="off">05</button>
-                                        <button id="day06" type="button" class="btn m-1" autocomplete="off">06</button>
-                                        <button id="day07" type="button" class="btn m-1" autocomplete="off">07</button>
-                                    </div>
-                                    <div class="d-flex">
-                                        <button id="day08" type="button" class="btn m-1" autocomplete="off">08</button>
-                                        <button id="day09" type="button" class="btn m-1" autocomplete="off">09</button>
-                                        <button id="day10" type="button" class="btn m-1" autocomplete="off">10</button>
-                                        <button id="day11" type="button" class="btn m-1" autocomplete="off">11</button>
-                                        <button id="day12" type="button" class="btn m-1" autocomplete="off">12</button>
-                                        <button id="day13" type="button" class="btn m-1" autocomplete="off">13</button>
-                                        <button id="day14" type="button" class="btn m-1" autocomplete="off">14</button>
-                                    </div>
-                                    <div class="d-flex">
-                                        <button id="day15" type="button" class="btn m-1" autocomplete="off">15</button>
-                                        <button id="day16" type="button" class="btn m-1" autocomplete="off">16</button>
-                                        <button id="day17" type="button" class="btn m-1" autocomplete="off">17</button>
-                                        <button id="day18" type="button" class="btn m-1" autocomplete="off">18</button>
-                                        <button id="day19" type="button" class="btn m-1" autocomplete="off">19</button>
-                                        <button id="day20" type="button" class="btn m-1" autocomplete="off">20</button>
-                                        <button id="day21" type="button" class="btn m-1" autocomplete="off">21</button>
-                                    </div>
-                                    <div class="d-flex">
-                                        <button id="day22" type="button" class="btn m-1" autocomplete="off">22</button>
-                                        <button id="day23" type="button" class="btn m-1" autocomplete="off">23</button>
-                                        <button id="day24" type="button" class="btn m-1" autocomplete="off">24</button>
-                                        <button id="day25" type="button" class="btn m-1" autocomplete="off">25</button>
-                                        <button id="day26" type="button" class="btn m-1" autocomplete="off">26</button>
-                                        <button id="day27" type="button" class="btn m-1" autocomplete="off">27</button>
-                                        <button id="day28" type="button" class="btn m-1" autocomplete="off">28</button>
-                                    </div>
-                                    <div class="d-flix">
-                                        <button id="day29" type="button" class="btn m-1" autocomplete="off">29</button>
-                                        <button id="day30" type="button" class="btn" autocomplete="off">30</button>
-                                        <button id="day31" type="button" class="btn m-1" autocomplete="off">31</button>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-10">
+                            <ul class="calendar-list">
+                                <li>MON</li>
+                                <li>TUE</li>
+                                <li>WED</li>
+                                <li>THU</li>
+                                <li>FRI</li>
+                                <li>SAT</li>
+                                <li>SUN</li>
+                            </ul>
+                            <ul id="calendar-days" class=" calendar-list">
+                                <li><a class="btn btn-outline-primary d-block">1</a></li>
+                                <li><a class="btn btn-outline-primary d-block">2</a></li>
+                                <li><a class="btn btn-outline-primary d-block">3</a></li>
+                                <li><a class="btn btn-outline-primary d-block">4</a></li>
+                                <li><a class="btn btn-outline-primary d-block">5</a></li>
+                                <li><a class="btn btn-outline-primary d-block">6</a></li>
+                                <li><a class="btn btn-outline-primary d-block">7</a></li>
+                                <li><a class="btn btn-outline-primary d-block">8</a></li>
+                                <li><a class="btn btn-outline-primary d-block">9</a></li>
+                                <li><a class="btn btn-outline-primary d-block">10</a></li>
+                                <li><a class="btn btn-outline-primary d-block">11</a></li>
+                                <li><a class="btn btn-outline-primary d-block">12</a></li>
+                                <li><a class="btn btn-outline-primary d-block">13</a></li>
+                                <li><a class="btn btn-outline-primary d-block">14</a></li>
+                                <li><a class="btn btn-outline-primary d-block">15</a></li>
+                                <li><a class="btn btn-outline-primary d-block">16</a></li>
+                                <li><a class="btn btn-outline-primary d-block">17</a></li>
+                                <li><a class="btn btn-outline-primary d-block">18</a></li>
+                                <li><a class="btn btn-outline-primary d-block">19</a></li>
+                                <li><a class="btn btn-outline-primary d-block">20</a></li>
+                                <li><a class="btn btn-outline-primary d-block">21</a></li>
+                                <li><a class="btn btn-outline-primary d-block">22</a></li>
+                                <li><a class="btn btn-outline-primary d-block">23</a></li>
+                                <li><a class="btn btn-outline-primary d-block">24</a></li>
+                                <li><a class="btn btn-outline-primary d-block">25</a></li>
+                                <li><a class="btn btn-outline-primary d-block">26</a></li>
+                                <li><a class="btn btn-outline-primary d-block">27</a></li>
+                                <li><a class="btn btn-outline-primary d-block">28</a></li>
+                                <li><a class="btn btn-outline-primary d-block">29</a></li>
+                                <li><a class="btn btn-outline-primary d-block">30</a></li>
+                                <li><a class="btn btn-outline-primary d-block">31</a></li>
+                            </ul>
                         </div>
                     </div>
-                    
                 </div>
                 <div class="modal-footer">
                     <button id="add-record-modal-button" type="button" data-bs-target="#add-record-modal" data-bs-toggle="modal" class="btn btn-info">Record</button>

@@ -831,8 +831,8 @@ async function loadStaffList() {
     if(!document.getElementById(doc.id)){
       const SALARY_ITEM_MONTH_AMOUNT_TEMPLATE =
       `<div class="row justify-content-between">
-        <div class="col staff-item-month-name text-capitalize"></div>
-        <div class="col text-end">
+        <div class="col-3 staff-item-month-name text-capitalize"></div>
+        <div class="col-9 text-end">
           <span class="staff-item-this-month-amount" data-amount="0">0 ฿</span> +
           <span class="staff-item-last-month-amount" data-amount="0">0 ฿</span> =
           <span class="staff-item-month-total-amount" data-amount="0">0 ฿</span>
@@ -1013,8 +1013,26 @@ async function monthSelector() {
   let date = this.value.split('-') || moment(new Date()).format('YYYY-MM').split('-')
   let days = getDaysInMonth(date[0], date[1]);
 
+  //獲取當月從禮拜幾開始
+  let dayStart = new Date(`${date[0]}-${date[1]}`).getDay();
+  const calendarDaysElement = document.getElementById('calendar-days');
+  
+  //新增空白的 li 前，先刪除之前的空 li
+  let aEmptyLi = document.getElementsByClassName('empty-li');
+  if (aEmptyLi){
+    for (let i = aEmptyLi.length-1; i >= 0; i--){
+      aEmptyLi[i].remove();
+    }
+  }
+  //新增空白的 li 在當月星期開始前
+  for (let i = 1; i < dayStart; i++){
+    const newLi = document.createElement('li');
+    newLi.classList.add('empty-li');
+    calendarDaysElement.insertBefore(newLi, calendarDaysElement.firstElementChild);
+  }
+  //AANEW
   //獲取月曆日期的所有按鈕
-  const aDateButton = staffSalaryCalendarElement.getElementsByTagName('button');
+  const aDateButton = staffSalaryCalendarElement.getElementsByTagName('a');
   //隱藏所有按鈕
   for (let i = 0; i < aDateButton.length; i++){
     aDateButton[i].classList.add('d-none');
@@ -1292,8 +1310,9 @@ function showStaffSalaryCalendar(){
     staffDaySalaryDefault.setAttribute('data-staff-id', this.value);
     staffSalaryCalendarElement.classList.remove('d-none');
     for (let i = 0; i < aStaffSalaryCalendarDayButtonElement.length; i++){
-      aStaffSalaryCalendarDayButtonElement[i].setAttribute('data-salary-item', this.value+staffSalaryMonthSelectorElement.value+'-'+aStaffSalaryCalendarDayButtonElement[i].textContent);
-      aStaffSalaryCalendarDayButtonElement[i].setAttribute('data-date', staffSalaryMonthSelectorElement.value+'-'+aStaffSalaryCalendarDayButtonElement[i].textContent);
+      const twoNum = i < 10 ? `0${i+1}` : `${i+1}`;
+      aStaffSalaryCalendarDayButtonElement[i].setAttribute('data-salary-item', this.value+staffSalaryMonthSelectorElement.value+'-'+twoNum);
+      aStaffSalaryCalendarDayButtonElement[i].setAttribute('data-date', staffSalaryMonthSelectorElement.value+'-'+twoNum);
     }
     getStaffSalaryData.apply(this);
   }
@@ -1450,7 +1469,7 @@ var modifyStaffAmountButtonElement =document.getElementById('modify-staff-amount
 var rightSideNavbarButton = document.getElementById('right-side-navbar-button');
 
 //calendar button
-const aStaffSalaryCalendarDayButtonElement = staffSalaryCalendarElement.getElementsByTagName('button');
+const aStaffSalaryCalendarDayButtonElement = staffSalaryCalendarElement.getElementsByTagName('a');
 for(let i = 0; i < aStaffSalaryCalendarDayButtonElement.length; i++){
   aStaffSalaryCalendarDayButtonElement[i].addEventListener('click', dayButtonStatusChange);
 }
