@@ -22,16 +22,15 @@ router.get('/', function(req, res, next) {
 });
 
 router.use('/about', thepudomdhamtravelAboutRouter);
-router.use('india', thepudomdhamtravelIndiaRouter);
-router.use('nepal', thepudomdhamtravelNepalRouter);
-router.use('cambodia', thepudomdhamtravelCambodiaRouter);
-router.use('contact', thepudomdhamtravelContactRouter);
-router.use('bhutan', thepudomdhamtravelBhutanRouter);
-router.use('laos', thepudomdhamtravelLaosRouter);
-router.use('indonesia', thepudomdhamtravelIndonesiaRouter);
-router.use('myanmar', thepudomdhamtravelMyanmarRouter);
-router.use('srilanka', thepudomdhamtravelSrilankaRouter);
-router.use('users', thepudomdhamtravelUsersRouter);
-router.use('login', thepudomdhamtravelLoginRouter);
+router.use('/india', thepudomdhamtravelIndiaRouter);
+router.use('/nepal', thepudomdhamtravelNepalRouter);
+router.use('/cambodia', thepudomdhamtravelCambodiaRouter);
+router.use('/contact', thepudomdhamtravelContactRouter);
+router.use('/bhutan', thepudomdhamtravelBhutanRouter);
+router.use('/laos', thepudomdhamtravelLaosRouter);
+router.use('/indonesia', thepudomdhamtravelIndonesiaRouter);
+router.use('/myanmar', thepudomdhamtravelMyanmarRouter);
+router.use('/users', thepudomdhamtravelUsersRouter);
+router.use('/login', thepudomdhamtravelLoginRouter);
 
 module.exports = router;
