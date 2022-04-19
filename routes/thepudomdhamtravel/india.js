@@ -14,7 +14,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('india', {title: 'อินเดีย'});
+  res.render('thepudomdhamtravel/india', {title: 'อินเดีย'});
 });
 
 // router.get('/:slug', async function(req, res, next) {

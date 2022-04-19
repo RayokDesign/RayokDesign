@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('laos', { title: 'พม่า' });
+  res.render('thepudomdhamtravel/laos', { title: 'พม่า' });
 });
 
 module.exports = router;

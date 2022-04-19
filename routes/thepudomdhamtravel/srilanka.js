@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('srilanka', { title: 'Srilanka' });
+  res.render('thepudomdhamtravel/srilanka', { title: 'Srilanka' });
 });
 
 module.exports = router;
