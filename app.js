@@ -21,7 +21,7 @@ var friendlychatRouter = require('./routes/friendlychat');
 // ------ thepudomdhamtravel
 const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
 const thepudomdhamtravelAboutRouter = require('./routes/thepudomdhamtravel/about');
-const thepudomdhamtravelIndiaRouter = require('./routes/thepudomdhamtravel/india');
+//const thepudomdhamtravelIndiaRouter = require('./routes/thepudomdhamtravel/india');
 const thepudomdhamtravelNepalRouter = require('./routes/thepudomdhamtravel/nepal');
 const thepudomdhamtravelCambodiaRouter = require('./routes/thepudomdhamtravel/cambodia');
 const thepudomdhamtravelContactRouter = require('./routes/thepudomdhamtravel/contact');
@@ -57,7 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ----- thepudomdhamtravel
 app.use(vhost('thepudomdhamtravel.rayok.tw', thepudomdhamtravelIndexRouter));
 app.use(vhost('thepudomdhamtravel.rayok.tw/about', thepudomdhamtravelAboutRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/india', thepudomdhamtravelIndiaRouter));
+//app.use(vhost('thepudomdhamtravel.rayok.tw/india', thepudomdhamtravelIndiaRouter));
 app.use(vhost('thepudomdhamtravel.rayok.tw/nepal', thepudomdhamtravelNepalRouter));
 app.use(vhost('thepudomdhamtravel.rayok.tw/cambodia', thepudomdhamtravelCambodiaRouter));
 app.use(vhost('thepudomdhamtravel.rayok.tw/contact', thepudomdhamtravelContactRouter));
