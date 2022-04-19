@@ -55,7 +55,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* Rayok----- */
 // ----- thepudomdhamtravel
-app.use(vhost('thepudomdhamtravel.rayok.tw/', thepudomdhamtravelIndexRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw', thepudomdhamtravelIndexRouter));
 app.use(vhost('thepudomdhamtravel.rayok.tw/about', thepudomdhamtravelAboutRouter));
 app.use(vhost('thepudomdhamtravel.rayok.tw/india', thepudomdhamtravelIndiaRouter));
 app.use(vhost('thepudomdhamtravel.rayok.tw/nepal', thepudomdhamtravelNepalRouter));
