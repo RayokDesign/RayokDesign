@@ -54,18 +54,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 /* Rayok----- */
 // ----- thepudomdhamtravel
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelIndexRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelAboutRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelNepalRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelCambodiaRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelContactRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelBhutanRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelLaosRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelIndonesiaRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelMyanmarRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelSrilankaRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelUsersRouter));
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelLoginRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw', thepudomdhamtravelIndexRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/about*', thepudomdhamtravelAboutRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/nepal*', thepudomdhamtravelNepalRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/cambodia*', thepudomdhamtravelCambodiaRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/contact*', thepudomdhamtravelContactRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/bhutan*', thepudomdhamtravelBhutanRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/laos*', thepudomdhamtravelLaosRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/indonesia*', thepudomdhamtravelIndonesiaRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/myanmar*', thepudomdhamtravelMyanmarRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/srilanka*', thepudomdhamtravelSrilankaRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/users*', thepudomdhamtravelUsersRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/login*', thepudomdhamtravelLoginRouter));
 // thepudomdhamtravel -----
 
 app.use('/', indexRouter);
