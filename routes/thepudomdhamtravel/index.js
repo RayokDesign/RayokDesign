@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
+const thepudomdhamtravelAboutRouter = require('./routes/thepudomdhamtravel/about');
 // const thepudomdhamtravelIndiaRouter = require('./routes/thepudomdhamtravel/india');
 // const thepudomdhamtravelNepalRouter = require('./routes/thepudomdhamtravel/nepal');
 // const thepudomdhamtravelCambodiaRouter = require('./routes/thepudomdhamtravel/cambodia');
@@ -20,6 +21,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.get('/about', thepudomdhamtravelAboutRouter);
 // router.use('/about', thepudomdhamtravelAboutRouter);
 // router.use('/india', thepudomdhamtravelIndiaRouter);
 // router.use('/nepal', thepudomdhamtravelNepalRouter);
