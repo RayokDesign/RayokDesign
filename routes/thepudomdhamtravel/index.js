@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.get('/about', thepudomdhamtravelAboutRouter);
+router.use('/about', thepudomdhamtravelAboutRouter);
 // router.use('/about', thepudomdhamtravelAboutRouter);
 // router.use('/india', thepudomdhamtravelIndiaRouter);
 // router.use('/nepal', thepudomdhamtravelNepalRouter);
