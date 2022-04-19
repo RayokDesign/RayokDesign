@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-const thepudomdhamtravelAboutRouter = require('./routes/thepudomdhamtravel/about');
+const thepudomdhamtravelAboutRouter = require('./about');
 // const thepudomdhamtravelIndiaRouter = require('./routes/thepudomdhamtravel/india');
 // const thepudomdhamtravelNepalRouter = require('./routes/thepudomdhamtravel/nepal');
 // const thepudomdhamtravelCambodiaRouter = require('./routes/thepudomdhamtravel/cambodia');
