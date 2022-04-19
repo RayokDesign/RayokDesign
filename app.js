@@ -20,6 +20,7 @@ var friendlychatRouter = require('./routes/friendlychat');
 
 // ------ thepudomdhamtravel
 const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
+const thepudomdhamtravelAboutRouter = require('./routes/thepudomdhamtravel/about');
 
 // thepudomdhamtravel -----
 
@@ -45,6 +46,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /* Rayok----- */
 // ----- thepudomdhamtravel
 app.use(vhost('thepudomdhamtravel.rayok.tw', thepudomdhamtravelIndexRouter));
+app.use(vhost('thepudomdhamtravel.rayok.tw/about', thepudomdhamtravelAboutRouter));
 
 // thepudomdhamtravel -----
 
