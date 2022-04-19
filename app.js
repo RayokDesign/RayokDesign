@@ -16,7 +16,7 @@ var memberRouter = require('./routes/member');
 var adminRouter = require('./routes/admin');
 var restaurantRouter = require('./routes/restaurant');
 var friendlychatRouter = require('./routes/friendlychat');
-const thepudomdhamtravelRouter = require('./routes/thepudomdhamtravel/routes')
+const thepudomdhamtravelRouter = require('./routes/thepudomdhamtravel/route')
 /* ----- Rayok */
 
 var app = express();
