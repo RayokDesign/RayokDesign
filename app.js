@@ -20,18 +20,7 @@ var friendlychatRouter = require('./routes/friendlychat');
 
 // ------ thepudomdhamtravel
 const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
-const thepudomdhamtravelAboutRouter = require('./routes/thepudomdhamtravel/about');
-const thepudomdhamtravelIndiaRouter = require('./routes/thepudomdhamtravel/india');
-const thepudomdhamtravelNepalRouter = require('./routes/thepudomdhamtravel/nepal');
-const thepudomdhamtravelCambodiaRouter = require('./routes/thepudomdhamtravel/cambodia');
-const thepudomdhamtravelContactRouter = require('./routes/thepudomdhamtravel/contact');
-const thepudomdhamtravelBhutanRouter = require('./routes/thepudomdhamtravel/bhutan');
-const thepudomdhamtravelLaosRouter = require('./routes/thepudomdhamtravel/laos');
-const thepudomdhamtravelIndonesiaRouter = require('./routes/thepudomdhamtravel/indonesia');
-const thepudomdhamtravelMyanmarRouter = require('./routes/thepudomdhamtravel/myanmar');
-const thepudomdhamtravelSrilankaRouter = require('./routes/thepudomdhamtravel/srilanka');
-const thepudomdhamtravelUsersRouter = require('./routes/thepudomdhamtravel/users');
-const thepudomdhamtravelLoginRouter = require('./routes/thepudomdhamtravel/login');
+
 // thepudomdhamtravel -----
 
 var app = express();
@@ -56,18 +45,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 /* Rayok----- */
 // ----- thepudomdhamtravel
 app.use(vhost('thepudomdhamtravel.rayok.tw', thepudomdhamtravelIndexRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/about', thepudomdhamtravelAboutRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/india', thepudomdhamtravelIndiaRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/nepal', thepudomdhamtravelNepalRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/cambodia', thepudomdhamtravelCambodiaRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/contact', thepudomdhamtravelContactRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/bhutan', thepudomdhamtravelBhutanRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/laos', thepudomdhamtravelLaosRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/indonesia', thepudomdhamtravelIndonesiaRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/myanmar', thepudomdhamtravelMyanmarRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/srilanka', thepudomdhamtravelSrilankaRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/users', thepudomdhamtravelUsersRouter));
-app.use(vhost('thepudomdhamtravel.rayok.tw/login', thepudomdhamtravelLoginRouter));
+
 // thepudomdhamtravel -----
 
 app.use('/', indexRouter);
