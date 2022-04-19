@@ -1,0 +1,69 @@
+<!DOCTYPE html><!--  This site was created in Webflow. http://www.webflow.com  -->
+<!--  Last Published: Fri Apr 08 2022 22:53:39 GMT+0000 (Coordinated Universal Time)  -->
+<html data-wf-page="624a8df3b328213dc1dd2238" data-wf-site="6249a010e2c35a26129c907b" lang="th">
+<head>
+  <%- include('head'); %>
+</head>
+<body>
+  <%- include('navbar'); %>
+  <div class="section">
+    <div class="container">
+      <div id="switch-buttons" class="mb-3">
+        <button class="btn btn-primary active" rd-target="#content">Content</button>
+        <button class="btn btn-primary" rd-target="#editor">Editor</button>
+        <button class="btn btn-primary" rd-target="#page-info">Page Info</button>
+        <button class="btn btn-primary" rd-target="#headline">Headline</button>
+      </div>
+      <div id="content"></div>
+      <div id="editor" class="d-none">
+        <form id="editor-form" action="#">
+          <textarea id="rd-editor"></textarea>
+          <button type="submit" class="btn btn-primary mt-3">อัพเดท</button>
+        </form>
+      </div>
+      <div id="page-info" class="d-none">
+        <form id="page-info-form" action="#">
+          <div class="mb-3">
+            <label for="slug" class="form-label">Slug</label>
+            <input type="text" class="form-control" id="slug">
+          </div>
+          <div class="mb-3">
+            <label for="title-tag" class="form-label">Title Tag</label>
+            <input type="text" class="form-control" id="title-tag">
+          </div>
+          <div class="mb-3">
+            <label for="meta-description" class="form-label">Meta Description</label>
+            <input type="text" class="form-control" id="meta-description">
+          </div>
+          <div class="mb-3">
+            <label for="open-graph-image-url" class="form-label">Open Graph Image URL</label>
+            <input class="form-control mb-2" type="text" id="open-graph-image-url" placeholder="Image URL" aria-label="readonly input example" readonly>
+            <input class="form-control" type="file" accept="image/*" id="open-graph-image-url-upload">
+          </div>
+          <button type="submit" class="btn btn-primary">อัพเดท</button>
+        </form>
+      </div>
+      <div id="headline" class="d-none">
+        <form id="headline-form" action="#">
+          <div class="mb-3">
+            <label for="image" class="form-label">Image</label>
+            <input class="form-control mb-2" type="text" id="headline-image" placeholder="Image URL" aria-label="readonly input example" readonly>
+            <input class="form-control" type="file" accept="image/*" id="headline-image-upload">
+          </div>
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input type="text" class="form-control" id="headline-title">
+          </div>
+          <div class="mb-3">
+            <label for="brief" class="form-label">Brief</label>
+            <input type="text" class="form-control" id="headline-brief">
+          </div>
+          <button type="submit" class="btn btn-primary">อัพเดท</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <%- include('footer'); %>
+  <script src="/dist/article.bundle.js"></script>
+</body>
+</html>

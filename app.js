@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const logger = require('morgan');
+const vhost = require('vhost');
 
 /* Rayok ----- */
 const session = require('express-session');
@@ -15,6 +16,7 @@ var memberRouter = require('./routes/member');
 var adminRouter = require('./routes/admin');
 var restaurantRouter = require('./routes/restaurant');
 var friendlychatRouter = require('./routes/friendlychat');
+const thepudomdhamtravelRouter = require('./routes/thepudomdhamtravel/routes')
 /* ----- Rayok */
 
 var app = express();
@@ -37,6 +39,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* Rayok----- */
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelRouter));
 app.use('/', indexRouter);
 app.use('/finances', financesRouter);
 app.use('/member', memberRouter);
