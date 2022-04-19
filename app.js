@@ -16,8 +16,22 @@ var memberRouter = require('./routes/member');
 var adminRouter = require('./routes/admin');
 var restaurantRouter = require('./routes/restaurant');
 var friendlychatRouter = require('./routes/friendlychat');
-const thepudomdhamtravelRouter = require('./routes/thepudomdhamtravel/route')
 /* ----- Rayok */
+
+// ------ thepudomdhamtravel
+const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
+const thepudomdhamtravelAboutRouter = require('./routes/thepudomdhamtravel/about');
+const thepudomdhamtravelNepalRouter = require('./routes/thepudomdhamtravel/nepal');
+const thepudomdhamtravelCambodiaRouter = require('./routes/thepudomdhamtravel/cambodia');
+const thepudomdhamtravelContactRouter = require('./routes/thepudomdhamtravel/contact');
+const thepudomdhamtravelBhutanRouter = require('./routes/thepudomdhamtravel/bhutan');
+const thepudomdhamtravelLaosRouter = require('./routes/thepudomdhamtravel/laos');
+const thepudomdhamtravelIndonesiaRouter = require('./routes/thepudomdhamtravel/indonesia');
+const thepudomdhamtravelMyanmarRouter = require('./routes/thepudomdhamtravel/myanmar');
+const thepudomdhamtravelSrilankaRouter = require('./routes/thepudomdhamtravel/srilanka');
+const thepudomdhamtravelUsersRouter = require('./routes/thepudomdhamtravel/users');
+const thepudomdhamtravelLoginRouter = require('./routes/thepudomdhamtravel/login');
+// thepudomdhamtravel -----
 
 var app = express();
 /* Rayok ----- */
@@ -39,7 +53,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 /* Rayok----- */
-app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelRouter));
+// ----- thepudomdhamtravel
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelIndexRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelAboutRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelNepalRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelCambodiaRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelContactRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelBhutanRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelLaosRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelIndonesiaRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelMyanmarRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelSrilankaRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelUsersRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelLoginRouter));
+// thepudomdhamtravel -----
+
 app.use('/', indexRouter);
 app.use('/finances', financesRouter);
 app.use('/member', memberRouter);
