@@ -1,0 +1,65 @@
+<% for (day in data) { %>
+    <div class="card mb-3" >
+        <!-- RECORD'S DATE -->
+        <div class="card-header d-flex justify-content-between">
+            <span>
+                <button type="button" class="btn btn-primary me-3" data-bs-toggle="modal" data-bs-target="#addRecordModal" data-bs-addRecord="<%= moment(data[day].timestamp._seconds*1000).format("YYYY-MM-DD") %>">
+                    <i class="bi bi-plus-circle"></i>
+                </button>
+                <%= moment(data[day].timestamp._seconds*1000).format('DD dddd YYYY MMMM') %></span>
+                <% if (dayStatistics[day] > 0) { %>
+                    <span class="fw-bold text-primary"><%= amountFormat(dayStatistics[day]) %></span>
+                <% } else if (dayStatistics[day] < 0) { %>
+                    <span class="fw-bold text-danger"><%= amountFormat(dayStatistics[day]) %></span>
+                <% } else { %>
+                    <span class="fw-bold"><%= amountFormat(dayStatistics[day]) %></span>
+                <% } %>
+        </div>
+        <!-- /RECORD'S DATE -->
+
+        <!-- RECORD'S DETAIL -->
+        <div class="card-body p-0">
+            <% for (record in data[day].records) { %>
+            <div class="accordion accordion-flush" id="accordionCategory">
+                <div class="accordion-item">
+                    <!-- CATEGORY HEAD -->
+                    <h2 class="accordion-header d-flex">
+                        <button class="accordion-button collapsed px-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<%= day+record %>" aria-expanded="true" aria-controls="<%= record %>">
+                            <%= categories[data[day].records[record].category].name %>
+                        </button>
+                        <span class="fs-6 p-3 text-nowrap w-25 text-end">
+                            <%= amountFormat(categoryStatistics[data[day].records[record].category+day]) %>
+                        </span>
+                    </h2>
+                    <!-- /CATEGORY HEAD -->
+                    <!-- ITEM HEAD -->
+                    <div id="collapse<%= day+record %>" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionCategory">
+                        <div class="accordion-body p-0">
+                            <ul class="list-group list-group-flush">
+                                <% for (item in data[day].records[record].items) { %>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span class="text-capitalize">
+                                        <a href="javascript:;" class="me-2 text-danger" data-bs-toggle="modal" data-bs-target="#deleteItemModal" data-bs-deleteHref=<%= `/restaurant/deleteitem?deleteitem=${date[0]}-${date[1]}-0${day}-${record}-${item}` %>><i class="bi bi-x-circle"></i></a>
+                                        <%= items[data[day].records[record].items[item].item].name %></span>    
+                                    <% if (data[day].records[record].items[item].expin == "income") { %>
+                                    <span class="text-primary">+<%= amountFormat(data[day].records[record].items[item].amount) %></span>
+                                    <% } else { %>
+                                    <span class="text-danger">-<%= amountFormat(data[day].records[record].items[item].amount) %></span>
+                                    <% } %>
+                                </li>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- /ITEM HEAD -->
+                </div>
+            </div>
+            <% } %>
+            <div class="form-floating">
+                <textarea class="form-control border-top-2 border-start-0 border-end-0 border-bottom-0 ps-3 pe-3" placeholder="Write some memo" id="floatingMemArea" oninput= "updateMemo(this, '<%= data[day].timestamp._seconds %>')"><%= data[day].memo %></textarea>
+                <label class="ps-3 pe-3 border-0" for="floatingMemoArea">Memo</label>
+            </div>
+        </div>
+        <!-- RECORD'S DETAIL -->
+    </div>
+    <% } %>

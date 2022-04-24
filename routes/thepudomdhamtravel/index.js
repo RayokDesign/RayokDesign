@@ -1,5 +1,6 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const path = require('path');
 
 const thepudomdhamtravelAboutRouter = require('./about');
 const thepudomdhamtravelIndiaRouter = require('./india');
@@ -13,6 +14,7 @@ const thepudomdhamtravelMyanmarRouter = require('./myanmar');
 const thepudomdhamtravelSrilankaRouter = require('./srilanka');
 const thepudomdhamtravelUsersRouter = require('./users');
 const thepudomdhamtravelLoginRouter = require('./login');
+router.use(express.static(path.join(__dirname, '../../public/thepudomdhamtravel')));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

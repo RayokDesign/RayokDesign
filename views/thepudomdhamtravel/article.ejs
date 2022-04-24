@@ -1,20 +1,31 @@
 <!DOCTYPE html><!--  This site was created in Webflow. http://www.webflow.com  -->
 <!--  Last Published: Fri Apr 08 2022 22:53:39 GMT+0000 (Coordinated Universal Time)  -->
-<html data-wf-page="624a8df3b328213dc1dd2238" data-wf-site="6249a010e2c35a26129c907b" lang="th">
+<html lang="th">
 <head>
-  <%- include('head'); %>
+  <%- include('articleHead'); %>
 </head>
 <body>
   <%- include('navbar'); %>
-  <div class="section">
+  <div class="section mb-5">
     <div class="container">
-      <div id="switch-buttons" class="mb-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">หน้าหลัก</a></li>
+          <li class="breadcrumb-item"><a href="/<%- pathname.split('/')[1] %> %>"><%- country %></a></li>
+          <li class="breadcrumb-item active" aria-current="page"><%- pathname.split('/')[2] %> %></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="section mb-5">
+    <div class="container">
+      <div id="switch-buttons" class="d-none mb-3">
         <button class="btn btn-primary active" rd-target="#content">Content</button>
         <button class="btn btn-primary" rd-target="#editor">Editor</button>
         <button class="btn btn-primary" rd-target="#page-info">Page Info</button>
         <button class="btn btn-primary" rd-target="#headline">Headline</button>
       </div>
-      <div id="content"></div>
+      <div id="content" class="clearfix text-break"></div>
       <div id="editor" class="d-none">
         <form id="editor-form" action="#">
           <textarea id="rd-editor"></textarea>
@@ -46,20 +57,40 @@
       <div id="headline" class="d-none">
         <form id="headline-form" action="#">
           <div class="mb-3">
-            <label for="image" class="form-label">Image</label>
+            <label for="image" class="form-label">Card Image</label>
             <input class="form-control mb-2" type="text" id="headline-image" placeholder="Image URL" aria-label="readonly input example" readonly>
             <input class="form-control" type="file" accept="image/*" id="headline-image-upload">
           </div>
           <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
+            <label for="title" class="form-label">Card Title</label>
             <input type="text" class="form-control" id="headline-title">
           </div>
           <div class="mb-3">
-            <label for="brief" class="form-label">Brief</label>
-            <input type="text" class="form-control" id="headline-brief">
+            <label for="brief" class="form-label">Card Text</label>
+            <input type="text" class="form-control" id="headline-text">
           </div>
-          <button type="submit" class="btn btn-primary">อัพเดท</button>
+          <div class="hstack gap-2">
+            <button type="submit" class="btn btn-primary">อัพเดท</button>
+            <button class="btn btn-danger ms-auto" id="delete-article-btn" data-bs-toggle="modal" data-bs-target="#delete-article-modal">ลบบทความ</button>
+          </div>
         </form>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="delete-article-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">ลบบทความ</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>คุณแน่ใจหรือไม่ว่าต้องการลบบทความนี้</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+          <button type="button" class="btn btn-danger" id="delete-confirm-btn">แน่นอน</button>
+        </div>
       </div>
     </div>
   </div>

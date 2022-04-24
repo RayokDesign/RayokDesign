@@ -9,30 +9,20 @@ const vhost = require('vhost');
 const session = require('express-session');
 /* ----- Rayok */
 
-/* Rayok ----- */
-var indexRouter = require('./routes/index');
-var financesRouter = require('./routes/finances');
-var memberRouter = require('./routes/member');
-var adminRouter = require('./routes/admin');
-var restaurantRouter = require('./routes/restaurant');
-var friendlychatRouter = require('./routes/friendlychat');
-/* ----- Rayok */
-
-// ------ thepudomdhamtravel
 const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
-// const thepudomdhamtravelAboutRouter = require('./routes/thepudomdhamtravel/about');
+const rayokDesignIndexRouter = require('./routes/rayokdesign/index');
 
 // thepudomdhamtravel -----
 
 var app = express();
 /* Rayok ----- */
 app.use(session({
-  secret: process.env.SESSION_SECRET_KEY,
+  secret: 'process.env.SESSION_SECRET_KEY',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false }
 }))
-/* ----- Rayok */
+// ----- Rayok
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -41,21 +31,14 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
 
-/* Rayok----- */
 // ----- thepudomdhamtravel
-app.use(vhost('thepudomdhamtravel.rayok.tw', thepudomdhamtravelIndexRouter));
-// app.use(vhost('thepudomdhamtravel.rayok.tw/about', thepudomdhamtravelAboutRouter));
-
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelIndexRouter));
 // thepudomdhamtravel -----
 
-app.use('/', indexRouter);
-app.use('/finances', financesRouter);
-app.use('/member', memberRouter);
-app.use('/admin', adminRouter);
-app.use('/restaurant', restaurantRouter);
-app.use('/friendlychat', friendlychatRouter);
+// ----- Rayok
+app.use('/', rayokDesignIndexRouter);
+// Rayok ------
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

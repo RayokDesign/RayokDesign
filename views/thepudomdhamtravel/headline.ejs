@@ -1,0 +1,55 @@
+<!DOCTYPE html><!--  This site was created in Webflow. http://www.webflow.com  -->
+<!--  Last Published: Fri Apr 08 2022 22:53:39 GMT+0000 (Coordinated Universal Time)  -->
+<html data-wf-page="624a8df3b328213dc1dd2238" data-wf-site="6249a010e2c35a26129c907b" lang="th">
+<head>
+  <%- include('head'); %>
+</head>
+<body>
+  <%- include('navbar'); %>
+  <div class="section mb-5">
+    <div class="container">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">หน้าหลัก</a></li>
+          <li class="breadcrumb-item active" aria-current="page"><%- country %></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <div class="section mb-5">
+    <div class="container mb-3">
+      <h1 class="fw-bold text-center text-primary mb-3"><%- country %></h1>
+      <div id="card-list" class="row"></div>
+    </div>
+    <div class="container mb-3 d-none">
+      <form id="add-article-form" action="#">
+        <div class="mb-3">
+          <label for="image" class="form-label">Card Image</label>
+          <input class="form-control mb-2" type="text" id="headline-image" placeholder="Image URL" aria-label="readonly input example" readonly>
+          <input class="form-control" type="file" id="headline-image-upload">
+        </div>
+        <div class="mb-3">
+          <label for="title" class="form-label">Card Title</label>
+          <input type="text" class="form-control" id="headline-title">
+        </div>
+        <div class="mb-3">
+          <label for="brief" class="form-label">Card Text</label>
+          <input type="text" class="form-control" id="headline-text">
+        </div>
+        <button type="submit" class="btn btn-primary">เพิ่มชื่อเรื่อง</button>
+      </form>
+    </div>
+  </div>
+  <div class="position-fixed top-0 start-50 p-3 translate-middle-x" style="z-index: 11">
+        <div id="prompt-toast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+            <div class="d-flex">
+            <div class="toast-body">
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+  <%- include('footer') %>
+  <script src="dist/headline.bundle.js"></script>
+</body>
+</html>
