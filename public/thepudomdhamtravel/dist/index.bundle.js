@@ -12,14 +12,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "getFirebaseConfig": () => (/* binding */ getFirebaseConfig)
 /* harmony export */ });
-/**
- * To find your Firebase config object:
- * 
- * 1. Go to your [Project settings in the Firebase console](https://console.firebase.google.com/project/_/settings/general/)
- * 2. In the "Your apps" card, select the nickname of the app for which you need a config object.
- * 3. Select Config from the Firebase SDK snippet pane.
- * 4. Copy the config object snippet, then add it here.
- */
 const config = {
   apiKey: "AIzaSyDjEfknvQzy-x6Bg9FLK_fbENFGoB2_6q4",
   authDomain: "thepudomdham-cb406.firebaseapp.com",
