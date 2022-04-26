@@ -2,7 +2,9 @@
   padding-bottom:calc(100%/4*3);
   position:relative;
 }
-
+.slide-img-box {
+  padding-bottom:calc(100%/16*9);
+}
 .card-img-fit-parent-box {
   position:absolute;
   height:100%;
@@ -41,4 +43,8 @@
   float: right;
   margin-top: 0.8rem;
   margin-left: 0.8rem;
+}
+
+.carousel-indicators{
+  bottom: -2.5rem;
 }

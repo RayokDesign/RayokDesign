@@ -25,7 +25,6 @@ const app = initializeApp(getFirebaseConfig());
 const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth(app);
-const imagesRef = ref(storage, 'images');
 
 async function loadCards(){
     const q = query(collection(db, "headlines"), where("country", "==", window.location.pathname.split('/')[1]), orderBy('timestamp'));
@@ -80,7 +79,7 @@ async function addHeadline(e){
     if(formChecker()){
         this.querySelector('button[type="submit"]').setAttribute('disabled', '')
         const file = headlineImageUploadElement.files[0];
-        const storageRef = ref(storage, 'images/' + file.name);
+        const storageRef = ref(storage, 'images'+'/' + new Date().getTime()+'.' + file.type.split('/')[1]);
         await uploadBytes(storageRef, file).then(async(snapshot) => {
             const docRef = await addDoc(collection(db, 'headlines'), {
                 cardImage: headlineImageElement.value,
@@ -128,9 +127,10 @@ function formChecker(){
 
 async function uploadImage(){
     const file = this.files[0];
+    const imageRef = ref(storage, 'images'+'/'+new Date().getTime()+'.'+this.files[0].type.split('/')[1]);
     const _this = this;
     // 'file' comes from the Blob or File API
-    uploadBytes(imagesRef, file).then((snapshot) => {
+    uploadBytes(imageRef, file).then((snapshot) => {
         getDownloadURL(snapshot.ref).then((downloadURL) => {
             _this.previousElementSibling.value = downloadURL;
         });
@@ -179,3 +179,4 @@ addHeadlineFormElement.addEventListener('submit', addHeadline);
 
 loadCards();
 initFirebaseAuth();
+document.querySelector('.nav-link.dropdown-toggle').classList.add('active');

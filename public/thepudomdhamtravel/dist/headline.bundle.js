@@ -36900,7 +36900,6 @@ const app = (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)((0,_conn
 const db = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.getFirestore)(app);
 const storage = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.getStorage)(app);
 const auth = (0,firebase_auth__WEBPACK_IMPORTED_MODULE_3__.getAuth)(app);
-const imagesRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.ref)(storage, 'images');
 
 async function loadCards(){
     const q = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.query)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.collection)(db, "headlines"), (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.where)("country", "==", window.location.pathname.split('/')[1]), (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.orderBy)('timestamp'));
@@ -36955,7 +36954,7 @@ async function addHeadline(e){
     if(formChecker()){
         this.querySelector('button[type="submit"]').setAttribute('disabled', '')
         const file = headlineImageUploadElement.files[0];
-        const storageRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.ref)(storage, 'images/' + file.name);
+        const storageRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.ref)(storage, 'images'+'/' + new Date().getTime()+'.' + file.type.split('/')[1]);
         await (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.uploadBytes)(storageRef, file).then(async(snapshot) => {
             const docRef = await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.addDoc)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_1__.collection)(db, 'headlines'), {
                 cardImage: headlineImageElement.value,
@@ -37003,9 +37002,10 @@ function formChecker(){
 
 async function uploadImage(){
     const file = this.files[0];
+    const imageRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.ref)(storage, 'images'+'/'+new Date().getTime()+'.'+this.files[0].type.split('/')[1]);
     const _this = this;
     // 'file' comes from the Blob or File API
-    (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.uploadBytes)(imagesRef, file).then((snapshot) => {
+    (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.uploadBytes)(imageRef, file).then((snapshot) => {
         (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.getDownloadURL)(snapshot.ref).then((downloadURL) => {
             _this.previousElementSibling.value = downloadURL;
         });
@@ -37054,6 +37054,7 @@ addHeadlineFormElement.addEventListener('submit', addHeadline);
 
 loadCards();
 initFirebaseAuth();
+document.querySelector('.nav-link.dropdown-toggle').classList.add('active');
 })();
 
 /******/ })()

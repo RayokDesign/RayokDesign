@@ -61,8 +61,86 @@
     </div>
   </div>
   <div class="section mb-5">
+    <div class="container mb-3">
+      <div id="switch-buttons" class="mb-3">
+        <div class="row">
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary active" rd-target="#slide1">Slide 1</button>
+          </div>
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary" rd-target="#slide2">Slide 2</button>
+          </div>
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary" rd-target="#slide3">Slide 3</button>
+          </div>
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary" rd-target="#slide4">Slide 4</button>
+          </div>
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary" rd-target="#slide5">Slide 5</button>
+          </div>
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary" rd-target="#slide6">Slide 6</button>
+          </div>
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary" rd-target="#slide7">Slide 7</button>
+          </div>
+          <div class="col-3 mb-2 d-grid">
+            <button class="btn btn-primary" rd-target="#slide8">Slide 8</button>
+          </div>
+        </div>
+      </div>
+      <form id="slide1" action="#" class="">
+        <label for="slide-url-1" class="form-label">Slide 1 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-1" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-1">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+      <form id="slide2" action="#" class="d-none">
+        <label for="slide-url-2" class="form-label">Slide 2 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-2" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-2">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+      <form id="slide3" action="#" class="d-none">
+        <label for="slide-url-3" class="form-label">Slide 3 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-3" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-3">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+      <form id="slide4" action="#" class="d-none">
+        <label for="slide-url-4" class="form-label">Slide 4 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-4" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-4">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+      <form id="slide5" action="#" class="d-none">
+        <label for="slide-url-5" class="form-label">Slide 5 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-5" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-5">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+      <form id="slide6" action="#" class="d-none">
+        <label for="slide-url-6" class="form-label">Slide 6 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-6" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-6">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+      <form id="slide7" action="#" class="d-none">
+        <label for="slide-url-7" class="form-label">Slide 7 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-7" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-7">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+      <form id="slide8" action="#" class="d-none">
+        <label for="slide-url-8" class="form-label">Slide 8 Video URL</label>
+        <input class="form-control mb-2" type="text" id="slide-url-8" placeholder="Video URL" aria-label="readonly input example" readonly>
+        <input class="form-control mb-2" type="file" accept="video/*" id="slide-uploader-8">
+        <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
+      </form>
+    </div>
     <div class="container">
-      <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+      <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-interval="false">
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -73,35 +151,36 @@
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="6" aria-label="Slide 7"></button>
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="7" aria-label="Slide 8"></button>
         </div>
-        <div class="carousel-inner" style="height: 33rem;">
-          <div class="carousel-item h-100 active">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div class="carousel-inner">
+          <div class="carousel-item slide-img-box active">
+            <video controls controlslist="nodownload" class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide1 %>"></video>
           </div>
-          <div class="carousel-item h-100">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="carousel-item slide-img-box">
+            <iframe class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide2 %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="carousel-item h-100">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="carousel-item slide-img-box">
+            <iframe class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide3 %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="carousel-item h-100">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="carousel-item slide-img-box">
+            <iframe class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide4 %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="carousel-item h-100">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="carousel-item slide-img-box">
+            <iframe class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide5 %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="carousel-item h-100">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="carousel-item slide-img-box">
+            <iframe class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide6 %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="carousel-item h-100">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="carousel-item slide-img-box">
+            <iframe class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide7 %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-          <div class="carousel-item h-100">
-            <iframe class="d-block w-100 h-100" src="https://www.youtube.com/embed/OBaiq3hwVeU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div class="carousel-item slide-img-box">
+            <iframe class="d-block card-img-fit-parent-box w-100" src="<%- slider.slide8 %>" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
         </div>
       </div>
     </div>
   </div>
   <%- include('footer'); %>
+  <script src="dist/about.bundle.js"></script>
 </body>
 </html>

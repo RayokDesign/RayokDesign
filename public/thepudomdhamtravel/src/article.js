@@ -144,7 +144,6 @@ const auth = getAuth(app);
 var articleRef = null;
 var headlineRef = null;
 
-const imagesRef = ref(storage, 'images');
 
 function signOutUser(){
     signOut(getAuth());
@@ -249,9 +248,10 @@ async function updateHeadline(e){
 
 async function uploadImage(){
     const file = this.files[0];
+    const imageRef = ref(storage, 'images'+'/'+new Date().getTime()+'.'+this.files[0].type.split('/')[1]);
     const _this = this;
     // 'file' comes from the Blob or File API
-    uploadBytes(imagesRef, file).then((snapshot) => {
+    uploadBytes(imageRef, file).then((snapshot) => {
         console.log('Uploaded a blob or file!');
         getDownloadURL(snapshot.ref).then((downloadURL) => {
             console.log('File available at', downloadURL);
@@ -381,10 +381,6 @@ for (let i=0; i<switchButtonsElement.children.length; i++){
     switchButtonsElement.children[i].addEventListener('click', switchPage)
 }
 
-//Image Upload
-openGraphImageUrlUploadElement.addEventListener('change', uploadImage);
-headlineImageUploadElement.addEventListener('change', uploadImage);
-
 function switchPage(){
     for (let i=0; i<switchButtonsElement.children.length; i++){
         switchButtonsElement.children[i].classList.remove('active');
@@ -394,6 +390,12 @@ function switchPage(){
     this.classList.add('active');
     document.querySelector(this.getAttribute('rd-target')).classList.remove('d-none');
 }
+
+//Image Upload
+openGraphImageUrlUploadElement.addEventListener('change', uploadImage);
+headlineImageUploadElement.addEventListener('change', uploadImage);
+
+
 
 //Member System
 var signInButtonElement = document.getElementById('rd-sign-in-btn');

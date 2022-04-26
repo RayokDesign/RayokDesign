@@ -1,16 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore } = require('firebase-admin/firestore');
-
-const serviceAccount = require('../../connections/thepudomdhamtravel/thepudomdham-cb406-firebase-adminsdk-feh61-68672865b4.json');
-
-const thepudomdhamtravelApp = initializeApp({
-  credential: cert(serviceAccount)
-});
-
-const db = getFirestore(thepudomdhamtravelApp);
+const db = getFirestore();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {

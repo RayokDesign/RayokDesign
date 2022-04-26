@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const { initializeApp, cert } = require('firebase-admin/app');
+const serviceAccount = require('../../connections/thepudomdhamtravel/thepudomdham-cb406-firebase-adminsdk-feh61-68672865b4.json');
+const { getFirestore } = require('firebase-admin/firestore');
+
+const thepudomdhamtravelApp = initializeApp({
+  credential: cert(serviceAccount)
+});
+
+const db = getFirestore(thepudomdhamtravelApp);
 
 const thepudomdhamtravelAboutRouter = require('./about');
 const thepudomdhamtravelIndiaRouter = require('./india');
@@ -17,9 +26,13 @@ const thepudomdhamtravelLoginRouter = require('./login');
 router.use(express.static(path.join(__dirname, '../../public/thepudomdhamtravel')));
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', async function(req, res, next) {
+  const indexRef = db.collection('pages').doc('index');
+  const doc = await indexRef.get();
+
   res.render('thepudomdhamtravel/index', {
-    title: 'Thepudomthamtour'
+    title: 'Thepudomthamtour',
+    slider: doc.data(),
   });
 });
 

@@ -9,7 +9,9 @@ module.exports = {
         index: './public/thepudomdhamtravel/src/index.js',
         login: './public/thepudomdhamtravel/src/login.js',
         headline: './public/thepudomdhamtravel/src/headline.js',
-        article: './public/thepudomdhamtravel/src/article.js'
+        article: './public/thepudomdhamtravel/src/article.js',
+        about: './public/thepudomdhamtravel/src/about.js',
+        contact: './public/thepudomdhamtravel/src/contact.js'
     },
     output: {
         filename: '[name].bundle.js',

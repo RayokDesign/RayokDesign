@@ -1,0 +1,1 @@
+document.querySelector('.nav-link[href="/contact"]').classList.add('active');
