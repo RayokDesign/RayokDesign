@@ -12145,6 +12145,87 @@ function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 /***/ }),
 
+/***/ "./public/thepudomdhamtravel/src/initApp.js":
+/*!**************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/initApp.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ initApp)
+/* harmony export */ });
+/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
+/* harmony import */ var _connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../connections/thepudomdhamtravel/firebase-config.js */ "./connections/thepudomdhamtravel/firebase-config.js");
+
+
+;
+
+
+function initApp(){
+    (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)((0,_connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_1__.getFirebaseConfig)());
+}
+
+/***/ }),
+
+/***/ "./public/thepudomdhamtravel/src/initAuth.js":
+/*!***************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/initAuth.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ initAuth)
+/* harmony export */ });
+/* harmony import */ var _initApp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initApp */ "./public/thepudomdhamtravel/src/initApp.js");
+/* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
+
+
+
+
+
+(0,_initApp__WEBPACK_IMPORTED_MODULE_0__["default"])();
+
+function signOutUser(){
+    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.signOut)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)());
+}
+
+function initFirebaseAuth() {
+    // Listen to auth state changes.
+    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.onAuthStateChanged)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)(), authStateObserver);
+}
+
+function authStateObserver(user){
+    if(user){
+        for (let i=0; i<loggedInRequiredElement.length; i++){
+            loggedInRequiredElement[i].classList.remove('d-none');
+        }
+        for (let i=0; i<loggedOutRequiredElement.length; i++){
+            loggedOutRequiredElement[i].classList.add('d-none');
+        }
+    } else {
+        for (let i=0; i<loggedInRequiredElement.length; i++){
+            loggedInRequiredElement[i].classList.add('d-none');
+        }
+        for (let i=0; i<loggedOutRequiredElement.length; i++){
+            loggedOutRequiredElement[i].classList.remove('d-none');
+        }
+    }
+}
+
+const loggedInRequiredElement = document.querySelectorAll('.logged-in');
+const loggedOutRequiredElement = document.querySelectorAll('.logged-out');
+const signOutBtnElement = document.querySelector('#sign-out-btn');
+
+signOutBtnElement.addEventListener('click', signOutUser);
+    
+function initAuth(){
+    initFirebaseAuth();
+}
+
+/***/ }),
+
 /***/ "./node_modules/@firebase/app/dist/esm/index.esm2017.js":
 /*!**************************************************************!*\
   !*** ./node_modules/@firebase/app/dist/esm/index.esm2017.js ***!
@@ -13825,22 +13906,18 @@ var __webpack_exports__ = {};
   !*** ./public/thepudomdhamtravel/src/login.js ***!
   \************************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
-/* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
-/* harmony import */ var _connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../connections/thepudomdhamtravel/firebase-config.js */ "./connections/thepudomdhamtravel/firebase-config.js");
+/* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
+/* harmony import */ var _initAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initAuth */ "./public/thepudomdhamtravel/src/initAuth.js");
 
 
 
 
 
- // Set the configuration for your app
-// TODO: Replace with your app's config object
-const app = (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)((0,_connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_2__.getFirebaseConfig)());
-const auth = (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)(app);
+(0,_initAuth__WEBPACK_IMPORTED_MODULE_1__["default"])();
 
 function signIn(e){
     e.preventDefault();
-    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.signInWithEmailAndPassword)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)(), emailElement.value, passwordElement.value)
+    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.signInWithEmailAndPassword)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.getAuth)(), emailElement.value, passwordElement.value)
     .then(() => {
         window.location.href='/';
     })
@@ -13849,31 +13926,11 @@ function signIn(e){
     })
 }
 
-function initFirebaseAuth() {
-    // Listen to auth state changes.
-    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.onAuthStateChanged)(auth, authStateObserver);
-}
-
-
-function authStateObserver(user){
-    console.log(user);
-    if(user){
-        signOutButtonElement.classList.remove('d-none');
-        signInButtonElement.classList.add('d-none');
-    } else {
-        signOutButtonElement.classList.add('d-none');
-        signInButtonElement.classList.remove('d-none');
-    }
-}
-
 var loginFormElement = document.getElementById('rd-sign-in-form');
 var emailElement = document.getElementById('rd-email');
 var passwordElement = document.getElementById('rd-password');
-var signInButtonElement = document.getElementById('rd-sign-in-btn');
-var signOutButtonElement = document.getElementById('rd-sign-out-btn');
 
 loginFormElement.addEventListener('submit', signIn);
-initFirebaseAuth();
 })();
 
 /******/ })()

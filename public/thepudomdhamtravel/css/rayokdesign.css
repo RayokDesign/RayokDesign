@@ -48,3 +48,15 @@
 .carousel-indicators{
   bottom: -2.5rem;
 }
+
+.edit-btn {
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+}
+
+.upload-group {
+  width: calc(100% - 2rem);
+  top: 1rem;
+  z-index: 2;
+}

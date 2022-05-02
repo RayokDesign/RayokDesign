@@ -23,8 +23,8 @@
 </head>
 <body>
   <%- include('navbar'); %>
-  <div class="section">
-    <div class="container mb-3">
+  <div class="section d-none logged-in">
+    <!-- <div class="container mb-3">
       <div id="switch-buttons" class="mb-3">
         <div class="row">
           <div class="col-3 mb-2 d-grid">
@@ -101,7 +101,7 @@
         <input class="form-control mb-2" type="file" accept="image/*" id="slide-uploader-8">
         <button type="submit" class="btn btn-primary" disabled>อัพเดท</button>
       </form>
-    </div>
+    </div> -->
     <div class="container text-primary text-center">
       <span class="fs-5">สิ่งที่คุณต้องการคือเทพอุดมธรรม</span>
       <h1>เที่ยวกับมืออาชีพ เที่ยวกับเรา</h1>
@@ -109,7 +109,7 @@
   </div>
   <div class="section mb-5">
     <div class="container">
-      <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel">
+      <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel" data-bs-pause="false">
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
           <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -123,27 +123,75 @@
         <div class="carousel-inner">
           <div class="carousel-item slide-img-box active">
             <img src="<%- slider.slide1 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide1" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
           <div class="carousel-item slide-img-box">
             <img src="<%- slider.slide2 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide2" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
           <div class="carousel-item slide-img-box">
             <img src="<%- slider.slide3 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide3" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
           <div class="carousel-item slide-img-box">
             <img src="<%- slider.slide4 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide4" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
           <div class="carousel-item slide-img-box">
             <img src="<%- slider.slide5 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide5" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
           <div class="carousel-item slide-img-box">
             <img src="<%- slider.slide6 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide6" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
           <div class="carousel-item slide-img-box">
             <img src="<%- slider.slide7 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide7" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
           <div class="carousel-item slide-img-box">
             <img src="<%- slider.slide8 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
+            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
+            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+              <input type="file" class="form-control">
+              <button class="btn btn-primary d-none" id="slide8" rd-data-doc-id="index">ยืนยัน</button>
+              <button class="btn btn-secondary">ยกเลิก</button>
+            </div>
           </div>
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">

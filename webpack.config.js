@@ -11,7 +11,7 @@ module.exports = {
         headline: './public/thepudomdhamtravel/src/headline.js',
         article: './public/thepudomdhamtravel/src/article.js',
         about: './public/thepudomdhamtravel/src/about.js',
-        contact: './public/thepudomdhamtravel/src/contact.js'
+        contact: './public/thepudomdhamtravel/src/contact.js',
     },
     output: {
         filename: '[name].bundle.js',

@@ -35198,6 +35198,197 @@ function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 /***/ }),
 
+/***/ "./public/thepudomdhamtravel/src/getFileURL.js":
+/*!*****************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/getFileURL.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ getFileURL)
+/* harmony export */ });
+/* harmony import */ var firebase_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/storage */ "./node_modules/firebase/storage/dist/index.esm.js");
+
+
+async function getFileURL(file){
+    const fileType = file.type.split('/');
+    const fileRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.ref)((0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.getStorage)(), fileType[0]+'s/'+new Date().getTime()+'.'+fileType[1]);
+    // 'file' comes from the Blob or File API
+    const snapshot = await (0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.uploadBytes)(fileRef, file)
+    const downloadURL = await (0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.getDownloadURL)(snapshot.ref);
+    return downloadURL;
+}
+
+/***/ }),
+
+/***/ "./public/thepudomdhamtravel/src/initApp.js":
+/*!**************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/initApp.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ initApp)
+/* harmony export */ });
+/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
+/* harmony import */ var _connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../connections/thepudomdhamtravel/firebase-config.js */ "./connections/thepudomdhamtravel/firebase-config.js");
+
+
+;
+
+
+function initApp(){
+    (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)((0,_connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_1__.getFirebaseConfig)());
+}
+
+/***/ }),
+
+/***/ "./public/thepudomdhamtravel/src/initAuth.js":
+/*!***************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/initAuth.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ initAuth)
+/* harmony export */ });
+/* harmony import */ var _initApp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initApp */ "./public/thepudomdhamtravel/src/initApp.js");
+/* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
+
+
+
+
+
+(0,_initApp__WEBPACK_IMPORTED_MODULE_0__["default"])();
+
+function signOutUser(){
+    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.signOut)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)());
+}
+
+function initFirebaseAuth() {
+    // Listen to auth state changes.
+    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.onAuthStateChanged)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)(), authStateObserver);
+}
+
+function authStateObserver(user){
+    if(user){
+        for (let i=0; i<loggedInRequiredElement.length; i++){
+            loggedInRequiredElement[i].classList.remove('d-none');
+        }
+        for (let i=0; i<loggedOutRequiredElement.length; i++){
+            loggedOutRequiredElement[i].classList.add('d-none');
+        }
+    } else {
+        for (let i=0; i<loggedInRequiredElement.length; i++){
+            loggedInRequiredElement[i].classList.add('d-none');
+        }
+        for (let i=0; i<loggedOutRequiredElement.length; i++){
+            loggedOutRequiredElement[i].classList.remove('d-none');
+        }
+    }
+}
+
+const loggedInRequiredElement = document.querySelectorAll('.logged-in');
+const loggedOutRequiredElement = document.querySelectorAll('.logged-out');
+const signOutBtnElement = document.querySelector('#sign-out-btn');
+
+signOutBtnElement.addEventListener('click', signOutUser);
+    
+function initAuth(){
+    initFirebaseAuth();
+}
+
+/***/ }),
+
+/***/ "./public/thepudomdhamtravel/src/updateSlideURL.js":
+/*!*********************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/updateSlideURL.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ uploadSlideURL)
+/* harmony export */ });
+/* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
+/* harmony import */ var _getFileURL__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getFileURL */ "./public/thepudomdhamtravel/src/getFileURL.js");
+
+
+
+
+
+let carousel = new bootstrap.Carousel(carouselExampleIndicators);
+let rayCarousel = document.getElementById('carouselExampleIndicators');
+
+rayCarousel.onmouseover = function(){
+    carousel.pause();
+}
+rayCarousel.onmouseout = function(){
+    carousel.cycle();
+}
+
+function showFileInput(){
+    rayCarousel.onmouseover = null;
+    rayCarousel.onmouseout = null;
+    carousel.pause();
+    this.classList.add('d-none');
+    this.nextElementSibling.classList.remove('d-none');
+}
+
+function initUploader(){
+    rayCarousel.onmouseover = function(){
+        carousel.pause();
+    }
+    rayCarousel.onmouseout = function(){
+        carousel.cycle();
+    }
+    carousel.cycle();
+    this.parentElement.classList.add('d-none');
+    this.parentElement.previousElementSibling.classList.remove('d-none');
+    this.parentElement.children[0].value = "";
+    this.parentElement.children[0].removeAttribute('disabled');
+    this.parentElement.children[1].classList.add('d-none');
+}
+async function showConfirmBtn(){
+    this.setAttribute('disabled', 'true');
+    const file = this.files[0];
+    const fileURL = await (0,_getFileURL__WEBPACK_IMPORTED_MODULE_1__["default"])(file);
+    this.nextElementSibling.classList.remove('d-none');
+    this.nextElementSibling.setAttribute('rd-data-url', fileURL);
+}
+
+async function updateFirestore(){
+    const docID = this.getAttribute('rd-data-doc-id');
+    const docRef = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_0__.doc)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_0__.getFirestore)(), "pages", docID);
+    const _this = this;
+    await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_0__.updateDoc)(docRef, {
+        [this.id]: this.getAttribute('rd-data-url')
+    }).then(function(){
+        _this.parentElement.parentElement.children[0].setAttribute('src', _this.getAttribute('rd-data-url'));
+        initUploader.call(_this);
+    });
+}
+
+function uploadSlideURL(){
+    const editBtnsElement = document.querySelectorAll('.edit-btn');
+    for (let i=0; i<editBtnsElement.length; i++){
+        editBtnsElement[i].addEventListener('click', showFileInput);
+        const cancelBtnElement = editBtnsElement[i].nextElementSibling.children[2];
+        cancelBtnElement.addEventListener('click', initUploader);
+
+        const fileInputElement = editBtnsElement[i].nextElementSibling.children[0];
+        fileInputElement.addEventListener('change', showConfirmBtn);
+
+        const confirmBtnElement = editBtnsElement[i].nextElementSibling.children[1];
+        confirmBtnElement.addEventListener('click', updateFirestore);
+    }
+}
+
+/***/ }),
+
 /***/ "./node_modules/@firebase/app/dist/esm/index.esm2017.js":
 /*!**************************************************************!*\
   !*** ./node_modules/@firebase/app/dist/esm/index.esm2017.js ***!
@@ -36878,118 +37069,16 @@ var __webpack_exports__ = {};
   !*** ./public/thepudomdhamtravel/src/about.js ***!
   \************************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/app */ "./node_modules/firebase/app/dist/index.esm.js");
-/* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
-/* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
-/* harmony import */ var _connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../connections/thepudomdhamtravel/firebase-config.js */ "./connections/thepudomdhamtravel/firebase-config.js");
-/* harmony import */ var firebase_storage__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! firebase/storage */ "./node_modules/firebase/storage/dist/index.esm.js");
+/* harmony import */ var _initAuth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initAuth */ "./public/thepudomdhamtravel/src/initAuth.js");
+/* harmony import */ var _updateSlideURL__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./updateSlideURL */ "./public/thepudomdhamtravel/src/updateSlideURL.js");
 
 
 
 
 
+(0,_initAuth__WEBPACK_IMPORTED_MODULE_0__["default"])();
+(0,_updateSlideURL__WEBPACK_IMPORTED_MODULE_1__["default"])();
 
-
-
-
-// Set the configuration for your app
-// TODO: Replace with your app's config object
-
-
-const app = (0,firebase_app__WEBPACK_IMPORTED_MODULE_0__.initializeApp)((0,_connections_thepudomdhamtravel_firebase_config_js__WEBPACK_IMPORTED_MODULE_3__.getFirebaseConfig)());
-const auth = (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)(app);
-const db = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.getFirestore)(app);
-const storage = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.getStorage)(app);
-
-function signOutUser(){
-    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.signOut)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)());
-}
-
-function initFirebaseAuth() {
-    // Listen to auth state changes.
-    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.onAuthStateChanged)(auth, authStateObserver);
-}
-
-function authStateObserver(user){
-    console.log(user);
-    if(user){
-        signOutButtonElement.classList.remove('d-none');
-        signInButtonElement.classList.add('d-none');
-    } else {
-        signOutButtonElement.classList.add('d-none');
-        signInButtonElement.classList.remove('d-none');
-    }
-}
-
-var signInButtonElement = document.getElementById('rd-sign-in-btn');
-var signOutButtonElement = document.getElementById('rd-sign-out-btn');
-
-async function uploadVideo(){
-    const file = this.files[0];
-    const videoRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.ref)(storage, 'videos'+'/'+new Date().getTime()+'.'+this.files[0].type.split('/')[1]);
-    const _this = this;
-    // 'file' comes from the Blob or File API
-    (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.uploadBytes)(videoRef, file).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
-        (0,firebase_storage__WEBPACK_IMPORTED_MODULE_4__.getDownloadURL)(snapshot.ref).then((downloadURL) => {
-            console.log('File available at', downloadURL);
-            _this.previousElementSibling.value = downloadURL;
-            _this.nextElementSibling.removeAttribute('disabled');
-        });
-    });
-}
-
-async function updateAboutPage(e){
-    e.preventDefault();
-    const aboutRef = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.doc)(db, "pages", "about");
-
-    await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.updateDoc)(aboutRef, {
-        [this.id]: this.querySelector('input[type="text"]').value
-    }).then(function(){
-        location.reload();
-    });
-}
-//Image Upload
-var slideUploader1 = document.querySelector("#slide-uploader-1")
-var slideUploader2 = document.querySelector("#slide-uploader-2")
-var slideUploader3 = document.querySelector("#slide-uploader-3")
-var slideUploader4 = document.querySelector("#slide-uploader-4")
-var slideUploader5 = document.querySelector("#slide-uploader-5")
-var slideUploader6 = document.querySelector("#slide-uploader-6")
-var slideUploader7 = document.querySelector("#slide-uploader-7")
-var slideUploader8 = document.querySelector("#slide-uploader-8")
-
-slideUploader1.addEventListener('change', uploadVideo);
-slideUploader2.addEventListener('change', uploadVideo);
-slideUploader3.addEventListener('change', uploadVideo);
-slideUploader4.addEventListener('change', uploadVideo);
-slideUploader5.addEventListener('change', uploadVideo);
-slideUploader6.addEventListener('change', uploadVideo);
-slideUploader7.addEventListener('change', uploadVideo);
-slideUploader8.addEventListener('change', uploadVideo);
-
-//Update Image
-var slideFormElement1 = document.querySelector("#slide1");
-var slideFormElement2 = document.querySelector("#slide2");
-var slideFormElement3 = document.querySelector("#slide3");
-var slideFormElement4 = document.querySelector("#slide4");
-var slideFormElement5 = document.querySelector("#slide5");
-var slideFormElement6 = document.querySelector("#slide6");
-var slideFormElement7 = document.querySelector("#slide7");
-var slideFormElement8 = document.querySelector("#slide8");
-
-slideFormElement1.addEventListener('submit', updateAboutPage);
-slideFormElement2.addEventListener('submit', updateAboutPage);
-slideFormElement3.addEventListener('submit', updateAboutPage);
-slideFormElement4.addEventListener('submit', updateAboutPage);
-slideFormElement5.addEventListener('submit', updateAboutPage);
-slideFormElement6.addEventListener('submit', updateAboutPage);
-slideFormElement7.addEventListener('submit', updateAboutPage);
-slideFormElement8.addEventListener('submit', updateAboutPage);
-
-signOutButtonElement.addEventListener('click', signOutUser)
-
-initFirebaseAuth();
 document.querySelector('.nav-link[href="/about"]').classList.add('active');
 })();
 

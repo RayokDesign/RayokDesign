@@ -1,8 +1,8 @@
 'use strict';
 
- import { initializeApp } from 'firebase/app';
-
- import {
+import initApp from './initApp';
+import initAuth from './initAuth';
+import {
    getFirestore,
    collection,
    query,
@@ -14,17 +14,15 @@
    serverTimestamp
  } from 'firebase/firestore';
 
-import { getFirebaseConfig } from '../../../connections/thepudomdhamtravel/firebase-config.js';
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+initApp();
+initAuth();
 
  // Set the configuration for your app
 // TODO: Replace with your app's config object
-const app = initializeApp(getFirebaseConfig());
-const db = getFirestore(app);
-const storage = getStorage(app);
-const auth = getAuth(app);
+const db = getFirestore();
+const storage = getStorage();
 
 async function loadCards(){
     const q = query(collection(db, "headlines"), where("country", "==", window.location.pathname.split('/')[1]), orderBy('timestamp'));
@@ -137,27 +135,6 @@ async function uploadImage(){
     });
 }
 
-function signOutUser(){
-    signOut(getAuth());
-}
-
-function initFirebaseAuth() {
-    // Listen to auth state changes.
-    onAuthStateChanged(auth, authStateObserver);
-}
-
-function authStateObserver(user){
-    if(user){
-        rdSignOutBtnElement.classList.remove('d-none');
-        rdSignInBtnElement.classList.add('d-none');
-        addHeadlineFormElement.parentElement.classList.remove('d-none');
-    } else {
-        rdSignOutBtnElement.classList.add('d-none');
-        rdSignInBtnElement.classList.remove('d-none');
-        addHeadlineFormElement.parentElement.classList.add('d-none');
-    }
-}
-
 
 var cardListElement = document.getElementById('card-list')
 var addHeadlineFormElement = document.getElementById('add-article-form');
@@ -168,15 +145,8 @@ var headlineTextElement = document.getElementById('headline-text');
 var promptToastElement  = document.getElementById('prompt-toast')
 var promptToast = new bootstrap.Toast(promptToastElement);
 
-//member
-var rdSignInBtnElement = document.getElementById('rd-sign-in-btn');
-var rdSignOutBtnElement = document.getElementById('rd-sign-out-btn');
-
-rdSignOutBtnElement.addEventListener('click', signOutUser);
-
 headlineImageUploadElement.addEventListener('change', uploadImage);
 addHeadlineFormElement.addEventListener('submit', addHeadline);
 
 loadCards();
-initFirebaseAuth();
 document.querySelector('.nav-link.dropdown-toggle').classList.add('active');
