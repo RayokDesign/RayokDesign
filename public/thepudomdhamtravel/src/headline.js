@@ -2,6 +2,8 @@
 
 import initApp from './initApp';
 import initAuth from './initAuth';
+import getFileURL from './getFileURL';
+import showPromptToast from './showPromptToast';
 import {
    getFirestore,
    collection,
@@ -14,7 +16,7 @@ import {
    serverTimestamp
  } from 'firebase/firestore';
 
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref } from "firebase/storage";
 
 initApp();
 initAuth();
@@ -107,16 +109,13 @@ async function addArticleElement(headlineID){
 
 function formChecker(){
     if (headlineImageElement.value == ''){
-        promptToastElement.querySelector('.toast-body').textContent = 'Please upload card image.'
-        promptToast.show();
+        showPromptToast('Please upload card image.');
         return false;
     } else if(headlineTitleElement.value == '') {
-        promptToastElement.querySelector('.toast-body').textContent = 'Please input card title.'
-        promptToast.show();
+        showPromptToast('Please input card title.');
         return false;
     } else if(headlineTextElement.value == '') {
-        promptToastElement.querySelector('.toast-body').textContent = 'Please input card text.';
-        promptToast.show();
+        showPromptToast('Please input card text.');
         return false;
     } else {
         return true;
@@ -124,15 +123,19 @@ function formChecker(){
 }
 
 async function uploadImage(){
-    const file = this.files[0];
-    const imageRef = ref(storage, 'images'+'/'+new Date().getTime()+'.'+this.files[0].type.split('/')[1]);
-    const _this = this;
-    // 'file' comes from the Blob or File API
-    uploadBytes(imageRef, file).then((snapshot) => {
-        getDownloadURL(snapshot.ref).then((downloadURL) => {
-            _this.previousElementSibling.value = downloadURL;
-        });
-    });
+    const file = this.files[0] || false;
+    if (file){
+        const fileType = file.type.split('/')[0];
+        if (fileType == "image") {
+            const fileURL = await getFileURL(file);
+            this.previousElementSibling.value = fileURL;
+        } else {
+            headlineImageUploadElement.value = "";
+            showPromptToast('Only accept image file.');
+        }
+    } else {
+        return;
+    }
 }
 
 
@@ -142,8 +145,7 @@ var headlineImageUploadElement = document.getElementById('headline-image-upload'
 var headlineImageElement = document.getElementById('headline-image');
 var headlineTitleElement = document.getElementById('headline-title');
 var headlineTextElement = document.getElementById('headline-text');
-var promptToastElement  = document.getElementById('prompt-toast')
-var promptToast = new bootstrap.Toast(promptToastElement);
+
 
 headlineImageUploadElement.addEventListener('change', uploadImage);
 addHeadlineFormElement.addEventListener('submit', addHeadline);

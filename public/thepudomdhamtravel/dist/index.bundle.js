@@ -35211,6 +35211,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var firebase_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/storage */ "./node_modules/firebase/storage/dist/index.esm.js");
 
 
+;
+
 async function getFileURL(file){
     const fileType = file.type.split('/');
     const fileRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.ref)((0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.getStorage)(), fileType[0]+'s/'+new Date().getTime()+'.'+fileType[1]);

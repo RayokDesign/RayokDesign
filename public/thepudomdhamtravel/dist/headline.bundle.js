@@ -35198,6 +35198,32 @@ function __classPrivateFieldSet(receiver, state, value, kind, f) {
 
 /***/ }),
 
+/***/ "./public/thepudomdhamtravel/src/getFileURL.js":
+/*!*****************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/getFileURL.js ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ getFileURL)
+/* harmony export */ });
+/* harmony import */ var firebase_storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/storage */ "./node_modules/firebase/storage/dist/index.esm.js");
+
+
+;
+
+async function getFileURL(file){
+    const fileType = file.type.split('/');
+    const fileRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.ref)((0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.getStorage)(), fileType[0]+'s/'+new Date().getTime()+'.'+fileType[1]);
+    // 'file' comes from the Blob or File API
+    const snapshot = await (0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.uploadBytes)(fileRef, file)
+    const downloadURL = await (0,firebase_storage__WEBPACK_IMPORTED_MODULE_0__.getDownloadURL)(snapshot.ref);
+    return downloadURL;
+}
+
+/***/ }),
+
 /***/ "./public/thepudomdhamtravel/src/initApp.js":
 /*!**************************************************!*\
   !*** ./public/thepudomdhamtravel/src/initApp.js ***!
@@ -35275,6 +35301,28 @@ signOutBtnElement.addEventListener('click', signOutUser);
     
 function initAuth(){
     initFirebaseAuth();
+}
+
+/***/ }),
+
+/***/ "./public/thepudomdhamtravel/src/showPromptToast.js":
+/*!**********************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/showPromptToast.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ showPromptToast)
+/* harmony export */ });
+
+
+var promptToastElement  = document.getElementById('prompt-toast')
+var promptToast = new bootstrap.Toast(promptToastElement);
+
+function showPromptToast(text){
+    promptToastElement.querySelector('.toast-body').textContent = text;
+    promptToast.show();
 }
 
 /***/ }),
@@ -36961,8 +37009,12 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _initApp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initApp */ "./public/thepudomdhamtravel/src/initApp.js");
 /* harmony import */ var _initAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initAuth */ "./public/thepudomdhamtravel/src/initAuth.js");
-/* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
-/* harmony import */ var firebase_storage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! firebase/storage */ "./node_modules/firebase/storage/dist/index.esm.js");
+/* harmony import */ var _getFileURL__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./getFileURL */ "./public/thepudomdhamtravel/src/getFileURL.js");
+/* harmony import */ var _showPromptToast__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./showPromptToast */ "./public/thepudomdhamtravel/src/showPromptToast.js");
+/* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
+/* harmony import */ var firebase_storage__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! firebase/storage */ "./node_modules/firebase/storage/dist/index.esm.js");
+
+
 
 
 
@@ -36976,12 +37028,12 @@ __webpack_require__.r(__webpack_exports__);
 
  // Set the configuration for your app
 // TODO: Replace with your app's config object
-const db = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.getFirestore)();
-const storage = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_3__.getStorage)();
+const db = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.getFirestore)();
+const storage = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_5__.getStorage)();
 
 async function loadCards(){
-    const q = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.query)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.collection)(db, "headlines"), (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.where)("country", "==", window.location.pathname.split('/')[1]), (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.orderBy)('timestamp'));
-    const querySnapshot = await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.getDocs)(q);
+    const q = (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.query)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.collection)(db, "headlines"), (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.where)("country", "==", window.location.pathname.split('/')[1]), (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.orderBy)('timestamp'));
+    const querySnapshot = await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.getDocs)(q);
     querySnapshot.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         var headline = doc.data();
@@ -37032,16 +37084,16 @@ async function addHeadline(e){
     if(formChecker()){
         this.querySelector('button[type="submit"]').setAttribute('disabled', '')
         const file = headlineImageUploadElement.files[0];
-        const storageRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_3__.ref)(storage, 'images'+'/' + new Date().getTime()+'.' + file.type.split('/')[1]);
-        await (0,firebase_storage__WEBPACK_IMPORTED_MODULE_3__.uploadBytes)(storageRef, file).then(async(snapshot) => {
-            const docRef = await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.addDoc)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.collection)(db, 'headlines'), {
+        const storageRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_5__.ref)(storage, 'images'+'/' + new Date().getTime()+'.' + file.type.split('/')[1]);
+        await uploadBytes(storageRef, file).then(async(snapshot) => {
+            const docRef = await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.addDoc)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.collection)(db, 'headlines'), {
                 cardImage: headlineImageElement.value,
                 cardTitle: headlineTitleElement.value,
                 cardText: headlineTextElement.value,
                 country: window.location.pathname.split('/')[1],
-                timestamp: (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.serverTimestamp)()
+                timestamp: (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.serverTimestamp)()
             });
-            await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.setDoc)(docRef, { cardLink: `${window.location.pathname}/${docRef.id}` }, { merge: true });
+            await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.setDoc)(docRef, { cardLink: `${window.location.pathname}/${docRef.id}` }, { merge: true });
             addArticleElement(docRef.id);
         });
         window.location.reload();
@@ -37049,29 +37101,26 @@ async function addHeadline(e){
 }
 
 async function addArticleElement(headlineID){
-    await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.addDoc)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.collection)(db, "articles"), {
+    await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.addDoc)((0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.collection)(db, "articles"), {
         headlineID: headlineID,
         slug: headlineID,
         titleTag: '',
         metaDescription: '',
         openGraphImageURL: '',
         content: '',
-        timestamp: (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_2__.serverTimestamp)()
+        timestamp: (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_4__.serverTimestamp)()
     });
 }
 
 function formChecker(){
     if (headlineImageElement.value == ''){
-        promptToastElement.querySelector('.toast-body').textContent = 'Please upload card image.'
-        promptToast.show();
+        (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_3__["default"])('Please upload card image.');
         return false;
     } else if(headlineTitleElement.value == '') {
-        promptToastElement.querySelector('.toast-body').textContent = 'Please input card title.'
-        promptToast.show();
+        (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_3__["default"])('Please input card title.');
         return false;
     } else if(headlineTextElement.value == '') {
-        promptToastElement.querySelector('.toast-body').textContent = 'Please input card text.';
-        promptToast.show();
+        (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_3__["default"])('Please input card text.');
         return false;
     } else {
         return true;
@@ -37079,15 +37128,19 @@ function formChecker(){
 }
 
 async function uploadImage(){
-    const file = this.files[0];
-    const imageRef = (0,firebase_storage__WEBPACK_IMPORTED_MODULE_3__.ref)(storage, 'images'+'/'+new Date().getTime()+'.'+this.files[0].type.split('/')[1]);
-    const _this = this;
-    // 'file' comes from the Blob or File API
-    (0,firebase_storage__WEBPACK_IMPORTED_MODULE_3__.uploadBytes)(imageRef, file).then((snapshot) => {
-        (0,firebase_storage__WEBPACK_IMPORTED_MODULE_3__.getDownloadURL)(snapshot.ref).then((downloadURL) => {
-            _this.previousElementSibling.value = downloadURL;
-        });
-    });
+    const file = this.files[0] || false;
+    if (file){
+        const fileType = file.type.split('/')[0];
+        if (fileType == "image") {
+            const fileURL = await (0,_getFileURL__WEBPACK_IMPORTED_MODULE_2__["default"])(file);
+            this.previousElementSibling.value = fileURL;
+        } else {
+            headlineImageUploadElement.value = "";
+            (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_3__["default"])('Only accept image file.');
+        }
+    } else {
+        return;
+    }
 }
 
 
@@ -37097,8 +37150,7 @@ var headlineImageUploadElement = document.getElementById('headline-image-upload'
 var headlineImageElement = document.getElementById('headline-image');
 var headlineTitleElement = document.getElementById('headline-title');
 var headlineTextElement = document.getElementById('headline-text');
-var promptToastElement  = document.getElementById('prompt-toast')
-var promptToast = new bootstrap.Toast(promptToastElement);
+
 
 headlineImageUploadElement.addEventListener('change', uploadImage);
 addHeadlineFormElement.addEventListener('submit', addHeadline);

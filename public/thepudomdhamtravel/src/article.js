@@ -100,10 +100,20 @@ async function updateHeadline(e){
 }
 
 async function uploadImage(){
-    const file = this.files[0];
-    const fileURL = await getFileURL(file);
-    
-    this.previousElementSibling.value = fileURL;
+    const file = this.files[0] || false;
+    if (file){
+        const fileType = file.type.split('/')[0];
+        if (fileType == "image") {
+            const fileURL = await getFileURL(file);
+            this.previousElementSibling.value = fileURL;
+        } else {
+            headlineImageUploadElement.value = "";
+            promptToastElement.querySelector('.toast-body').textContent = 'Only accept image file.';
+            promptToast.show();
+        }
+    } else {
+        return;
+    }
 }
 
 //Editor
@@ -169,6 +179,10 @@ function switchPage(){
 //Image Upload
 openGraphImageUrlUploadElement.addEventListener('change', uploadImage);
 headlineImageUploadElement.addEventListener('change', uploadImage);
+
+//Toast
+var promptToastElement  = document.getElementById('prompt-toast')
+var promptToast = new bootstrap.Toast(promptToastElement);
 
 initApp();
 initAuth();

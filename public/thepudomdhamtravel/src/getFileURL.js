@@ -1,3 +1,5 @@
+'use strict'
+
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default async function getFileURL(file){
