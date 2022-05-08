@@ -4,28 +4,28 @@ import { getFirestore, doc, updateDoc } from 'firebase/firestore';
 import getFileURL from './getFileURL';
 
 let carousel = new bootstrap.Carousel(carouselExampleIndicators);
-let rayCarousel = document.getElementById('carouselExampleIndicators');
+let rdCarousel = document.getElementById('carouselExampleIndicators');
 
-rayCarousel.onmouseover = function(){
+rdCarousel.onmouseover = function(){
     carousel.pause();
 }
-rayCarousel.onmouseout = function(){
+rdCarousel.onmouseout = function(){
     carousel.cycle();
 }
 
 function showFileInput(){
-    rayCarousel.onmouseover = null;
-    rayCarousel.onmouseout = null;
+    rdCarousel.onmouseover = null;
+    rdCarousel.onmouseout = null;
     carousel.pause();
     this.classList.add('d-none');
     this.nextElementSibling.classList.remove('d-none');
 }
 
 function initUploader(){
-    rayCarousel.onmouseover = function(){
+    rdCarousel.onmouseover = function(){
         carousel.pause();
     }
-    rayCarousel.onmouseout = function(){
+    rdCarousel.onmouseout = function(){
         carousel.cycle();
     }
     carousel.cycle();
@@ -50,12 +50,12 @@ async function updateFirestore(){
     await updateDoc(docRef, {
         [this.id]: this.getAttribute('rd-data-url')
     }).then(function(){
-        _this.parentElement.parentElement.children[0].setAttribute('src', _this.getAttribute('rd-data-url'));
+        _this.parentElement.parentElement.parentElement.children[0].setAttribute('src', _this.getAttribute('rd-data-url'));
         initUploader.call(_this);
     });
 }
 
-export default function uploadSlideURL(){
+export default function updateSlideURL(){
     const editBtnsElement = document.querySelectorAll('.edit-btn');
     for (let i=0; i<editBtnsElement.length; i++){
         editBtnsElement[i].addEventListener('click', showFileInput);

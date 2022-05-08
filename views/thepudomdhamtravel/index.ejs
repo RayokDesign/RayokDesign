@@ -4,12 +4,12 @@
 <head>
   <meta charset="utf-8">
   <title>ทพอุดมธรรม ทราเวล</title>
-  <meta content="รับจัดทัวร์แสวงบุญอินเดีย เนปาล ศรีลังกา พม่า กรุ๊ปเหมา กรุ๊ปส่วนตัว กรุ๊ปท่องเที่ยวอินเดีย เนปาล ศรีลังกา บาหลี นครวัด นครธม หลวงพระบาง" name="description">
+  <meta content="รับจัดทัวร์แสวงบุญอินเดีย เนปาล ดูเพิ่มเติม พม่า กรุ๊ปเหมา กรุ๊ปส่วนตัว กรุ๊ปท่องเที่ยวอินเดีย เนปาล ดูเพิ่มเติม บาหลี นครวัด นครธม หลวงพระบาง" name="description">
   <meta content="ทพอุดมธรรม ทราเวล" property="og:title">
-  <meta content="รับจัดทัวร์แสวงบุญอินเดีย เนปาล ศรีลังกา พม่า กรุ๊ปเหมา กรุ๊ปส่วนตัว กรุ๊ปท่องเที่ยวอินเดีย เนปาล ศรีลังกา บาหลี นครวัด นครธม หลวงพระบาง" property="og:description">
+  <meta content="รับจัดทัวร์แสวงบุญอินเดีย เนปาล ดูเพิ่มเติม พม่า กรุ๊ปเหมา กรุ๊ปส่วนตัว กรุ๊ปท่องเที่ยวอินเดีย เนปาล ดูเพิ่มเติม บาหลี นครวัด นครธม หลวงพระบาง" property="og:description">
   <meta content="https://uploads-ssl.webflow.com/6249a010e2c35a26129c907b/6252b549284d5bda88218036_%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%81%E0%B9%8A%E0%B8%AD%E0%B8%9B%E0%B8%9B%E0%B8%B5%E0%B9%89%E0%B8%A5%E0%B8%B4%E0%B9%89%E0%B8%87.jpg" property="og:image">
   <meta content="ทพอุดมธรรม ทราเวล" property="twitter:title">
-  <meta content="รับจัดทัวร์แสวงบุญอินเดีย เนปาล ศรีลังกา พม่า กรุ๊ปเหมา กรุ๊ปส่วนตัว กรุ๊ปท่องเที่ยวอินเดีย เนปาล ศรีลังกา บาหลี นครวัด นครธม หลวงพระบาง" property="twitter:description">
+  <meta content="รับจัดทัวร์แสวงบุญอินเดีย เนปาล ดูเพิ่มเติม พม่า กรุ๊ปเหมา กรุ๊ปส่วนตัว กรุ๊ปท่องเที่ยวอินเดีย เนปาล ดูเพิ่มเติม บาหลี นครวัด นครธม หลวงพระบาง" property="twitter:description">
   <meta content="https://uploads-ssl.webflow.com/6249a010e2c35a26129c907b/6252b549284d5bda88218036_%E0%B8%A3%E0%B8%B9%E0%B8%9B%E0%B8%81%E0%B9%8A%E0%B8%AD%E0%B8%9B%E0%B8%9B%E0%B8%B5%E0%B9%89%E0%B8%A5%E0%B8%B4%E0%B9%89%E0%B8%87.jpg" property="twitter:image">
   <meta property="og:type" content="website">
   <meta content="summary_large_image" name="twitter:card">
@@ -18,11 +18,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
   <link href="/images/favicon.svg" rel="shortcut icon" type="image/x-icon">
   <link href="/images/webclip.svg" rel="apple-touch-icon">
-  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
   <link rel="stylesheet" href="/css/rayokdesign.css">
 </head>
 <body>
-  <%- include('navbar'); %>
+  <nav class="navbar navbar-expand-lg navbar-light mt-2 mb-4">
+    <%- include('navbar'); %>
+  </nav>
   <div class="section d-none logged-in">
     <div class="container text-primary text-center">
       <span class="fs-5">สิ่งที่คุณต้องการคือเทพอุดมธรรม</span>
@@ -44,75 +46,91 @@
         </div>
         <div class="carousel-inner">
           <div class="carousel-item slide-img-box active">
-            <img src="<%- slider.slide1 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide1" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide1 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy" alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide1" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
           <div class="carousel-item slide-img-box">
-            <img src="<%- slider.slide2 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide2" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide2 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy" alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide2" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
           <div class="carousel-item slide-img-box">
-            <img src="<%- slider.slide3 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide3" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide3 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy" alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide3" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
           <div class="carousel-item slide-img-box">
-            <img src="<%- slider.slide4 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide4" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide4 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy" alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide4" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
           <div class="carousel-item slide-img-box">
-            <img src="<%- slider.slide5 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide5" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide5 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy" alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide5" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
           <div class="carousel-item slide-img-box">
-            <img src="<%- slider.slide6 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide6" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide6 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy" alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide6" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
           <div class="carousel-item slide-img-box">
-            <img src="<%- slider.slide7 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide7" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide7 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy" alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide7" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
           <div class="carousel-item slide-img-box">
-            <img src="<%- slider.slide8 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" alt="...">
-            <button class="btn btn-primary position-absolute edit-btn logged-in">แก้ไข</button>
-            <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
-              <input type="file" class="form-control">
-              <button class="btn btn-primary d-none" id="slide8" rd-data-doc-id="index">ยืนยัน</button>
-              <button class="btn btn-secondary">ยกเลิก</button>
+            <img src="<%- slider.slide8 %>" class="d-block card-img-fit-parent-box top-50 start-50 translate-middle" loading="lazy"alt="...">
+            <div class="logged-in">
+              <button class="btn btn-primary position-absolute edit-btn">แก้ไข</button>
+              <div class="input-group position-absolute upload-group start-50 translate-middle-x d-none">
+                <input type="file" accept="image/*" class="form-control">
+                <button class="btn btn-primary d-none" id="slide8" rd-data-doc-id="index">ยืนยัน</button>
+                <button class="btn btn-secondary">ยกเลิก</button>
+              </div>
             </div>
           </div>
         </div>
@@ -132,7 +150,7 @@
       <div class="row">
         <div class="col-12 order-1 col-md-6 order-md-0"><img src="/images/home-intro.jpg" class="img-fluid"></div>
         <div class="col-12 order-0 col-md-6 order-md-1">
-          <h2 class="text-primary">ทำไมถึงเลือกเทพอุดมธรรม?</h2>
+          <h2 class="text-primary" style="font-size: 4em; line-height: 1em">ทำไมถึงเลือกเทพอุดมธรรมทราเวล?</h2>
           <p class="fs-4">เทพอุดมธรรมได้ร่วมมือกับประเทศที่จัดเตรียมสถานที่ที่สวยงามกว่า 30 แห่งให้คุณได้เพลิดเพลินและพักผ่อนในเวลาว่างจากความเร่งรีบและคึกคักของชีวิตนี้ ไม่ต้องกังวลคุณจะไม่สูญเสียเพราะเทพอุดมธรรมมีไกด์นำเที่ยวมืออาชีพ 10+ คนด้วย ลูกค้า 5.k+ ของเราพอใจกับบริการที่เรามีให้ ดังนั้นสิ่งที่คุณรอ? มาวางแผนวันหยุดของคุณกับเรากันเถอะ!</p>
         </div>
       </div>
@@ -145,7 +163,7 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div class="card-img-box">
-              <img src="/images/404519515-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/404519515-min.jpg" class="card-img-top card-img-fit-parent-box" loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">เดลี</h5>
@@ -164,7 +182,7 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div class="card-img-box">
-              <img src="/images/757543819-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/757543819-min.jpg" class="card-img-top card-img-fit-parent-box"  loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">กาฐมาณฑุ</h5>
@@ -184,16 +202,16 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div class="card-img-box">
-              <img src="/images/374185558-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/374185558-min.jpg" class="card-img-top card-img-fit-parent-box" loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">สิกิริยา</h5>
               <div class="card-text-box overflow-hidden mb-2">
-                <p class="card-text">Lion's Rock หรือที่รู้จักกันในชื่อสามเหลี่ยมทองคำทางวัฒนธรรม เป็นหนึ่งในสถานที่ท่องเที่ยวที่ไม่ควรพลาดในการเดินทางอิสระของศรีลังกาและสิ่งมหัศจรรย์อันดับแปดของโลก The Lion Rock ตั้งอยู่บน Great Plains ในภาคกลางของ Zongiria หินสีน้ำตาลแดงขนาดใหญ่นี้มีเฉพาะตัวของสิงโตและหัวของสิงโตถูกกัดเซาะโดยสภาพอากาศเป็นเวลานาน</p>
+                <p class="card-text">Lion's Rock หรือที่รู้จักกันในชื่อสามเหลี่ยมทองคำทางวัฒนธรรม เป็นหนึ่งในสถานที่ท่องเที่ยวที่ไม่ควรพลาดในการเดินทางอิสระของดูเพิ่มเติมและสิ่งมหัศจรรย์อันดับแปดของโลก The Lion Rock ตั้งอยู่บน Great Plains ในภาคกลางของ Zongiria หินสีน้ำตาลแดงขนาดใหญ่นี้มีเฉพาะตัวของสิงโตและหัวของสิงโตถูกกัดเซาะโดยสภาพอากาศเป็นเวลานาน</p>
               </div>
               <div class="d-flex mb-3">
                 <img src="/images/geo-alt-fill.svg" loading="lazy" alt="" class="pe-2">
-                <div class="card-position-text">ศรีลังกา</div>
+                <div class="card-position-text">ดูเพิ่มเติม</div>
               </div>
               <a href="/srilanka" class="btn btn-primary stretched-link">สถานที่ท่องเที่ยวเพิ่มเติม</a>
             </div>
@@ -202,7 +220,7 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div class="card-img-box">
-              <img src="/images/328520822-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/328520822-min.jpg" class="card-img-top card-img-fit-parent-box" loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">ย่างกุ้ง</h5>
@@ -220,7 +238,7 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div style="padding-bottom:calc(100%/4*3); position:relative">
-              <img src="/images/1272037927-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/1272037927-min.jpg" class="card-img-top card-img-fit-parent-box" loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">นครวัด</h5>
@@ -238,7 +256,7 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div class="card-img-box">
-              <img src="/images/369806540-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/369806540-min.jpg" class="card-img-top card-img-fit-parent-box" loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">บาหลี</h5>
@@ -256,7 +274,7 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div style="padding-bottom:calc(100%/4*3); position:relative">
-              <img src="/images/1027853701-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/1027853701-min.jpg" class="card-img-top card-img-fit-parent-box" loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">เวียงจันทน์</h5>
@@ -274,7 +292,7 @@
         <div class="col-12 col-md-6 col-lg-3 mb-3">
           <div class="card">
             <div class="card-img-box">
-              <img src="/images/1220689990-min.jpg" class="card-img-top card-img-fit-parent-box" alt="...">
+              <img src="/images/1220689990-min.jpg" class="card-img-top card-img-fit-parent-box" loading="lazy" alt="...">
             </div>
             <div class="card-body">
               <h5 class="card-title">Dochula Pass</h5>

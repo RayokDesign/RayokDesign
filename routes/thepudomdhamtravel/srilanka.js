@@ -7,7 +7,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', { 
     title: 'ศรีลังกา',
-    country: 'ศรีลังกา'
+    country: 'ศรีลังกา',
+    HeroImgUrl: '/images/374185558-min.jpg'
   });
 });
 

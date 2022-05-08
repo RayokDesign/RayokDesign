@@ -35313,7 +35313,7 @@ function initAuth(){
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ uploadSlideURL)
+/* harmony export */   "default": () => (/* binding */ updateSlideURL)
 /* harmony export */ });
 /* harmony import */ var firebase_firestore__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/firestore */ "./node_modules/firebase/firestore/dist/index.esm.js");
 /* harmony import */ var _getFileURL__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getFileURL */ "./public/thepudomdhamtravel/src/getFileURL.js");
@@ -35323,28 +35323,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 let carousel = new bootstrap.Carousel(carouselExampleIndicators);
-let rayCarousel = document.getElementById('carouselExampleIndicators');
+let rdCarousel = document.getElementById('carouselExampleIndicators');
 
-rayCarousel.onmouseover = function(){
+rdCarousel.onmouseover = function(){
     carousel.pause();
 }
-rayCarousel.onmouseout = function(){
+rdCarousel.onmouseout = function(){
     carousel.cycle();
 }
 
 function showFileInput(){
-    rayCarousel.onmouseover = null;
-    rayCarousel.onmouseout = null;
+    rdCarousel.onmouseover = null;
+    rdCarousel.onmouseout = null;
     carousel.pause();
     this.classList.add('d-none');
     this.nextElementSibling.classList.remove('d-none');
 }
 
 function initUploader(){
-    rayCarousel.onmouseover = function(){
+    rdCarousel.onmouseover = function(){
         carousel.pause();
     }
-    rayCarousel.onmouseout = function(){
+    rdCarousel.onmouseout = function(){
         carousel.cycle();
     }
     carousel.cycle();
@@ -35369,12 +35369,12 @@ async function updateFirestore(){
     await (0,firebase_firestore__WEBPACK_IMPORTED_MODULE_0__.updateDoc)(docRef, {
         [this.id]: this.getAttribute('rd-data-url')
     }).then(function(){
-        _this.parentElement.parentElement.children[0].setAttribute('src', _this.getAttribute('rd-data-url'));
+        _this.parentElement.parentElement.parentElement.children[0].setAttribute('src', _this.getAttribute('rd-data-url'));
         initUploader.call(_this);
     });
 }
 
-function uploadSlideURL(){
+function updateSlideURL(){
     const editBtnsElement = document.querySelectorAll('.edit-btn');
     for (let i=0; i<editBtnsElement.length; i++){
         editBtnsElement[i].addEventListener('click', showFileInput);
@@ -37080,11 +37080,6 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_initAuth__WEBPACK_IMPORTED_MODULE_0__["default"])();
 (0,_updateSlideURL__WEBPACK_IMPORTED_MODULE_1__["default"])();
-
-
-const slierElement = document.getElementById('carouselExampleIndicators');
-
-document.querySelector('.nav-link[href="/"]').classList.add('active');
 })();
 
 /******/ })()

@@ -12226,6 +12226,45 @@ function initAuth(){
 
 /***/ }),
 
+/***/ "./public/thepudomdhamtravel/src/showPromptToast.js":
+/*!**********************************************************!*\
+  !*** ./public/thepudomdhamtravel/src/showPromptToast.js ***!
+  \**********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ showPromptToast)
+/* harmony export */ });
+
+
+// Template for headline card.
+var PROMPT_TOAST_TEMPLATE =
+`<div class="position-fixed top-0 start-50 p-3 translate-middle-x" style="z-index: 11">
+<div id="prompt-toast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
+    <div class="d-flex">
+    <div class="toast-body">
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+</div>`;
+
+const container = document.createElement('div');
+container.innerHTML = PROMPT_TOAST_TEMPLATE;
+const div = container.firstChild;
+document.querySelector("body").appendChild(div);
+
+var promptToastElement  = document.getElementById('prompt-toast')
+var promptToast = new bootstrap.Toast(promptToastElement);
+
+function showPromptToast(text){
+    promptToastElement.querySelector('.toast-body').textContent = text;
+    promptToast.show();
+}
+
+/***/ }),
+
 /***/ "./node_modules/@firebase/app/dist/esm/index.esm2017.js":
 /*!**************************************************************!*\
   !*** ./node_modules/@firebase/app/dist/esm/index.esm2017.js ***!
@@ -13908,6 +13947,8 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
 /* harmony import */ var _initAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initAuth */ "./public/thepudomdhamtravel/src/initAuth.js");
+/* harmony import */ var _showPromptToast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./showPromptToast */ "./public/thepudomdhamtravel/src/showPromptToast.js");
+
 
 
 
@@ -13922,7 +13963,25 @@ function signIn(e){
         window.location.href='/';
     })
     .catch((error) => {
-        console.log(error);
+          // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        switch (errorCode){
+            case "auth/invalid-email":
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('Email format incorrect');
+                break;
+            case "auth/user-disabled":
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('User is disabled');
+                break;
+            case "auth/user-not-found":
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('User not found');
+                break;
+            case "auth/wrong-password": 
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('Wrong password');
+                break;
+            default:
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])(errorMessage);
+        }
     })
 }
 

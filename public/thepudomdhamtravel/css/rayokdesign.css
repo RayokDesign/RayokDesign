@@ -1,3 +1,7 @@
+:root {
+  --bs-font-sans-serif: 'Kanit', sans-serif;
+}
+
 .card-img-box {
   padding-bottom:calc(100%/4*3);
   position:relative;
@@ -59,4 +63,28 @@
   width: calc(100% - 2rem);
   top: 1rem;
   z-index: 2;
+}
+
+.dropdown-menu {
+  width: calc(100% - 2rem);
+}
+
+.navbar-dark .navbar-nav .nav-link {
+  color: #f5f5f7;
+  opacity: .8;
+  transition: opacity 0.3s;
+}
+.navbar-dark .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+  color: #f5f5f7;
+  opacity: 1;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #0d6efd;
+  opacity: .8;
+  transition: opacity 0.3s;
+}
+.navbar-light .navbar-nav .nav-link:hover, .navbar-dark .navbar-nav .nav-link:focus {
+  color: #0d6efd;
+  opacity: 1;
 }

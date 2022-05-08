@@ -7,7 +7,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', { 
     title: 'กัมพูชา',
-    country: 'กัมพูชา'
+    country: 'กัมพูชา',
+    HeroImgUrl: '/images/1272037927-min.jpg'
   });
 });
 

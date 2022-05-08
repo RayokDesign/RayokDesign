@@ -7,7 +7,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', { 
     title: 'พม่า',
-    country: 'พม่า'
+    country: 'พม่า',
+    HeroImgUrl: '/images/328520822-min.jpg'
   });
 });
 

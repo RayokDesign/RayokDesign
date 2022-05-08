@@ -2,6 +2,7 @@
 
 import initApp from './initApp';
 import initAuth from './initAuth';
+import showPromptToast from './showPromptToast';
 import {
 getFirestore,
 collection,
@@ -101,15 +102,15 @@ async function updateHeadline(e){
 
 async function uploadImage(){
     const file = this.files[0] || false;
+    const _this = this;
     if (file){
         const fileType = file.type.split('/')[0];
         if (fileType == "image") {
             const fileURL = await getFileURL(file);
             this.previousElementSibling.value = fileURL;
         } else {
-            headlineImageUploadElement.value = "";
-            promptToastElement.querySelector('.toast-body').textContent = 'Only accept image file.';
-            promptToast.show();
+            _this.value = "";
+            showPromptToast('Only accept image file.');
         }
     } else {
         return;

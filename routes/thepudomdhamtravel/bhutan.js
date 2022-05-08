@@ -7,7 +7,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', { 
     title: 'ภูฏาน',
-    country: 'ภูฏาน'
+    country: 'ภูฏาน',
+    HeroImgUrl: '/images/1220689990-min.jpg'
   });
 });
 

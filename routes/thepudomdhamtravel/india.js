@@ -8,7 +8,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', {
     title: 'อินเดีย',
-    country: 'อินเดีย'
+    country: 'อินเดีย',
+    HeroImgUrl: '/images/404519515-min.jpg'
   });
 });
 

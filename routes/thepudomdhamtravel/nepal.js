@@ -7,7 +7,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', {
     title: 'เนปาล',
-    country: 'เนปาล'
+    country: 'เนปาล',
+    HeroImgUrl: '/images/757543819-min.jpg'
   });
 });
 

@@ -5,8 +5,18 @@
   <%- include('head'); %>
 </head>
 <body>
-  <%- include('navbar'); %>
-  <div class="section mb-5">
+  <header class="mb-3" style="height:400px; background: no-repeat center url('<%- HeroImgUrl %>'); background-size: cover;">
+    <div class="d-flex flex-column" style="height:100%; background-color:rgba(0, 0, 0, 0.6); color:white;">
+      <nav class="navbar navbar-expand-lg navbar-dark mt-2">
+        <%- include('navbar'); %>
+      </nav>
+      <div class="text-center my-auto pb-5">
+        <h1 style="font-size:3rem"><%- country %></h1>
+        <span>เทพอุดมธรรม ทราเวล รอโอกาสรับใช้ท่านด้วยความกระตือรือร้นอยู่เสมอ</span>
+      </div>
+    </div>
+  </header>
+  <div class="section mb-3">
     <div class="container">
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
@@ -18,7 +28,7 @@
   </div>
   <div class="section mb-5">
     <div class="container mb-3">
-      <h1 class="fw-bold text-center text-primary mb-3"><%- country %></h1>
+      <h1 class="fw-bold text-center text-primary mb-5">จุดหมายปลายทางยอดนิยม</h1>
       <div id="card-list" class="row"></div>
     </div>
   </div>
@@ -28,7 +38,7 @@
         <div class="mb-3">
           <label for="image" class="form-label">Card Image</label>
           <input class="form-control mb-2" type="text" id="headline-image" placeholder="Image URL" aria-label="readonly input example" readonly>
-          <input class="form-control" type="file" id="headline-image-upload">
+          <input class="form-control" type="file"  accept="image/*" id="headline-image-upload">
         </div>
         <div class="mb-3">
           <label for="title" class="form-label">Card Title</label>
@@ -41,15 +51,6 @@
         <button type="submit" class="btn btn-primary">เพิ่มชื่อเรื่อง</button>
       </form>
     </div>
-  </div>
-  <div class="position-fixed top-0 start-50 p-3 translate-middle-x" style="z-index: 11">
-      <div id="prompt-toast" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="5000">
-          <div class="d-flex">
-          <div class="toast-body">
-          </div>
-          <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-      </div>
   </div>
   <%- include('footer') %>
   <script src="dist/headline.bundle.js"></script>

@@ -7,7 +7,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', { 
     title: 'ลาว',
-    country: 'ลาว'
+    country: 'ลาว',
+    HeroImgUrl: '/images/1027853701-min.jpg'
   });
 });
 

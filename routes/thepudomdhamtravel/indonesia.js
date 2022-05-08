@@ -7,7 +7,8 @@ const db = getFirestore();
 router.get('/', function(req, res, next) {
   res.render('thepudomdhamtravel/headline', { 
     title: 'อินโดนีเซีย',
-    country: 'อินโดนีเซีย'
+    country: 'อินโดนีเซีย',
+    HeroImgUrl: '/images/369806540-min.jpg'
   });
 });
 

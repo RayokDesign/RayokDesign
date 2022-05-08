@@ -124,13 +124,14 @@ function formChecker(){
 
 async function uploadImage(){
     const file = this.files[0] || false;
+    const _this = this;
     if (file){
         const fileType = file.type.split('/')[0];
         if (fileType == "image") {
             const fileURL = await getFileURL(file);
             this.previousElementSibling.value = fileURL;
         } else {
-            headlineImageUploadElement.value = "";
+            _this.value = "";
             showPromptToast('Only accept image file.');
         }
     } else {
