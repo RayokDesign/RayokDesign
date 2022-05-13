@@ -1,14 +1,14 @@
 'use strict';
 
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import initAuth from './initAuth';
+import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import showPromptToast from "./showPromptToast";
+import initApp from "./initApp";
 
-initAuth();
+initApp();
 
 function signIn(e){
     e.preventDefault();
-    signInWithEmailAndPassword(getAuth(), emailElement.value, passwordElement.value)
+    signInWithEmailAndPassword(getAuth(), this.querySelector('#sign-in-email').value, this.querySelector('#sign-in-password').value)
     .then(() => {
         window.location.href='/';
     })
@@ -35,8 +35,58 @@ function signIn(e){
     })
 }
 
-var loginFormElement = document.getElementById('rd-sign-in-form');
-var emailElement = document.getElementById('rd-email');
-var passwordElement = document.getElementById('rd-password');
+function resetPassword(e){
+    e.preventDefault();
+    sendPasswordResetEmail(getAuth(), this.querySelector('#reset-password-email').value)
+    .then(() => {
+        // Password reset email sent!
+        // ..
+        showPromptToast('Password reset email sent!');
+        setTimeout(function(){
+            showSignInForm(e);
+            showPromptToast('Sign in after reset email!');
+        }, 2000);
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        switch (errorCode){
+            case "auth/invalid-email":
+                showPromptToast('Email can\'t find');
+                break;
+            default:
+                showPromptToast(errorMessage);
+        }
+        console.log(errorCode);
+        console.log(errorMessage);
+        // ..
+    });
+}
 
-loginFormElement.addEventListener('submit', signIn);
+function showResetPassForm(e){
+    e.preventDefault();
+    resetPassFormElement.classList.remove('d-none');
+    signInFormElement.classList.add('d-none');
+    pageHeadingElement.innerText = 'ลืมรหัสผ่าน';
+}
+
+function showSignInForm(e){
+    e.preventDefault();
+    resetPassFormElement.classList.add('d-none');
+    signInFormElement.classList.remove('d-none');
+    pageHeadingElement.innerText = 'ผู้ดูแลระบบเข้าสู่ระบบ';
+}
+
+
+var signInFormElement = document.getElementById('sign-in-form');
+var resetPassFormElement = document.getElementById('reset-password-form');
+var showSignInPageBtnElement = resetPassFormElement.querySelector('a');
+var showResetPasswordPageBtnElement = signInFormElement.querySelector('a');
+var pageHeadingElement = document.querySelector('#page-heading');
+
+showSignInPageBtnElement.addEventListener('click', showSignInForm);
+showResetPasswordPageBtnElement.addEventListener('click', showResetPassForm);
+
+
+signInFormElement.addEventListener('submit', signIn);
+resetPassFormElement.addEventListener('submit', resetPassword);

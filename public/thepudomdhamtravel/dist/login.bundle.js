@@ -12168,64 +12168,6 @@ function initApp(){
 
 /***/ }),
 
-/***/ "./public/thepudomdhamtravel/src/initAuth.js":
-/*!***************************************************!*\
-  !*** ./public/thepudomdhamtravel/src/initAuth.js ***!
-  \***************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ initAuth)
-/* harmony export */ });
-/* harmony import */ var _initApp__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./initApp */ "./public/thepudomdhamtravel/src/initApp.js");
-/* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
-
-
-
-
-
-(0,_initApp__WEBPACK_IMPORTED_MODULE_0__["default"])();
-
-function signOutUser(){
-    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.signOut)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)());
-}
-
-function initFirebaseAuth() {
-    // Listen to auth state changes.
-    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.onAuthStateChanged)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_1__.getAuth)(), authStateObserver);
-}
-
-function authStateObserver(user){
-    if(user){
-        for (let i=0; i<loggedInRequiredElement.length; i++){
-            loggedInRequiredElement[i].classList.remove('d-none');
-        }
-        for (let i=0; i<loggedOutRequiredElement.length; i++){
-            loggedOutRequiredElement[i].classList.add('d-none');
-        }
-    } else {
-        for (let i=0; i<loggedInRequiredElement.length; i++){
-            loggedInRequiredElement[i].classList.add('d-none');
-        }
-        for (let i=0; i<loggedOutRequiredElement.length; i++){
-            loggedOutRequiredElement[i].classList.remove('d-none');
-        }
-    }
-}
-
-const loggedInRequiredElement = document.querySelectorAll('.logged-in');
-const loggedOutRequiredElement = document.querySelectorAll('.logged-out');
-const signOutBtnElement = document.querySelector('#sign-out-btn');
-
-signOutBtnElement.addEventListener('click', signOutUser);
-    
-function initAuth(){
-    initFirebaseAuth();
-}
-
-/***/ }),
-
 /***/ "./public/thepudomdhamtravel/src/showPromptToast.js":
 /*!**********************************************************!*\
   !*** ./public/thepudomdhamtravel/src/showPromptToast.js ***!
@@ -13946,19 +13888,19 @@ var __webpack_exports__ = {};
   \************************************************/
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var firebase_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! firebase/auth */ "./node_modules/firebase/auth/dist/index.esm.js");
-/* harmony import */ var _initAuth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initAuth */ "./public/thepudomdhamtravel/src/initAuth.js");
-/* harmony import */ var _showPromptToast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./showPromptToast */ "./public/thepudomdhamtravel/src/showPromptToast.js");
+/* harmony import */ var _showPromptToast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./showPromptToast */ "./public/thepudomdhamtravel/src/showPromptToast.js");
+/* harmony import */ var _initApp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./initApp */ "./public/thepudomdhamtravel/src/initApp.js");
 
 
 
 
 
 
-(0,_initAuth__WEBPACK_IMPORTED_MODULE_1__["default"])();
+(0,_initApp__WEBPACK_IMPORTED_MODULE_2__["default"])();
 
 function signIn(e){
     e.preventDefault();
-    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.signInWithEmailAndPassword)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.getAuth)(), emailElement.value, passwordElement.value)
+    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.signInWithEmailAndPassword)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.getAuth)(), this.querySelector('#sign-in-email').value, this.querySelector('#sign-in-password').value)
     .then(() => {
         window.location.href='/';
     })
@@ -13968,28 +13910,78 @@ function signIn(e){
         var errorMessage = error.message;
         switch (errorCode){
             case "auth/invalid-email":
-                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('Email format incorrect');
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])('Email format incorrect');
                 break;
             case "auth/user-disabled":
-                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('User is disabled');
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])('User is disabled');
                 break;
             case "auth/user-not-found":
-                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('User not found');
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])('User not found');
                 break;
             case "auth/wrong-password": 
-                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])('Wrong password');
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])('Wrong password');
                 break;
             default:
-                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_2__["default"])(errorMessage);
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])(errorMessage);
         }
     })
 }
 
-var loginFormElement = document.getElementById('rd-sign-in-form');
-var emailElement = document.getElementById('rd-email');
-var passwordElement = document.getElementById('rd-password');
+function resetPassword(e){
+    e.preventDefault();
+    (0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.sendPasswordResetEmail)((0,firebase_auth__WEBPACK_IMPORTED_MODULE_0__.getAuth)(), this.querySelector('#reset-password-email').value)
+    .then(() => {
+        // Password reset email sent!
+        // ..
+        (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])('Password reset email sent!');
+        setTimeout(function(){
+            showSignInForm(e);
+            (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])('Sign in after reset email!');
+        }, 2000);
+    })
+    .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        switch (errorCode){
+            case "auth/invalid-email":
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])('Email can\'t find');
+                break;
+            default:
+                (0,_showPromptToast__WEBPACK_IMPORTED_MODULE_1__["default"])(errorMessage);
+        }
+        console.log(errorCode);
+        console.log(errorMessage);
+        // ..
+    });
+}
 
-loginFormElement.addEventListener('submit', signIn);
+function showResetPassForm(e){
+    e.preventDefault();
+    resetPassFormElement.classList.remove('d-none');
+    signInFormElement.classList.add('d-none');
+    pageHeadingElement.innerText = 'ลืมรหัสผ่าน';
+}
+
+function showSignInForm(e){
+    e.preventDefault();
+    resetPassFormElement.classList.add('d-none');
+    signInFormElement.classList.remove('d-none');
+    pageHeadingElement.innerText = 'ผู้ดูแลระบบเข้าสู่ระบบ';
+}
+
+
+var signInFormElement = document.getElementById('sign-in-form');
+var resetPassFormElement = document.getElementById('reset-password-form');
+var showSignInPageBtnElement = resetPassFormElement.querySelector('a');
+var showResetPasswordPageBtnElement = signInFormElement.querySelector('a');
+var pageHeadingElement = document.querySelector('#page-heading');
+
+showSignInPageBtnElement.addEventListener('click', showSignInForm);
+showResetPasswordPageBtnElement.addEventListener('click', showResetPassForm);
+
+
+signInFormElement.addEventListener('submit', signIn);
+resetPassFormElement.addEventListener('submit', resetPassword);
 })();
 
 /******/ })()
