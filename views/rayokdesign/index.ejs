@@ -5,20 +5,81 @@
 </head>
 <body>
     <%- include('navbar'); %>
-    <div class="hero">
+    <div class="hero d-flex">
         <div class="hero-wrap">
-            <div class="headline-wrap">
-                <h1>Hi, I'm Rayok, </h1>
-                <div class="highlight-box">
-                    <div class="highlight" style="animation-delay: 0.6s;"></div>
-                    <h1>Web Designer</h1>
+            <div class="container">
+                <div class="headline-wrap">
+                    <h1 class="hero-heading">Hi, I'm Rayok, </h1>
+                    <div class="highlight-box">
+                        <div class="highlight" style="animation-delay: 0.6s;"></div>
+                        <h1 class="hero-heading">Web Designer</h1>
+                    </div>
+                    <h1 class="hero-heading"> and </h1>
+                    <div class="highlight-box">
+                        <div class="highlight" style="animation-delay: 1.4s;"></div>
+                        <h1 class="hero-heading">Webflow</h1>
+                    </div>
+                    <h1 class="hero-heading"> Developer</h1>
                 </div>
-                <h1> and </h1>
-                <div class="highlight-box">
-                    <div class="highlight" style="animation-delay: 1.4s;"></div>
-                    <h1>Webflow</h1>
+                <p class="hero-paragraph">
+                    I design and build beautiful websites for businesses around the globe. If you need a modern and powerful website, send me an email. If we are a good fit, I will give you a time and cost estimate.
+                </p>
+                <div class="button-wrapper d-inline-block">
+                    <div class="button-border d-inline-block">
+                        <button>see my work</button>
+                    </div>
                 </div>
-                <h1> Developer</h1>
+            </div>
+        </div>
+    </div>
+    <div class="scroll-wrapper">
+        <div class="container">
+            <div class="scroll-block">
+                <div class="scroll-arrow"></div>
+                <div class="scroll-text fw-bold d-inline-block text-uppercase">scroll</div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="project">
+            <div class="row justify-content-around">
+                <div class="col-5">
+                    <div class="row">
+                        <div class="col left-column">
+                            <h4 class="text-uppercase fw-bold text-secondary">latest work</h4>
+                            <h1>Team App website</h1>
+                            <div class="tags-wrapper d-flex fw-bold flex-wrap">
+                                <div class="tag">Website Design</div>
+                                <div class="tag">Webflow Development</div>
+                                <div class="tag">Concept</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p class="portfolio-paragraph">
+                                Full website design and build for a concept team collaboration platform. This website also includes a beautiful blog. I have built the website and the blog in Webflow which has one of the best CMS for blog hosting.
+                            </p>
+                            <div class="button-wrapper d-inline-block">
+                                <div class="button-border d-inline-block">
+                                    <button>see this project</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <a href="#" class="mockup-column top-50 translate-middle-y d-inline-block">
+                        <img class="mockup-img" src="https://uploads-ssl.webflow.com/627dda2f1ca1f5059825b3a4/627dda301ca1f501ee25b3c1_chat%20app-min.jpg" alt="">
+                        <img class="dots" src="https://uploads-ssl.webflow.com/627dda2f1ca1f5059825b3a4/627dda301ca1f5293a25b3bf_dot%20pattern-min.png" alt="">
+                        <div class="mockup-hover d-flex align-items-center">
+                            <div class="mockup-hover-text fw-semibold text-secondary">See this project</div>
+                            <div class="mockup-arrow-wrapper">
+                                <img class="mockup-arrow" src="https://uploads-ssl.webflow.com/627dda2f1ca1f5059825b3a4/627dda301ca1f5f02325b3be_ic-arrow-forward-18px.svg" alt="">
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
