@@ -33,8 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // ----- thepudomdhamtravel
-app.use(vhost('thepudomdhamtravel.rayokdesign.tw', thepudomdhamtravelIndexRouter));
-app.use(vhost('thepudomdhamtravel.localhost', thepudomdhamtravelIndexRouter));
+app.use(vhost('thepudomdhamtravel.*', thepudomdhamtravelIndexRouter));
 // thepudomdhamtravel -----
 
 // ----- Rayok
