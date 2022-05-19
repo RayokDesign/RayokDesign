@@ -1,3 +1,5 @@
+gsap.registerPlugin(ScrollTrigger);
+
 function scrollArrow(){
     let tl = gsap.timeline({repeat: -1});
 
@@ -13,6 +15,21 @@ gsap.from(".headline-wrap", {duration: 0.8, ease: "power1.out", opacity: 0, y: 6
 gsap.from(".hero-paragraph, .button-wrapper", {duration: 0.8, delay: 0.2, ease: "power1.out", opacity: 0, y: 60 });
 gsap.from(".highlight", {duration: 0.6, delay: 0.8, transformOrigin: "0% 50%", scaleX: 0, stagger: 0.6})
 
+gsap.set(".what-i-do, .what-to-work", {
+    opacity: 0,
+    y: 60
+})
+gsap.to(".what-i-do, .what-to-work", {
+    scrollTrigger: {
+        trigger: ".what-i-do, .what-to-work",
+        start: "top 85%",
+        toggleActions: "restart pause reverse pause",
+    },
+    duration: 0.8,
+    ease: "power1.out",
+    opacity: 1,
+    y: 0
+});
 
 function mouseInOut(e, tl){
     e.addEventListener('mouseenter', () => {
@@ -52,7 +69,7 @@ gsap.utils.toArray(".mockup-column").forEach(e => {
     let mockupArrow = e.querySelector('.mockup-arrow'),
     mockupHoverText = e.querySelector('.mockup-hover-text'),
     mockupImg = e.querySelector('.mockup-img');
-    tl = gsap.timeline({ paused: true });
+    tl = gsap.timeline({  paused: true });
     
     gsap.set(mockupArrow, {
         x: -35
@@ -68,14 +85,15 @@ gsap.utils.toArray(".mockup-column").forEach(e => {
         x: 0
     })
     .to(mockupArrow, {
-        duration: 0.1,
+        duration: 0.2,
         opacity: 1,
         x: 0
-    })
+    }, 0.1)
     .to(mockupImg, {
+        duration: 0.3,
         x: 8,
         y: -8
-    }, "-=0.1");
+    }, 0);
 
     mouseInOut(e, tl);
 })

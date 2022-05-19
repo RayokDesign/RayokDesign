@@ -22,6 +22,11 @@ p {
   line-height: 32px;
 }
 
+.section {
+  padding: 60px;
+  margin: 0px 24px;
+}
+
 /* header */
 
 .hero {
@@ -176,6 +181,10 @@ p {
 .left-column {
   min-width: 410px;
 }
+.right-column {
+  padding-top: 30px;
+  max-width: 544px;
+}
 
 .tags-wrapper {
   margin-bottom: 32px;
@@ -227,4 +236,27 @@ p {
 
 .mockup-arrow-wrapper {
   overflow: hidden;
+}
+
+.development-heading {
+  margin-top: 80px;
+}
+
+.footer {
+  padding: 50px 60px 24px 60px;
+  margin: 0px 24px;
+  background-color: #f9efe7;
+}
+
+.want-to-work {
+  margin-bottom: 260px;
+}
+
+.height-24px {
+  height: 24px;
+}
+
+.copyright {
+  font-size: 14px;
+  color: rgba(0,0,0,0.5);
 }
