@@ -1,27 +1,28 @@
 require('dotenv').config();
-const createError = require('http-errors');
 const express = require('express');
+const app = express();
+app.use(function (req, res, next) {
+  if(req.protocol == 'http'){
+    return res.redirect('https://' + req.hostname + req.originalUrl);
+  }
+  next();
+});
+
+const createError = require('http-errors');
 const path = require('path');
 const logger = require('morgan');
 const vhost = require('vhost');
-
-/* Rayok ----- */
 const session = require('express-session');
-/* ----- Rayok */
+
 
 const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
 const rayokDesignIndexRouter = require('./routes/rayokdesign/index');
 
 // thepudomdhamtravel -----
 
-var app = express();
 
-app.use(function (req, res, next) {
-  if(req.protocol == 'http'){
-    return res.redirect(301, 'https://' + req.hostname + req.originalUrl);
-  }
-  next();
-});
+
+
 /* Rayok ----- */
 app.use(session({
   secret: 'process.env.SESSION_SECRET_KEY',
