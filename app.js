@@ -20,6 +20,7 @@ app.use(function (req, res, next) {
   if(req.protocol == 'http'){
     res.redirect(301, 'https://' + req.hostname + req.originalUrl);
   }
+  next();
 });
 /* Rayok ----- */
 app.use(session({
