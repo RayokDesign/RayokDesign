@@ -18,9 +18,8 @@ var app = express();
 
 app.use(function (req, res, next) {
   if(req.protocol == 'http'){
-      return res.redirect('https://' + req.hostname + req.originalUrl);
+    res.redirect(301, 'https://' + req.hostname + req.originalUrl);
   }
-  next()
 });
 /* Rayok ----- */
 app.use(session({
