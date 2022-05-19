@@ -18,7 +18,7 @@ var app = express();
 
 app.use(function (req, res, next) {
   if(req.protocol == 'http'){
-    res.redirect(301, 'https://' + req.hostname + req.originalUrl);
+    return res.redirect(301, 'https://' + req.hostname + req.originalUrl);
   }
   next();
 });
