@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 app.use(function (req, res, next) {
-  if(req.protocol == 'http'){
+  if(req.protocol == 'http' && req.hostname.search("localhost") == -1){
     return res.redirect('https://' + req.hostname + req.originalUrl);
   }
   next();
@@ -17,11 +17,6 @@ const session = require('express-session');
 
 const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
 const rayokDesignIndexRouter = require('./routes/rayokdesign/index');
-
-// thepudomdhamtravel -----
-
-
-
 
 /* Rayok ----- */
 app.use(session({
