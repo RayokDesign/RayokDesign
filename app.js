@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 app.use(function (req, res, next) {
   if(req.protocol == 'http' && req.hostname.search("localhost") == -1){
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
     return res.redirect('https://' + req.hostname + req.originalUrl);
   }
   next();
