@@ -1,7 +1,7 @@
-ssl
 bin
-node_modules
 connections
+node_modules
+public
+ssl
 .env
-bin/www
 package-lock.json

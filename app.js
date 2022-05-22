@@ -16,6 +16,7 @@ const session = require('express-session');
 
 
 const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
+const diamondmarriagevisaIndexRouter = require('./routes/diamondmarriagevisa/index');
 const rayokDesignIndexRouter = require('./routes/rayokdesign/index');
 
 /* Rayok ----- */
@@ -35,14 +36,11 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// ----- thepudomdhamtravel
 app.use(vhost('thepudomdhamtravel.rayokdesign.com', thepudomdhamtravelIndexRouter));
 app.use(vhost('thepudomdhamtravel.localhost', thepudomdhamtravelIndexRouter));
-// thepudomdhamtravel -----
-
-// ----- Rayok
+app.use(vhost('diamondmarriagevisa.rayokdesign.com', diamondmarriagevisaIndexRouter));
+app.use(vhost('diamondmarriagevisa.localhost', diamondmarriagevisaIndexRouter));
 app.use('/', rayokDesignIndexRouter);
-// Rayok ------
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -10,18 +10,19 @@ function scrollArrow(){
 
 scrollArrow();
 
-
+gsap.set('.highlight', {transformOrigin: "0% 50%", scaleX: 0});
 gsap.from(".headline-wrap", {duration: 0.8, ease: "power1.out", opacity: 0, y: 60 });
 gsap.from(".hero-paragraph, .button-wrapper", {duration: 0.8, delay: 0.2, ease: "power1.out", opacity: 0, y: 60 });
-gsap.from(".highlight", {duration: 0.6, delay: 0.8, transformOrigin: "0% 50%", scaleX: 0, stagger: 0.6})
+gsap.to(".headline-wrap .highlight", {duration: 0.6, delay: 0.8, scaleX: 1, stagger: 0.6});
 
-gsap.set(".what-i-do, .what-to-work", {
+gsap.set(".what-i-do, .want-to-work", {
     opacity: 0,
     y: 60
-})
-gsap.to(".what-i-do, .what-to-work", {
+});
+
+gsap.to(".what-i-do", {
     scrollTrigger: {
-        trigger: ".what-i-do, .what-to-work",
+        trigger: ".what-i-do",
         start: "top 85%",
         toggleActions: "restart pause reverse pause",
     },
@@ -29,6 +30,41 @@ gsap.to(".what-i-do, .what-to-work", {
     ease: "power1.out",
     opacity: 1,
     y: 0
+});
+
+gsap.to(".what-i-do .highlight", {
+    scrollTrigger: {
+        trigger: ".what-i-do",
+        start: "top 85%",
+        toggleActions: "restart pause reverse pause",
+    },
+    duration: 0.6,
+    delay: 0.8,
+    scaleX: 1,
+});
+
+
+gsap.to(".want-to-work", {
+    scrollTrigger: {
+        trigger: ".want-to-work",
+        start: "top 85%",
+        toggleActions: "restart pause reverse pause",
+    },
+    duration: 0.8,
+    ease: "power1.out",
+    opacity: 1,
+    y: 0
+});
+
+gsap.to(".want-to-work .highlight", {
+    scrollTrigger: {
+        trigger: ".want-to-work",
+        start: "top 85%",
+        toggleActions: "restart pause reverse pause",
+    },
+    duration: 0.6,
+    delay: 0.8,
+    scaleX: 1,
 });
 
 function mouseInOut(e, tl){
