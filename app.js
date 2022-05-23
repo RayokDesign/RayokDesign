@@ -4,7 +4,7 @@ const app = express();
 
 
 app.use(function(req, res, next){
-  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  //res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   res.setHeader('Server', 'Node.js/16.15.0');
   next();
 })
