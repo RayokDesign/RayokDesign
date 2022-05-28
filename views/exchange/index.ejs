@@ -5,7 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="/images/logo/logo_32x32.png">
-    <title>Exchange | RayokDesign</title>
+    <meta name="description" content="EXCHANGE 支援 155 個國家的貨幣即時匯率轉換，畫面簡潔操作容易，支援響應式頁面，不管是用電腦還是智慧型手機都方便使用。
+    此網頁應用程式為 RayokDesign 工作室設計的第一款產品，整合了 Vue 與 Bootstrap，達到匯率即時的運算以及畫面的美觀。">
+    <meta name="keywords" content="匯率轉換, 即時匯率, 貨幣轉換, 匯率計算器, 匯率計算機, 即時匯率轉換, 國家貨幣轉換">
+    <meta name="author" content="RayokDesign">
+    <title>EXCHANGE-貨幣匯率轉換計算器</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Ubuntu&display=swap" rel="stylesheet">
@@ -25,15 +29,15 @@
     <div class="container p-4" id="app">
         <header class="mb-5">
             <div class="d-flex justify-content-center">
-                <a href="/" class="btn mt-2"><h1>exchange</h1></a>
+                <a href="/" class="btn"><h1>exchange</h1></a>
             </div>
         </header>
         <section class="mb-5">
             <div class="row justify-content-center">
                 <div class="col-10 col-md-6">
                     <div class="d-flex justify-content-center align-items-center mb-3 btn" data-bs-toggle="modal" data-bs-target="#currencies-list-modal" @click="showCurrenciesListModal('primaryCurrencyCode', primaryCurrencyCode)">
-                        <img v-for="(flag, name) in primaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
-                        <h2 class="m-0">{{primaryCurrencyName}} <span class="fw-bold">{{primaryCurrencyCode}}</span></h2>
+                        <img v-for="(flag, name) in primaryFlag" v-bind:src="flag" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="primary-flag me-3">
+                        <h4 class="m-0">{{primaryCurrencyName}} <span class="fw-bold">{{primaryCurrencyCode}}</span></h4>
                     </div>
                     <div class="input-group mb-2">
                         <input type="number" class="form-control fw-bold" v-model="primaryInput" v-on:keydown="limitKeys" v-on:keyup="calculateSecondaryInput" placeholder="0" autofocus>
@@ -44,8 +48,8 @@
                         <button class="btn" v-on:click="switchCountry"><img src="/images/2195.svg" width="32" height="32" alt="switch-button"></button>
                     </div>
                     <div class="d-flex justify-content-center align-items-center mb-3 btn" data-bs-toggle="modal" data-bs-target="#currencies-list-modal" @click="showCurrenciesListModal('secondaryCurrencyCode', secondaryCurrencyCode)">
-                        <img v-for="(flag, name) in secondaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
-                        <h2 class="m-0">{{secondaryCurrencyName}} <span class="fw-bold">{{secondaryCurrencyCode}}</span></h2>
+                        <img v-for="(flag, name) in secondaryFlag" v-bind:src="flag" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="primary-flag me-3">
+                        <h4 class="m-0">{{secondaryCurrencyName}} <span class="fw-bold">{{secondaryCurrencyCode}}</span></h4>
                     </div>
                     <div class="input-group mb-2">
                         <input type="number" class="form-control fw-bold" placeholder="0" v-model="secondaryInput" v-on:keydown="limitKeys" v-on:keyup="calculatePrimaryInput">
@@ -59,22 +63,22 @@
             </div>
         </section>
         <section class="mb-5">
-            <h2 class="text-center mb-4">使用的國家與地區</h2>
+            <h2 class="text-center mb-4">使用該貨幣的國家</h2>
             <div class="d-flex p-3 mb-5 justify-content-center">
                 <div class="primary-currency" style="width:30%;">
                     <div class="d-flex justify-content-center align-items-center mb-3">
-                        <img v-for="(flag, name) in primaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
-                        <h2 class="m-0">{{primaryCurrencyName}}</h2>
+                        <img v-for="(flag, name) in primaryFlag" v-bind:src="flag" width="50" height="50" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
+                        <h4 class="m-0">{{primaryCurrencyName}} <span class="fw-bold">{{primaryCurrencyCode}}</span></h4>
                     </div>
-                    <img v-for="(flag, name) in primaryCurrencyCountrieFlags" v-bind:src=`https://openmoji.org/data/color/svg/${flag}.svg` v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` width="45" height="45">
+                    <img v-for="(flag, name) in primaryCurrencyCountrieFlags" v-bind:src=`https://openmoji.org/data/color/svg/${flag}.svg` v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` width="45" height="45" loading="lazy">
                 </div>
                 <div class="vertical-line ms-4 me-4"></div>
                 <div class="secondary-currency" style="width:30%;">
                     <div class="d-flex justify-content-center align-items-center mb-3">
-                        <img v-for="(flag, name) in secondaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
-                        <h2 class="m-0">{{secondaryCurrencyName}}</h2>
+                        <img v-for="(flag, name) in secondaryFlag" v-bind:src="flag" width="50" height="50" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
+                        <h4 class="m-0">{{secondaryCurrencyName}} <span class="fw-bold">{{secondaryCurrencyCode}}</span></h4>
                     </div>
-                    <img v-for="(flag, name) in secondaryCurrencyCountrieFlags" v-bind:src=`https://openmoji.org/data/color/svg/${flag}.svg` v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` width="45" height="45">
+                    <img v-for="(flag, name) in secondaryCurrencyCountrieFlags" v-bind:src=`https://openmoji.org/data/color/svg/${flag}.svg` v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` width="45" height="45" loading="lazy">
                 </div>
             </div>
             <h2 class="text-center">免責聲明</h2>
@@ -117,7 +121,7 @@
                     <div class="d-inline-block" v-for="currency in currencyJson" @click.once="changeCurrency(currency.currencyCode)">
                         <input type="radio" class="btn-check" name="currencies" :id="currency.currencyCode" autocomplete="off">
                         <label class="btn btn-outline-primary btn-sm m-2" :for="currency.currencyCode">
-                            <img v-bind:src=`https://openmoji.org/data/color/svg/${currency.countryUnicode}.svg` width="32" height="32" v-bind:alt=`${currency.countryName.split('&')[0]}國旗` v-bind:title=`${currency.countryName.split('&')[0]}國旗` class="me-1">
+                            <img v-bind:src=`https://openmoji.org/data/color/svg/${currency.countryUnicode}.svg` width="32" height="32" v-bind:alt=`${currency.countryName.split('&')[0]}國旗` v-bind:title=`${currency.countryName.split('&')[0]}國旗` class="me-1" loading="lazy">
                             {{currency.currencyName}} <span class="fw-bold">{{currency.currencyCode}}</span>
                         </label>
                     </div>
