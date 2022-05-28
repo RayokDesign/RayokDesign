@@ -6,16 +6,11 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 module.exports = {
     mode: 'development',
     entry: {
-        index: './public/thepudomdhamtravel/src/index.js',
-        login: './public/thepudomdhamtravel/src/login.js',
-        headline: './public/thepudomdhamtravel/src/headline.js',
-        article: './public/thepudomdhamtravel/src/article.js',
-        about: './public/thepudomdhamtravel/src/about.js',
-        contact: './public/thepudomdhamtravel/src/contact.js',
+        index: './public/exchange/src/index.js'
     },
     output: {
         filename: '[name].bundle.js',
-        path: path.resolve(__dirname, './public/thepudomdhamtravel/dist'),
+        path: path.resolve(__dirname, './public/exchange/dist'),
         clean: true,
     },  
     module: {

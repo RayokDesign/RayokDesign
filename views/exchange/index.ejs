@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="tw">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/images/logo/logo_32x32.png">
+    <title>Exchange | RayokDesign</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&family=Ubuntu&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/rayokdesign.css">
+</head>
+<body>
+    <div class="container p-4" id="app">
+        <header class="mb-5">
+            <div class="d-flex justify-content-center">
+                <a href="/" class="btn mt-2"><h1>exchange</h1></a>
+            </div>
+        </header>
+        <section class="mb-5">
+            <div class="row justify-content-center">
+                <div class="col-10 col-md-6">
+                    <div class="d-flex justify-content-center align-items-center mb-3 btn" data-bs-toggle="modal" data-bs-target="#currencies-list-modal" @click="showCurrenciesListModal('primaryCurrencyCode', primaryCurrencyCode)">
+                        <img v-for="(flag, name) in primaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
+                        <h2 class="m-0">{{primaryCurrencyName}} <span class="fw-bold">{{primaryCurrencyCode}}</span></h2>
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="number" class="form-control fw-bold" v-model="primaryInput" v-on:keydown="limitKeys" v-on:keyup="calculateSecondaryInput" placeholder="0" autofocus>
+                        <span class="input-group-text">{{primaryCurrencyCode}}</span>
+                    </div>
+                    <span class="d-block text-center mb-4">1 {{primaryCurrencyCode}} = {{primaryToSecondaryRate}} {{secondaryCurrencyCode}}</span>
+                    <div class="text-center mb-4">
+                        <button class="btn" v-on:click="switchCountry"><img src="/images/2195.svg" width="32" height="32" alt="switch-button"></button>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center mb-3 btn" data-bs-toggle="modal" data-bs-target="#currencies-list-modal" @click="showCurrenciesListModal('secondaryCurrencyCode', secondaryCurrencyCode)">
+                        <img v-for="(flag, name) in secondaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
+                        <h2 class="m-0">{{secondaryCurrencyName}} <span class="fw-bold">{{secondaryCurrencyCode}}</span></h2>
+                    </div>
+                    <div class="input-group mb-2">
+                        <input type="number" class="form-control fw-bold" placeholder="0" v-model="secondaryInput" v-on:keydown="limitKeys" v-on:keyup="calculatePrimaryInput">
+                        <span class="input-group-text">{{secondaryCurrencyCode}}</span>
+                    </div>
+                    <span class="d-block text-center mb-4">1 {{secondaryCurrencyCode}} = {{secondaryToPrimaryRate}} {{primaryCurrencyCode}}</span>
+                    <p>匯率更新日期: <span>{{updateTime}} UTC</span></p>
+                    <p>匯率更新來源: <a href="https://tw.rter.info" class="me-2">即匯站 RTER.info</a><a href="https://tw.rter.info/howto_currencyapi.php">全球即時匯率API</a></p>
+                    <p>資料授權方式: <a href="https://creativecommons.org/licenses/by-sa/3.0/tw/">CC BY-SA 3.0 TW</a></p>
+                </div>
+            </div>
+        </section>
+        <section class="mb-5">
+            <h2 class="text-center mb-4">使用的國家與地區</h2>
+            <div class="d-flex p-3 mb-5 justify-content-center">
+                <div class="primary-currency" style="width:30%;">
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <img v-for="(flag, name) in primaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
+                        <h2 class="m-0">{{primaryCurrencyName}}</h2>
+                    </div>
+                    <img v-for="(flag, name) in primaryCurrencyCountrieFlags" v-bind:src=`https://openmoji.org/data/color/svg/${flag}.svg` v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` width="45" height="45">
+                </div>
+                <div class="vertical-line ms-4 me-4"></div>
+                <div class="secondary-currency" style="width:30%;">
+                    <div class="d-flex justify-content-center align-items-center mb-3">
+                        <img v-for="(flag, name) in secondaryFlag" v-bind:src="flag" width="64" height="64" v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` class="me-3">
+                        <h2 class="m-0">{{secondaryCurrencyName}}</h2>
+                    </div>
+                    <img v-for="(flag, name) in secondaryCurrencyCountrieFlags" v-bind:src=`https://openmoji.org/data/color/svg/${flag}.svg` v-bind:alt=`${name}國旗` v-bind:title=`${name}國旗` width="45" height="45">
+                </div>
+            </div>
+            <h2 class="text-center">免責聲明</h2>
+            <ul class="list-group list-group-flush mb-5">
+                <li class="list-group-item">資料來源：各銀行公告匯率牌價及新聞網站。</li>
+                <li class="list-group-item">本資料僅供參考，使用者依本資料交易發生交易損失需自行負責，
+                    本站對資料內容錯誤、更新延誤或傳輸中斷不負任何責任。</li>
+                <li class="list-group-item">相關資料僅供參考，不代表實際交易價格。實際交易價格以各銀行實際交易時之價格為準。</li>
+            </ul>
+            <h2 class="text-center">隱私權政策</h2>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">使用者隱私對我們來說是件相當慎重且嚴謹的事情。</li>
+                <li class="list-group-item">本站無需註冊、登入，即可使用全部功能。</li>
+                <li class="list-group-item">本站目前使用 Google Analytics 做為網站流量統計
+                    所收集之資料類型如下所示，而此資料僅供本站統計使用，絕不會提供給任何第三者。
+                    <h5 class="mt-4 fw-bold">瀏覽者資訊</h5>
+                    <p>包含IP Address、瀏覽器資訊、所瀏覽頁面、時間、停留時間及跳出頁面。
+                        我們會依據上述所收集之資訊，用來改善我們網頁內容呈現方式、排版，以提供使用者更好的瀏覽效果。</p>
+                </li>
+            </ul>
+        </section>
+        <footer>
+            <div class="row">
+                <div class="col">
+                    <span>Copyright 2022 RayokDesign - All Rights Reserved.</span>
+                </div>
+                <div class="col text-end">
+                    <span>Powered by RayokDesign</span>
+                </div>
+            </div>
+        </footer>
+        <div class="modal" id="currencies-list-modal" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title m-2">國家貨幣</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-inline-block" v-for="currency in currencyJson" @click.once="changeCurrency(currency.currencyCode)">
+                        <input type="radio" class="btn-check" name="currencies" :id="currency.currencyCode" autocomplete="off">
+                        <label class="btn btn-outline-primary btn-sm m-2" :for="currency.currencyCode">
+                            <img v-bind:src=`https://openmoji.org/data/color/svg/${currency.countryUnicode}.svg` width="32" height="32" v-bind:alt=`${currency.countryName.split('&')[0]}國旗` v-bind:title=`${currency.countryName.split('&')[0]}國旗` class="me-1">
+                            {{currency.currencyName}} <span class="fw-bold">{{currency.currencyCode}}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3.2.33"></script>
+    <script src="/dist/index.bundle.js"></script>
+    <script src="/js/rayokdesign.js"></script>
+</body>
+</html>

@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 
-
 app.use(function(req, res, next){
   //res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   res.setHeader('Server', 'Node.js/16.15.0');
@@ -21,9 +20,9 @@ const logger = require('morgan');
 const vhost = require('vhost');
 const session = require('express-session');
 
-
-const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
 const diamondmarriagevisaIndexRouter = require('./routes/diamondmarriagevisa/index');
+const exchangeIndexRouter = require('./routes/exchange/index');
+const thepudomdhamtravelIndexRouter = require('./routes/thepudomdhamtravel/index');
 const rayokDesignIndexRouter = require('./routes/rayokdesign/index');
 
 /* Rayok ----- */
@@ -43,10 +42,12 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use(vhost('thepudomdhamtravel.rayokdesign.com', thepudomdhamtravelIndexRouter));
-app.use(vhost('thepudomdhamtravel.localhost', thepudomdhamtravelIndexRouter));
 app.use(vhost('diamondmarriagevisa.rayokdesign.com', diamondmarriagevisaIndexRouter));
 app.use(vhost('diamondmarriagevisa.localhost', diamondmarriagevisaIndexRouter));
+app.use(vhost('exchange.rayokdesign.com', exchangeIndexRouter));
+app.use(vhost('exchange.localhost', exchangeIndexRouter));
+app.use(vhost('thepudomdhamtravel.rayokdesign.com', thepudomdhamtravelIndexRouter));
+app.use(vhost('thepudomdhamtravel.localhost', thepudomdhamtravelIndexRouter));
 app.use('/', rayokDesignIndexRouter);
 
 // catch 404 and forward to error handler
