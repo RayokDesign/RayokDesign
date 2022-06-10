@@ -6,10 +6,10 @@ const { styles } = require( '@ckeditor/ckeditor5-dev-utils' );
 module.exports = {
     mode: 'development',
     entry: {
-        index: './public/exchange/src/index.js'
+        index: './public/exchange/src/index.vue'
     },
     output: {
-        filename: '[name].bundle.js',
+        filename: '[name].bundle.vue',
         path: path.resolve(__dirname, './public/exchange/dist'),
         clean: true,
     },  

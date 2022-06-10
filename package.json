@@ -37,7 +37,8 @@
     "ocsp": "^1.2.0",
     "openssl": "^2.0.0",
     "request": "^2.88.2",
-    "vhost": "^3.0.2"
+    "vhost": "^3.0.2",
+    "vue": "^3.2.36"
   },
   "devDependencies": {
     "css-loader": "^6.7.1",
